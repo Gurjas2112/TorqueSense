@@ -1,0 +1,53 @@
+# Jenkins as code. Secrets come from the container's environment (var/jenkins.env, gitignored),
+# never from this file.
+jenkins:
+  systemMessage: "TorqueSense GPU gates — builds run only on hsgpc-gpu, only from main (docs/adr/0004)"
+  numExecutors: 0                       # the controller builds nothing
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: admin
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  nodes:
+    - permanent:
+        name: hsgpc-gpu
+        labelString: hsgpc-gpu
+        numExecutors: 1                 # one GPU: concurrent builds would corrupt latency figures
+        remoteFS: 'C:\dev\jenkins-agent'
+        launcher:
+          inbound:
+            webSocket: true             # the agent dials out over the controller's own port; nothing inbound on the laptop
+        retentionStrategy: "always"
+unclassified:
+  location:
+    url: "http://localhost:8081/"
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - string:
+              scope: GLOBAL
+              id: torquesense-api-key
+              description: "API_KEY for the engine's event uplink"
+              secret: "${TORQUESENSE_API_KEY}"
+jobs:
+  - script: >
+      pipelineJob('torquesense-gpu-gates') {
+        description('The GPU-bound gates of spec Section 31: build, ctest, both engines over the samples, the I4 latency gate, the accuracy report.')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote { url('https://github.com/Gurjas2112/TorqueSense.git') }
+                branch('*/main')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(true)
+          }
+        }
+      }

@@ -17,9 +17,14 @@ outbox.db-*
 *.db-wal
 *.db-shm
 var/
-data/
+# data and models are DVC-tracked (spec Section 34): their .dvc pointers are committed, never the files
+data/*
+!data/*.dvc
+!data/.gitignore
 models/*
 !models/manifest.json
+!models/*.dvc
+!models/.gitignore
 
 # weights, renders, videos, engine caches
 *.onnx
