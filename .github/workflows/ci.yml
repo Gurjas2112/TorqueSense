@@ -28,7 +28,7 @@ jobs:
           pacboy: >-
             toolchain:p cmake:p ninja:p opencv:p opencascade:p
             spdlog:p gtest:p benchmark:p nlohmann-json:p yaml-cpp:p python-yaml:p
-      - run: cmake --preset windows-ci && cmake --build --preset windows-ci
+      - run: cmake --preset windows-ci -DTS_PYTHON="$(cygpath -m "$(command -v python3)")" && cmake --build --preset windows-ci
       - run: ctest --preset windows-ci
 
   samples:                             # the conformance suite: every assembly, one contract

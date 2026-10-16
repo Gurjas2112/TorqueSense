@@ -25,6 +25,8 @@ namespace fs = std::filesystem;
 using nlohmann::json;
 
 namespace sunverify::app {
+#ifdef SUNVERIFY_WITH_OPENCV
+
 namespace {
 
 constexpr int kW = 960, kH = 540;
@@ -44,8 +46,6 @@ Loaded load(const fs::path& sample) {
 }
 
 }  // namespace
-
-#ifdef SUNVERIFY_WITH_OPENCV
 
 namespace {
 
