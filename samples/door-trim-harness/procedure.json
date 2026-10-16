@@ -1,0 +1,274 @@
+{
+  "cad_revision": "cad",
+  "cameras": [
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 2058.7266436891764,
+      "hfov_deg": 50.0,
+      "id": "cam-1",
+      "look_at_mm": [
+        150.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        150.0,
+        0.0,
+        420.0
+      ],
+      "width_px": 1920
+    },
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 2058.7266436891764,
+      "hfov_deg": 50.0,
+      "id": "cam-2",
+      "look_at_mm": [
+        500.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        500.0,
+        0.0,
+        420.0
+      ],
+      "width_px": 1920
+    },
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 2058.7266436891764,
+      "hfov_deg": 50.0,
+      "id": "cam-3",
+      "look_at_mm": [
+        850.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        850.0,
+        0.0,
+        420.0
+      ],
+      "width_px": 1920
+    }
+  ],
+  "geometry": "cad",
+  "inspection_points": [
+    {
+      "camera": "cam-1",
+      "family": "snap_clip",
+      "feature_mm": 4.0,
+      "feature_px": 17.4,
+      "id": "clip-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "snap_clip",
+      "feature_mm": 4.0,
+      "feature_px": 19.3,
+      "id": "clip-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        200.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "cam-2",
+      "family": "snap_clip",
+      "feature_mm": 4.0,
+      "feature_px": 18.6,
+      "id": "clip-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        400.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "cam-2",
+      "family": "snap_clip",
+      "feature_mm": 4.0,
+      "feature_px": 18.6,
+      "id": "clip-4",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        600.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "cam-3",
+      "family": "snap_clip",
+      "feature_mm": 4.0,
+      "feature_px": 19.3,
+      "id": "clip-5",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        800.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "cam-3",
+      "family": "snap_clip",
+      "feature_mm": 4.0,
+      "feature_px": 17.4,
+      "id": "clip-6",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        1000.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "cam-3",
+      "family": "connector",
+      "feature_mm": 6.0,
+      "feature_px": 28.0,
+      "id": "connector-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        900.0,
+        80.0,
+        0.0
+      ],
+      "states": [
+        "unmated",
+        "mated"
+      ]
+    },
+    {
+      "camera": "cam-2",
+      "family": "panel",
+      "feature_mm": 60.0,
+      "feature_px": 294.1,
+      "id": "panel-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        500.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "installed"
+      ]
+    }
+  ],
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "clips",
+      "kind": "complete",
+      "max_duration_s": 40.0,
+      "state": "closed",
+      "targets": [
+        "clip-1",
+        "clip-2",
+        "clip-3",
+        "clip-4",
+        "clip-5",
+        "clip-6"
+      ]
+    },
+    {
+      "evidence": {
+        "equals": true,
+        "tag": "Station.D07.ConnectorLock",
+        "within_ms": 1000
+      },
+      "id": "connector",
+      "kind": "complete",
+      "max_duration_s": 20.0,
+      "state": "mated",
+      "targets": [
+        "connector-1"
+      ]
+    },
+    {
+      "id": "trim_panel",
+      "kind": "complete",
+      "max_duration_s": 30.0,
+      "requires": [
+        "clips",
+        "connector"
+      ],
+      "state": "installed",
+      "targets": [
+        "panel-1"
+      ]
+    }
+  ],
+  "title": "Door trim: harness clips, connector, trim panel — PS4 example"
+}

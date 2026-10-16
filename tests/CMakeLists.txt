@@ -1,5 +1,4 @@
 # Cross-component tests. Each component's own unit tests live beside it (perception/tests, …).
-include(GoogleTest)
 
 add_executable(contracts_test contracts/ContractsTest.cpp)
 target_include_directories(contracts_test PRIVATE ${CMAKE_SOURCE_DIR}/control-app/include)

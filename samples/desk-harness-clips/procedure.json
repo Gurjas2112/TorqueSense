@@ -1,0 +1,213 @@
+{
+  "cad_revision": "measured",
+  "cameras": [
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 914.0147243149534,
+      "hfov_deg": 70.0,
+      "id": "webcam",
+      "look_at_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        400.0
+      ],
+      "width_px": 1280
+    }
+  ],
+  "geometry": "measured",
+  "inspection_points": [
+    {
+      "camera": "webcam",
+      "family": "snap_clip",
+      "feature_mm": 8.0,
+      "feature_px": 16.6,
+      "id": "clip-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -120.0,
+        40.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "webcam",
+      "family": "snap_clip",
+      "feature_mm": 8.0,
+      "feature_px": 17.7,
+      "id": "clip-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -60.0,
+        40.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "webcam",
+      "family": "snap_clip",
+      "feature_mm": 8.0,
+      "feature_px": 18.1,
+      "id": "clip-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        40.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "webcam",
+      "family": "snap_clip",
+      "feature_mm": 8.0,
+      "feature_px": 17.7,
+      "id": "clip-4",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        60.0,
+        40.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "webcam",
+      "family": "snap_clip",
+      "feature_mm": 8.0,
+      "feature_px": 16.6,
+      "id": "clip-5",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        120.0,
+        40.0,
+        0.0
+      ],
+      "states": [
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "webcam",
+      "family": "connector",
+      "feature_mm": 12.0,
+      "feature_px": 23.8,
+      "id": "connector-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        150.0,
+        -40.0,
+        0.0
+      ],
+      "states": [
+        "unmated",
+        "mated"
+      ]
+    },
+    {
+      "camera": "webcam",
+      "family": "panel",
+      "feature_mm": 100.0,
+      "feature_px": 228.5,
+      "id": "cover-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "installed"
+      ]
+    }
+  ],
+  "profile": "desk-harness-clips",
+  "profile_version": "d9f44503771b",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "clips",
+      "kind": "complete",
+      "max_duration_s": 45.0,
+      "state": "closed",
+      "targets": [
+        "clip-1",
+        "clip-2",
+        "clip-3",
+        "clip-4",
+        "clip-5"
+      ]
+    },
+    {
+      "id": "connector",
+      "kind": "complete",
+      "max_duration_s": 20.0,
+      "state": "mated",
+      "targets": [
+        "connector-1"
+      ]
+    },
+    {
+      "id": "cover",
+      "kind": "complete",
+      "max_duration_s": 20.0,
+      "requires": [
+        "clips",
+        "connector"
+      ],
+      "state": "installed",
+      "targets": [
+        "cover-1"
+      ]
+    }
+  ],
+  "title": "Cable into five clips, connector mated, then the cover"
+}

@@ -1,0 +1,79 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "webcam",
+      "distance_mm": 419.5,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "clip-1",
+      "obliquity_deg": 17.5,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "webcam",
+      "distance_mm": 406.4,
+      "feature_px": 17.7,
+      "in_frame_and_facing": true,
+      "ip": "clip-2",
+      "obliquity_deg": 10.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "webcam",
+      "distance_mm": 402.0,
+      "feature_px": 18.1,
+      "in_frame_and_facing": true,
+      "ip": "clip-3",
+      "obliquity_deg": 5.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "webcam",
+      "distance_mm": 406.4,
+      "feature_px": 17.7,
+      "in_frame_and_facing": true,
+      "ip": "clip-4",
+      "obliquity_deg": 10.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "webcam",
+      "distance_mm": 419.5,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "clip-5",
+      "obliquity_deg": 17.5,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "webcam",
+      "distance_mm": 429.1,
+      "feature_px": 23.8,
+      "in_frame_and_facing": true,
+      "ip": "connector-1",
+      "obliquity_deg": 21.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "webcam",
+      "distance_mm": 400.0,
+      "feature_px": 228.5,
+      "in_frame_and_facing": true,
+      "ip": "cover-1",
+      "obliquity_deg": 0.0,
+      "occlusion": "not_run",
+      "resolved": true
+    }
+  ],
+  "profile": "desk-harness-clips",
+  "profile_version": "d9f44503771b",
+  "unresolved": []
+}

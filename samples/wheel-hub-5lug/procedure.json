@@ -1,0 +1,177 @@
+{
+  "cad_revision": "cad",
+  "cameras": [
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1360.8867518292534,
+      "hfov_deg": 70.4,
+      "id": "cam-1",
+      "look_at_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        900.0
+      ],
+      "width_px": 1920
+    }
+  ],
+  "geometry": "cad",
+  "inspection_points": [
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 17.0,
+      "feature_px": 25.6,
+      "id": "bolt-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        57.15,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 17.0,
+      "feature_px": 25.6,
+      "id": "bolt-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        54.35,
+        17.66,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 17.0,
+      "feature_px": 25.6,
+      "id": "bolt-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        33.59,
+        -46.24,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 17.0,
+      "feature_px": 25.6,
+      "id": "bolt-4",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -33.59,
+        -46.24,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 17.0,
+      "feature_px": 25.6,
+      "id": "bolt-5",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -54.35,
+        17.66,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    }
+  ],
+  "profile": "wheel-fitment-rl",
+  "profile_version": "bdea81aa8b67",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "hand_start",
+      "kind": "complete",
+      "max_duration_s": 20.0,
+      "state": "seated",
+      "targets": [
+        "bolt-1",
+        "bolt-2",
+        "bolt-3",
+        "bolt-4",
+        "bolt-5"
+      ]
+    },
+    {
+      "evidence": {
+        "equals": true,
+        "tag": "Station.W14.Nutrunner.ResultOK",
+        "within_ms": 1500
+      },
+      "id": "torque",
+      "kind": "sequence",
+      "max_duration_s": 16.0,
+      "order_source": "derived",
+      "pattern": "circle",
+      "requires": [
+        "hand_start"
+      ],
+      "state": "fastened",
+      "targets": [
+        "bolt-1",
+        "bolt-3",
+        "bolt-5",
+        "bolt-2",
+        "bolt-4"
+      ]
+    }
+  ],
+  "title": "Wheel and tyre fitment, 5-lug hub, 114.3 mm PCD — the PS4 reference"
+}

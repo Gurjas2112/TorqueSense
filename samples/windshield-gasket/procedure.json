@@ -1,0 +1,299 @@
+{
+  "cad_revision": "cad",
+  "cameras": [
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1662.7687752661222,
+      "hfov_deg": 60.0,
+      "id": "cam-1",
+      "look_at_mm": [
+        -350.0,
+        -200.0,
+        0.0
+      ],
+      "position_mm": [
+        -350.0,
+        -200.0,
+        800.0
+      ],
+      "width_px": 1920
+    },
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1662.7687752661222,
+      "hfov_deg": 60.0,
+      "id": "cam-2",
+      "look_at_mm": [
+        350.0,
+        -200.0,
+        0.0
+      ],
+      "position_mm": [
+        350.0,
+        -200.0,
+        800.0
+      ],
+      "width_px": 1920
+    },
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1662.7687752661222,
+      "hfov_deg": 60.0,
+      "id": "cam-3",
+      "look_at_mm": [
+        -350.0,
+        200.0,
+        0.0
+      ],
+      "position_mm": [
+        -350.0,
+        200.0,
+        800.0
+      ],
+      "width_px": 1920
+    },
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1662.7687752661222,
+      "hfov_deg": 60.0,
+      "id": "cam-4",
+      "look_at_mm": [
+        350.0,
+        200.0,
+        0.0
+      ],
+      "position_mm": [
+        350.0,
+        200.0,
+        800.0
+      ],
+      "width_px": 1920
+    }
+  ],
+  "geometry": "cad",
+  "inspection_points": [
+    {
+      "camera": "cam-1",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -700.0,
+        -400.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        -400.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-2",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        700.0,
+        -400.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-2",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-4",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        700.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-4",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-5",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        700.0,
+        400.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-3",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-6",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        400.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-3",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-7",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -700.0,
+        400.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "seal_segment",
+      "feature_mm": 10.0,
+      "feature_px": 16.6,
+      "id": "gasket-8",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -700.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "unseated",
+        "seated"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "panel",
+      "feature_mm": 200.0,
+      "feature_px": 331.5,
+      "id": "glass-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "placed"
+      ]
+    }
+  ],
+  "profile": "windshield-bond",
+  "profile_version": "d56b663da004",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "gasket",
+      "kind": "complete",
+      "max_duration_s": 60.0,
+      "state": "seated",
+      "targets": [
+        "gasket-1",
+        "gasket-2",
+        "gasket-3",
+        "gasket-4",
+        "gasket-5",
+        "gasket-6",
+        "gasket-7",
+        "gasket-8"
+      ]
+    },
+    {
+      "id": "glass",
+      "kind": "complete",
+      "max_duration_s": 45.0,
+      "requires": [
+        "gasket"
+      ],
+      "state": "placed",
+      "targets": [
+        "glass-1"
+      ]
+    }
+  ],
+  "title": "Windshield: gasket seated before the glass — PS4 example"
+}

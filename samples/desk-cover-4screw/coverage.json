@@ -1,0 +1,69 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "phone",
+      "distance_mm": 350.0,
+      "feature_px": 319.3,
+      "in_frame_and_facing": true,
+      "ip": "lid-1",
+      "obliquity_deg": 0.0,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "phone",
+      "distance_mm": 354.5,
+      "feature_px": 27.2,
+      "in_frame_and_facing": true,
+      "ip": "screw-1",
+      "obliquity_deg": 9.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "phone",
+      "distance_mm": 354.5,
+      "feature_px": 27.2,
+      "in_frame_and_facing": true,
+      "ip": "screw-2",
+      "obliquity_deg": 9.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "phone",
+      "distance_mm": 354.5,
+      "feature_px": 27.2,
+      "in_frame_and_facing": true,
+      "ip": "screw-3",
+      "obliquity_deg": 9.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "phone",
+      "distance_mm": 354.5,
+      "feature_px": 27.2,
+      "in_frame_and_facing": true,
+      "ip": "screw-4",
+      "obliquity_deg": 9.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "phone",
+      "distance_mm": 350.3,
+      "feature_px": 99.6,
+      "in_frame_and_facing": true,
+      "ip": "label-1",
+      "obliquity_deg": 2.5,
+      "occlusion": "not_run",
+      "resolved": true
+    }
+  ],
+  "profile": "desk-cover-4screw",
+  "profile_version": "3e3cc412c049",
+  "unresolved": []
+}

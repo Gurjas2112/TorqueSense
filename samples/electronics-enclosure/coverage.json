@@ -1,0 +1,89 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "cam-1",
+      "distance_mm": 352.8,
+      "feature_px": 23.2,
+      "in_frame_and_facing": true,
+      "ip": "connector-1",
+      "obliquity_deg": 7.3,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 367.4,
+      "feature_px": 17.8,
+      "in_frame_and_facing": true,
+      "ip": "screw-1",
+      "obliquity_deg": 17.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 353.6,
+      "feature_px": 19.2,
+      "in_frame_and_facing": true,
+      "ip": "screw-2",
+      "obliquity_deg": 8.1,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 367.4,
+      "feature_px": 17.8,
+      "in_frame_and_facing": true,
+      "ip": "screw-3",
+      "obliquity_deg": 17.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 367.4,
+      "feature_px": 17.8,
+      "in_frame_and_facing": true,
+      "ip": "screw-4",
+      "obliquity_deg": 17.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 353.6,
+      "feature_px": 19.2,
+      "in_frame_and_facing": true,
+      "ip": "screw-5",
+      "obliquity_deg": 8.1,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 367.4,
+      "feature_px": 17.8,
+      "in_frame_and_facing": true,
+      "ip": "screw-6",
+      "obliquity_deg": 17.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 355.1,
+      "feature_px": 76.2,
+      "in_frame_and_facing": true,
+      "ip": "label-1",
+      "obliquity_deg": 9.7,
+      "occlusion": "not_run",
+      "resolved": true
+    }
+  ],
+  "profile": "enclosure-cover",
+  "profile_version": "13dafe670dc4",
+  "unresolved": []
+}

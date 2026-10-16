@@ -28,7 +28,7 @@ endif()
 # or fetched code.
 add_library(sunverify_warnings INTERFACE)
 target_compile_options(sunverify_warnings INTERFACE
-  $<$<COMPILE_LANGUAGE:CXX>:-Wall -Wextra -Wpedantic -Werror -Wno-interference-size>
+  $<$<COMPILE_LANGUAGE:CXX>:-Wall -Wextra -Wpedantic -Werror>
   $<$<COMPILE_LANGUAGE:C>:-Wall -Wextra -Wpedantic -Werror>)
 
 find_package(Threads REQUIRED)
@@ -44,6 +44,7 @@ endif()
 include(cmake/deps.cmake)
 
 enable_testing()
+include(GoogleTest)
 
 add_subdirectory(perception)
 add_subdirectory(procedure)

@@ -39,3 +39,19 @@ def test_every_solver_returns_a_permutation_on_random_layouts():
         pts = [(rng.uniform(-200, 200), rng.uniform(-200, 200)) for _ in range(rng.randint(3, 16))]
         _, order = patterns.solve(pts)
         assert sorted(order) == list(range(len(pts)))
+
+def test_an_explicit_order_overrides_derivation_and_is_recorded():
+    from tsref import compiler, optics
+    cam = optics.Camera("c", 1920, 69, (0, 0, 350), (0, 0, 0))
+    m = {"profile": "p", "cameras": [], "groups": [{"id": "s", "family": "threaded_fastener",
+         "states": ["absent", "seated", "fastened"], "feature_mm": 7,
+         "members": [{"position_mm": [x, y, 0]} for x, y in ((-40, 40), (40, 40), (40, -40), (-40, -40))]}],
+         "steps": [{"id": "f", "group": "s", "kind": "sequence", "order": [1, 2, 3, 4], "state": "fastened",
+                    "max_duration_s": 30}]}
+    prof, _, _ = compiler.compile_profile(m, [cam], 16)
+    assert prof["steps"][0]["targets"] == ["s-1", "s-2", "s-3", "s-4"]          # round the box, as written
+    assert prof["steps"][0]["order_source"] == "specified" and "pattern" not in prof["steps"][0]
+    m["steps"][0]["order"] = "derive"
+    prof, _, _ = compiler.compile_profile(m, [cam], 16)
+    assert prof["steps"][0]["targets"] == ["s-1", "s-3", "s-2", "s-4"]          # across the diagonals
+    assert prof["steps"][0]["order_source"] == "derived"

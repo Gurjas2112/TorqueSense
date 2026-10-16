@@ -1,0 +1,99 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "cam-1",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-1",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-2",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-2",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-3",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-2",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-4",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-4",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-5",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-3",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-6",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-3",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-7",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 895.8,
+      "feature_px": 16.6,
+      "in_frame_and_facing": true,
+      "ip": "gasket-8",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 895.8,
+      "feature_px": 331.5,
+      "in_frame_and_facing": true,
+      "ip": "glass-1",
+      "obliquity_deg": 26.7,
+      "occlusion": "not_run",
+      "resolved": true
+    }
+  ],
+  "profile": "windshield-bond",
+  "profile_version": "d56b663da004",
+  "unresolved": []
+}

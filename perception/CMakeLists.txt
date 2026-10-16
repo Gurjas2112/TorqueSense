@@ -1,4 +1,8 @@
 # sunverify_perception — SpscRingBuffer, frame pools, StateVector, detectors (spec Sections 9, 14).
-# Phase 1: the target and its include path. Sources arrive in Phases 4 and 6.
-add_library(sunverify_perception INTERFACE)
-target_include_directories(sunverify_perception INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+add_library(sunverify_perception STATIC src/FramePool.cpp)
+target_include_directories(sunverify_perception PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(sunverify_perception PRIVATE sunverify_warnings PUBLIC Threads::Threads)
+
+add_executable(perception_test tests/SpscRingBufferTest.cpp)
+target_link_libraries(perception_test PRIVATE sunverify_warnings sunverify_perception GTest::gtest_main)
+gtest_discover_tests(perception_test DISCOVERY_MODE PRE_TEST)

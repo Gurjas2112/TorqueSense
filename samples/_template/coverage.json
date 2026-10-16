@@ -1,0 +1,49 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "cam",
+      "distance_mm": 350.0,
+      "feature_px": 119.7,
+      "in_frame_and_facing": true,
+      "ip": "part-1",
+      "obliquity_deg": 0.0,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam",
+      "distance_mm": 351.3,
+      "feature_px": 27.7,
+      "in_frame_and_facing": true,
+      "ip": "screw-1",
+      "obliquity_deg": 4.9,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam",
+      "distance_mm": 350.0,
+      "feature_px": 27.9,
+      "in_frame_and_facing": true,
+      "ip": "screw-2",
+      "obliquity_deg": 0.0,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "cam",
+      "distance_mm": 351.3,
+      "feature_px": 27.7,
+      "in_frame_and_facing": true,
+      "ip": "screw-3",
+      "obliquity_deg": 4.9,
+      "occlusion": "not_run",
+      "resolved": true
+    }
+  ],
+  "profile": "my-assembly",
+  "profile_version": "c665c4fdb667",
+  "unresolved": []
+}

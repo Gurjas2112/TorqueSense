@@ -1,0 +1,143 @@
+{
+  "cad_revision": "measured",
+  "cameras": [
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1396.8086675255472,
+      "hfov_deg": 69.0,
+      "id": "cam",
+      "look_at_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        350.0
+      ],
+      "width_px": 1920
+    }
+  ],
+  "geometry": "measured",
+  "inspection_points": [
+    {
+      "camera": "cam",
+      "family": "presence",
+      "feature_mm": 30.0,
+      "feature_px": 119.7,
+      "id": "part-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "present"
+      ]
+    },
+    {
+      "camera": "cam",
+      "family": "threaded_fastener",
+      "feature_mm": 7.0,
+      "feature_px": 27.7,
+      "id": "screw-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -30.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam",
+      "family": "threaded_fastener",
+      "feature_mm": 7.0,
+      "feature_px": 27.9,
+      "id": "screw-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam",
+      "family": "threaded_fastener",
+      "feature_mm": 7.0,
+      "feature_px": 27.7,
+      "id": "screw-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        30.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    }
+  ],
+  "profile": "my-assembly",
+  "profile_version": "c665c4fdb667",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "place",
+      "kind": "complete",
+      "max_duration_s": 15.0,
+      "state": "present",
+      "targets": [
+        "part-1"
+      ]
+    },
+    {
+      "id": "fasten",
+      "kind": "sequence",
+      "max_duration_s": 40.0,
+      "order_source": "derived",
+      "pattern": "line",
+      "requires": [
+        "place"
+      ],
+      "state": "fastened",
+      "targets": [
+        "screw-2",
+        "screw-3",
+        "screw-1"
+      ]
+    }
+  ],
+  "title": "One line: what is assembled, and what must not go wrong"
+}

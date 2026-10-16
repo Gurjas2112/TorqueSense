@@ -1,0 +1,245 @@
+{
+  "cad_revision": "cad",
+  "cameras": [
+    {
+      "aspect": 1.7777777777777777,
+      "f_px": 1372.4844291261174,
+      "hfov_deg": 50.0,
+      "id": "cam-1",
+      "look_at_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        350.0
+      ],
+      "width_px": 1280
+    }
+  ],
+  "geometry": "cad",
+  "inspection_points": [
+    {
+      "camera": "cam-1",
+      "family": "connector",
+      "feature_mm": 6.0,
+      "feature_px": 23.2,
+      "id": "connector-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        40.0,
+        20.0,
+        0.0
+      ],
+      "states": [
+        "unmated",
+        "mated"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 5.0,
+      "feature_px": 17.8,
+      "id": "screw-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -100.0,
+        50.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 5.0,
+      "feature_px": 19.2,
+      "id": "screw-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        50.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 5.0,
+      "feature_px": 17.8,
+      "id": "screw-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        100.0,
+        50.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 5.0,
+      "feature_px": 17.8,
+      "id": "screw-4",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -100.0,
+        -50.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 5.0,
+      "feature_px": 19.2,
+      "id": "screw-5",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        0.0,
+        -50.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "threaded_fastener",
+      "feature_mm": 5.0,
+      "feature_px": 17.8,
+      "id": "screw-6",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        100.0,
+        -50.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "seated",
+        "fastened"
+      ]
+    },
+    {
+      "camera": "cam-1",
+      "family": "label",
+      "feature_mm": 20.0,
+      "feature_px": 76.2,
+      "id": "label-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -60.0,
+        0.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "applied"
+      ]
+    }
+  ],
+  "profile": "enclosure-cover",
+  "profile_version": "13dafe670dc4",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "connector",
+      "kind": "complete",
+      "max_duration_s": 15.0,
+      "state": "mated",
+      "targets": [
+        "connector-1"
+      ]
+    },
+    {
+      "id": "cover_screws",
+      "kind": "sequence",
+      "max_duration_s": 40.0,
+      "order_source": "derived",
+      "pattern": "field",
+      "requires": [
+        "connector"
+      ],
+      "state": "fastened",
+      "targets": [
+        "screw-2",
+        "screw-5",
+        "screw-3",
+        "screw-4",
+        "screw-6",
+        "screw-1"
+      ]
+    },
+    {
+      "id": "label",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "requires": [
+        "cover_screws"
+      ],
+      "state": "applied",
+      "targets": [
+        "label-1"
+      ]
+    }
+  ],
+  "title": "Electronics enclosure: connector, six cover screws, label — not automotive"
+}

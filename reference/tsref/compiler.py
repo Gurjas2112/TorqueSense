@@ -22,6 +22,13 @@ def compile_profile(manifest: dict, cameras: list[optics.Camera], min_feature_px
         if st["kind"] == "sequence" and st.get("order", "derive") == "derive":
             kind, order = patterns.solve([tuple(m["position_mm"][:2]) for m in g["members"]])
             step["targets"], step["pattern"] = [ids[i] for i in order], kind
+            step["order_source"] = "derived"
+        elif st["kind"] == "sequence" and isinstance(st.get("order"), list):
+            # the OEM's work instruction mandates its own order: it overrides derivation (Section 7)
+            if sorted(st["order"]) != list(range(1, len(ids) + 1)):
+                raise ValueError(f'{st["id"]}: an explicit order must list every member once')
+            step["targets"] = [ids[i - 1] for i in st["order"]]
+            step["order_source"] = "specified"
         else:
             step["targets"] = ids
         step.pop("order", None)
