@@ -1,0 +1,25 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://torquesense.dev/contracts/health.schema.json",
+  "title": "StationHealth",
+  "description": "Engine io thread -> API, one bucket per station per bucket_s (300 s, 5 in demo mode). Columns of public.station_health (spec Sections 16 and 19).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["station_id", "bucket_start", "bucket_s", "fps", "dropped_frame_rate", "ambiguous_rate", "model_version", "cad_revision"],
+  "properties": {
+    "station_id": { "type": "string" },
+    "bucket_start": { "type": "string", "format": "date-time" },
+    "bucket_s": { "type": "integer", "minimum": 1 },
+    "fps": { "type": "number", "minimum": 0 },
+    "dropped_frame_rate": { "type": "number", "minimum": 0 },
+    "ip_conf_mean": { "type": ["number", "null"] },
+    "ambiguous_rate": { "type": "number", "minimum": 0 },
+    "anchor_residual_px": { "type": ["number", "null"] },
+    "evidence_p99_ms": { "type": ["number", "null"] },
+    "camera_temp_c": { "type": ["number", "null"], "description": "NULL for file, webcam and phone sources" },
+    "packets_resent": { "type": ["integer", "null"], "description": "industrial GigE only (Appendix D.1)" },
+    "adjudications": { "type": "integer", "minimum": 0 },
+    "model_version": { "type": "string" },
+    "cad_revision": { "type": "string" }
+  }
+}

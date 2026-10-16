@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://torquesense.dev/contracts/host_health.schema.json",
+  "title": "HostHealth",
+  "description": "Fleet agent -> API (POST /v1/health/host), every 10 s. The record fleet-agent/main.go sends; the API flattens it into public.host_health.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["ts", "station_id", "node", "engine", "disk_free_bytes"],
+  "properties": {
+    "ts": { "type": "string", "format": "date-time" },
+    "station_id": { "type": "string" },
+    "node": { "type": "string" },
+    "engine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status"],
+      "properties": {
+        "status": { "type": "string", "enum": ["up", "down"] },
+        "reason": { "type": "string" },
+        "fps": { "type": "number" },
+        "evidence_p99_ms": { "type": "number" },
+        "model_version": { "type": "string" },
+        "cad_revision": { "type": "string" },
+        "uptime_s": { "type": "number" }
+      }
+    },
+    "gpu": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["temp_c", "sm_clock_mhz", "sm_clock_max_mhz", "mem_used_mib", "util_pct", "sm_clock_ratio"],
+      "properties": {
+        "temp_c": { "type": "number" },
+        "sm_clock_mhz": { "type": "number" },
+        "sm_clock_max_mhz": { "type": "number" },
+        "mem_used_mib": { "type": "number" },
+        "util_pct": { "type": "number" },
+        "sm_clock_ratio": { "type": "number" }
+      }
+    },
+    "disk_free_bytes": { "type": "integer", "minimum": 0 }
+  }
+}

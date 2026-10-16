@@ -1,0 +1,33 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://torquesense.dev/contracts/anomaly.schema.json",
+  "title": "Anomaly",
+  "description": "Engine -> API, once per violation (spec Section 22). The API stores it in the outbox and forwards it to public.anomalies; the columns here are that table's.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["event_id", "ts", "station_id", "cycle_id", "profile", "profile_version", "step_id", "violation_type", "engine_ms", "evidence_ms", "narrative", "cad_revision", "model_version"],
+  "properties": {
+    "event_id": { "type": "string", "format": "uuid", "description": "minted at the source: replays are idempotent" },
+    "ts": { "type": "string", "format": "date-time" },
+    "station_id": { "type": "string" },
+    "cycle_id": { "type": "string", "format": "uuid" },
+    "profile": { "type": "string" },
+    "profile_version": { "type": "string" },
+    "step_id": { "type": "string" },
+    "violation_type": {
+      "type": "string",
+      "enum": ["SEQUENCE", "PRECEDENCE", "EVIDENCE_MISSING", "REGRESSION", "STEP_TIMEOUT", "INCOMPLETE_AT_RELEASE"]
+    },
+    "observed_ip": { "type": ["string", "null"] },
+    "expected_ip": { "type": ["string", "null"] },
+    "detail": { "type": "object", "description": "violation-specific facts from the interpreter (missing, before, signal …)" },
+    "engine_ms": { "type": "number", "minimum": 0 },
+    "evidence_ms": { "type": "number", "minimum": 0 },
+    "ring_end_seq": { "type": "integer", "minimum": 0, "description": "clip ring sequence at the violation; the sidecar cuts the clip around it" },
+    "clip_key": { "type": ["string", "null"] },
+    "narrative": { "type": "string", "minLength": 1 },
+    "adjudicated": { "type": "boolean" },
+    "cad_revision": { "type": "string" },
+    "model_version": { "type": "string" }
+  }
+}

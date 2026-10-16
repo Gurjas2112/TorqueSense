@@ -2,7 +2,10 @@
 # Everything else comes from the platform's package manager: pacman (MSYS2 UCRT64) on Windows,
 # apt on Ubuntu. Nothing here needs vcpkg.
 include(FetchContent)
-set(USE_TLS OFF CACHE BOOL "" FORCE)                          # IXWebSocket: plain ws:// on localhost,
+# CMake 4 (MSYS2 ships 4.4) refuses projects that declare cmake_minimum_required below 3.5, and
+# miniz 3.0.2 — which OpenXLSX v0.5.1 fetches — still does. Scoped to this file's fetched sources.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+set(USE_TLS OFF CACHE BOOL "" FORCE)                        # IXWebSocket: plain ws:// on localhost,
 set(USE_ZLIB OFF CACHE BOOL "" FORCE)                         # no compression needed
 set(HDR_LOG_REQUIRED OFF CACHE BOOL "" FORCE)                 # histograms in memory; no zlib log format
 set(HDR_HISTOGRAM_BUILD_PROGRAMS OFF CACHE BOOL "" FORCE)
@@ -11,6 +14,10 @@ set(OPENXLSX_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
 set(OPENXLSX_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(OPENXLSX_BUILD_BENCHMARKS OFF CACHE BOOL "" FORCE)
 set(OPENXLSX_CREATE_DOCS OFF CACHE BOOL "" FORCE)
+# OpenXLSX probes the system for pugixml first; MSYS2's pugixml 1.16 config defines `pugixml` but not
+# the `pugixml::static` OpenXLSX asks for, so it then fetches 1.15 and the two target names collide.
+# Fetch all of OpenXLSX's own dependencies instead: self-contained, and the same on every machine.
+set(FORCE_FETCH_ALL ON CACHE BOOL "" FORCE)
 
 FetchContent_Declare(ixwebsocket   GIT_REPOSITORY https://github.com/machinezone/IXWebSocket   GIT_TAG v12.1.0 GIT_SHALLOW TRUE)
 FetchContent_Declare(httplib       GIT_REPOSITORY https://github.com/yhirose/cpp-httplib       GIT_TAG v0.61.0 GIT_SHALLOW TRUE)

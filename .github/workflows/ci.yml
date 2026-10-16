@@ -11,7 +11,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y clang ninja-build libgtest-dev libgmock-dev libbenchmark-dev \
-                                  nlohmann-json3-dev libspdlog-dev
+                                  nlohmann-json3-dev libspdlog-dev libyaml-cpp-dev
       - run: cmake --preset ${{ matrix.preset }} && cmake --build --preset ${{ matrix.preset }}
       - run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure --repeat until-fail:5
 
@@ -27,7 +27,7 @@ jobs:
           install: git
           pacboy: >-
             toolchain:p cmake:p ninja:p opencv:p opencascade:p
-            spdlog:p gtest:p benchmark:p nlohmann-json:p
+            spdlog:p gtest:p benchmark:p nlohmann-json:p yaml-cpp:p
       - run: cmake --preset windows-ci && cmake --build --preset windows-ci
       - run: ctest --preset windows-ci
 
@@ -103,4 +103,6 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4          # the generators are pinned npm packages (scripts/gen-contracts.sh)
+        with: { node-version: 22 }
       - run: ./scripts/gen-contracts.sh && git diff --exit-code

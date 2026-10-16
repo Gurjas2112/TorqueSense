@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://torquesense.dev/contracts/adjudication.schema.json",
+  "title": "Adjudication",
+  "description": "Engine io thread <-> sidecar (:8001), POST /v1/adjudicate. The engine names a frame in the SharedClipRing and an inspection point's crop; the sidecar grounds a phrase in it with Florence-2. Never on the alert path (I3, I11): an answer can only resolve an ambiguous state commit.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["request"],
+  "properties": {
+    "request": { "$ref": "#/definitions/AdjudicationRequest" },
+    "response": { "$ref": "#/definitions/AdjudicationResponse" }
+  },
+  "definitions": {
+    "AdjudicationRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "station_id", "ip", "family", "candidate_state", "ring_seq", "crop"],
+      "properties": {
+        "request_id": { "type": "string" },
+        "station_id": { "type": "string" },
+        "ip": { "type": "string" },
+        "family": { "type": "string" },
+        "candidate_state": { "type": "string", "description": "the state the detector thinks it sees, with confidence in the ambiguous band" },
+        "conf": { "type": "number" },
+        "phrase": { "type": "string", "description": "what to ground, from the family library; defaults to the family's phrase for candidate_state" },
+        "ring_seq": { "type": "integer", "minimum": 0, "description": "SharedClipRing sequence of the frame" },
+        "crop": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["x", "y", "w", "h"],
+          "properties": {
+            "x": { "type": "integer" }, "y": { "type": "integer" },
+            "w": { "type": "integer", "minimum": 1 }, "h": { "type": "integer", "minimum": 1 }
+          }
+        }
+      }
+    },
+    "AdjudicationResponse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_id", "confirmed", "latency_ms"],
+      "properties": {
+        "request_id": { "type": "string" },
+        "confirmed": { "type": "boolean", "description": "true if the grounded phrase sits on the inspection point" },
+        "boxes": { "type": "array", "items": { "type": "array", "items": { "type": "number" }, "minItems": 4, "maxItems": 4 } },
+        "model": { "type": "string" },
+        "revision": { "type": "string" },
+        "latency_ms": { "type": "number" },
+        "cached": { "type": "boolean" },
+        "error": { "type": ["string", "null"] }
+      }
+    }
+  }
+}
