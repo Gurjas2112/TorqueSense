@@ -185,3 +185,31 @@ publishable key: reads anomalies, cycles, station_health, health_events, ftr_hou
 **Not run:** the network-pull drill (pull the link mid-cycle; alerts continue; the outbox drains in
 order). It needs the adapter disabled by hand (👤); the ordering it relies on is covered by
 `api/tests/test_outbox.py` (a dropped link stops the flush, order survives, a restart loses nothing).
+
+## Florence-2 in the loop — 2026-10-16
+
+`florence-community/Florence-2-base` at commit `00921df66db728a9ceb750f5eca43e5c203a2051` (I12), torch
+2.14.1+cu130, transformers 5.20.1, on the RTX 3060: loaded in 67.9 s (first load includes the
+download); whole-GPU memory in use with the sidecar loaded: 797 MiB. `edge_hand_occlusion` drove
+bolt 3 into the 0.35–0.65 band: the engine held the state and asked the sidecar through its circuit
+breaker (1 adjudication served, circuit closed); the scenario raised no violation, as it must.
+
+```text
+direct probe, six calls on frames from the live clip ring:
+Florence-2 latency ms per call: [750.0, 15.0, 0.0, 0.0, 0.0, 16.0]
+```
+
+One uncached call took **750 ms** — slower than the spec's 200–400 ms estimate; repeats of the same crop
+are answered from the 256-entry cache. Not yet measured: the agreement rate on ambiguous crops
+(spec Section 30 asks for it before the adjudicator is trusted), which needs labelled real crops.
+
+## Dashboard, HMI, Node-RED (Phase 8) — 2026-10-16
+
+```text
+> npx vitest run          6 passed
+> npx playwright test     5 passed: GREEN · RED (strobe + corrective order) · AMBER (PLC down) ·
+                          offline after one silent second · the HMI accepts no input
+```
+
+Node-RED 5.0.8 (tools/node-red) reads the soft PLC's tags over OPC-UA and lights GREEN and
+INSPECTION ONLINE live; the demo stack runs natively from `scripts/start-dev.ps1`.

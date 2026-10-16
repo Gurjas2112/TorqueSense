@@ -3,6 +3,7 @@
 profile: wheel-fitment-rl
 title: "Wheel and tyre fitment, 5-lug hub, 114.3 mm PCD — the PS4 reference"
 geometry: cad                 # cad: positions from the STEP file | measured: with a ruler
+cad_revision: C               # RL_WHEEL_ASSY_REV_C.step (spec Section 21: the provenance chip)
 registration: fixed
 
 cameras:

@@ -1,0 +1,25 @@
+/* web/src/styles/tokens.css — spec Section 21. Shop-floor dark: no glare on a station screen. The three
+   state colours differ in luminance as well as hue, so they survive greyscale and red-green colour
+   blindness. Check them on the venue projector: projectors wash out amber first. */
+:root {
+  --bg: #0f1115;
+  --surface: #171a21;
+  --surface-2: #1f232c;
+  --text: #e8eaed;
+  --text-muted: #9aa0a6;
+  --line: #2a2f3a;
+
+  --state-ok: #22c55e;      /* complete */
+  --state-active: #f5a524;  /* in progress, next bolt */
+  --state-fault: #ef4444;   /* violation */
+  --state-info: #0e7c86;    /* CAD provenance, links */
+
+  --focus: #7dd3fc;
+  --radius: 8px;
+
+  --t-hmi-hero: 700 96px/1.05 'IBM Plex Sans', system-ui, sans-serif;
+  --t-hmi-label: 600 40px/1.1 'IBM Plex Sans', system-ui, sans-serif;
+  --t-h1: 600 24px/1.25 'IBM Plex Sans', system-ui, sans-serif;
+  --t-body: 400 14px/1.45 'IBM Plex Sans', system-ui, sans-serif;
+  --t-mono: 500 13px/1.4 'IBM Plex Mono', ui-monospace, monospace;
+}

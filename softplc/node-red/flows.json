@@ -1,0 +1,485 @@
+[
+  {
+    "id": "tab1",
+    "type": "tab",
+    "label": "Station tags",
+    "info": "Reads the soft PLC's OPC-UA tags (ns=2) every 250 ms and shows them as lamps \u2014 proof the alert is a real protocol write, not a coloured div. Endpoint opc.tcp://127.0.0.1:4840; leave the server URL at its default (docs/adr/0007)."
+  },
+  {
+    "id": "ep1",
+    "type": "OpcUa-Endpoint",
+    "endpoint": "opc.tcp://127.0.0.1:4840",
+    "secpol": "None",
+    "secmode": "None",
+    "none": true,
+    "login": false,
+    "usercert": false,
+    "usercertificate": "",
+    "userprivatekey": ""
+  },
+  {
+    "id": "base1",
+    "type": "ui-base",
+    "name": "TorqueSense",
+    "path": "/dashboard",
+    "includeClientData": true,
+    "acceptsClientConfig": [
+      "ui-notification",
+      "ui-control"
+    ],
+    "showPathInSidebar": false,
+    "navigationStyle": "none"
+  },
+  {
+    "id": "theme1",
+    "type": "ui-theme",
+    "name": "Shop floor",
+    "colors": {
+      "surface": "#171A21",
+      "primary": "#0E7C86",
+      "bgPage": "#0F1115",
+      "groupBg": "#171A21",
+      "groupOutline": "#2A2F3A"
+    },
+    "sizes": {
+      "pagePadding": "12px",
+      "groupGap": "12px",
+      "groupBorderRadius": "8px",
+      "widgetGap": "12px"
+    }
+  },
+  {
+    "id": "page1",
+    "type": "ui-page",
+    "name": "Tags",
+    "ui": "base1",
+    "path": "/tags",
+    "layout": "grid",
+    "theme": "theme1",
+    "order": 1
+  },
+  {
+    "id": "grp1",
+    "type": "ui-group",
+    "name": "Station W14 \u2014 OPC-UA tags",
+    "page": "page1",
+    "width": "12",
+    "height": "1",
+    "order": 1
+  },
+  {
+    "id": "t0_tick",
+    "type": "inject",
+    "z": "tab1",
+    "name": "every 250 ms",
+    "repeat": "0.25",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 60,
+    "wires": [
+      [
+        "t0_item"
+      ]
+    ]
+  },
+  {
+    "id": "t0_item",
+    "type": "OpcUa-Item",
+    "z": "tab1",
+    "item": "ns=2;s=Station.W14.Andon.Green",
+    "datatype": "Boolean",
+    "value": "",
+    "name": "Andon.Green",
+    "x": 360,
+    "y": 60,
+    "wires": [
+      [
+        "t0_read"
+      ]
+    ]
+  },
+  {
+    "id": "t0_read",
+    "type": "OpcUa-Client",
+    "z": "tab1",
+    "endpoint": "ep1",
+    "action": "read",
+    "deadbandtype": "a",
+    "deadbandvalue": 1,
+    "time": 10,
+    "timeUnit": "s",
+    "certificate": "n",
+    "localfile": "",
+    "localkeyfile": "",
+    "securitymode": "None",
+    "securitypolicy": "None",
+    "name": "read Andon.Green",
+    "x": 580,
+    "y": 60,
+    "wires": [
+      [
+        "t0_lamp"
+      ]
+    ]
+  },
+  {
+    "id": "t0_lamp",
+    "type": "ui-template",
+    "z": "tab1",
+    "group": "grp1",
+    "page": "",
+    "ui": "",
+    "name": "GREEN",
+    "order": 1,
+    "width": "2",
+    "height": "2",
+    "head": "",
+    "templateScope": "local",
+    "className": "",
+    "format": "<template><div style=\"text-align:center;font-family:'IBM Plex Mono',monospace\"><div :style=\"{width:'64px',height:'64px',margin:'8px auto',borderRadius:'50%',border:'3px solid #2A2F3A',background: msg?.payload ? '#22C55E' : '#1F232C', boxShadow: msg?.payload ? '0 0 24px #22C55E' : 'none'}\"></div><div style=\"color:#E8EAED;font-size:13px\">GREEN</div><div style=\"color:#9AA0A6;font-size:11px\">Station.W14.Andon.Green</div></div></template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "x": 820,
+    "y": 60,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "t1_tick",
+    "type": "inject",
+    "z": "tab1",
+    "name": "every 250 ms",
+    "repeat": "0.25",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 120,
+    "wires": [
+      [
+        "t1_item"
+      ]
+    ]
+  },
+  {
+    "id": "t1_item",
+    "type": "OpcUa-Item",
+    "z": "tab1",
+    "item": "ns=2;s=Station.W14.Andon.Amber",
+    "datatype": "Boolean",
+    "value": "",
+    "name": "Andon.Amber",
+    "x": 360,
+    "y": 120,
+    "wires": [
+      [
+        "t1_read"
+      ]
+    ]
+  },
+  {
+    "id": "t1_read",
+    "type": "OpcUa-Client",
+    "z": "tab1",
+    "endpoint": "ep1",
+    "action": "read",
+    "deadbandtype": "a",
+    "deadbandvalue": 1,
+    "time": 10,
+    "timeUnit": "s",
+    "certificate": "n",
+    "localfile": "",
+    "localkeyfile": "",
+    "securitymode": "None",
+    "securitypolicy": "None",
+    "name": "read Andon.Amber",
+    "x": 580,
+    "y": 120,
+    "wires": [
+      [
+        "t1_lamp"
+      ]
+    ]
+  },
+  {
+    "id": "t1_lamp",
+    "type": "ui-template",
+    "z": "tab1",
+    "group": "grp1",
+    "page": "",
+    "ui": "",
+    "name": "AMBER",
+    "order": 2,
+    "width": "2",
+    "height": "2",
+    "head": "",
+    "templateScope": "local",
+    "className": "",
+    "format": "<template><div style=\"text-align:center;font-family:'IBM Plex Mono',monospace\"><div :style=\"{width:'64px',height:'64px',margin:'8px auto',borderRadius:'50%',border:'3px solid #2A2F3A',background: msg?.payload ? '#F5A524' : '#1F232C', boxShadow: msg?.payload ? '0 0 24px #F5A524' : 'none'}\"></div><div style=\"color:#E8EAED;font-size:13px\">AMBER</div><div style=\"color:#9AA0A6;font-size:11px\">Station.W14.Andon.Amber</div></div></template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "x": 820,
+    "y": 120,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "t2_tick",
+    "type": "inject",
+    "z": "tab1",
+    "name": "every 250 ms",
+    "repeat": "0.25",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 180,
+    "wires": [
+      [
+        "t2_item"
+      ]
+    ]
+  },
+  {
+    "id": "t2_item",
+    "type": "OpcUa-Item",
+    "z": "tab1",
+    "item": "ns=2;s=Station.W14.Andon.Red",
+    "datatype": "Boolean",
+    "value": "",
+    "name": "Andon.Red",
+    "x": 360,
+    "y": 180,
+    "wires": [
+      [
+        "t2_read"
+      ]
+    ]
+  },
+  {
+    "id": "t2_read",
+    "type": "OpcUa-Client",
+    "z": "tab1",
+    "endpoint": "ep1",
+    "action": "read",
+    "deadbandtype": "a",
+    "deadbandvalue": 1,
+    "time": 10,
+    "timeUnit": "s",
+    "certificate": "n",
+    "localfile": "",
+    "localkeyfile": "",
+    "securitymode": "None",
+    "securitypolicy": "None",
+    "name": "read Andon.Red",
+    "x": 580,
+    "y": 180,
+    "wires": [
+      [
+        "t2_lamp"
+      ]
+    ]
+  },
+  {
+    "id": "t2_lamp",
+    "type": "ui-template",
+    "z": "tab1",
+    "group": "grp1",
+    "page": "",
+    "ui": "",
+    "name": "RED",
+    "order": 3,
+    "width": "2",
+    "height": "2",
+    "head": "",
+    "templateScope": "local",
+    "className": "",
+    "format": "<template><div style=\"text-align:center;font-family:'IBM Plex Mono',monospace\"><div :style=\"{width:'64px',height:'64px',margin:'8px auto',borderRadius:'50%',border:'3px solid #2A2F3A',background: msg?.payload ? '#EF4444' : '#1F232C', boxShadow: msg?.payload ? '0 0 24px #EF4444' : 'none'}\"></div><div style=\"color:#E8EAED;font-size:13px\">RED</div><div style=\"color:#9AA0A6;font-size:11px\">Station.W14.Andon.Red</div></div></template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "x": 820,
+    "y": 180,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "t3_tick",
+    "type": "inject",
+    "z": "tab1",
+    "name": "every 250 ms",
+    "repeat": "0.25",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 240,
+    "wires": [
+      [
+        "t3_item"
+      ]
+    ]
+  },
+  {
+    "id": "t3_item",
+    "type": "OpcUa-Item",
+    "z": "tab1",
+    "item": "ns=2;s=Station.W14.Conveyor.HoldReq",
+    "datatype": "Boolean",
+    "value": "",
+    "name": "Conveyor.HoldReq",
+    "x": 360,
+    "y": 240,
+    "wires": [
+      [
+        "t3_read"
+      ]
+    ]
+  },
+  {
+    "id": "t3_read",
+    "type": "OpcUa-Client",
+    "z": "tab1",
+    "endpoint": "ep1",
+    "action": "read",
+    "deadbandtype": "a",
+    "deadbandvalue": 1,
+    "time": 10,
+    "timeUnit": "s",
+    "certificate": "n",
+    "localfile": "",
+    "localkeyfile": "",
+    "securitymode": "None",
+    "securitypolicy": "None",
+    "name": "read Conveyor.HoldReq",
+    "x": 580,
+    "y": 240,
+    "wires": [
+      [
+        "t3_lamp"
+      ]
+    ]
+  },
+  {
+    "id": "t3_lamp",
+    "type": "ui-template",
+    "z": "tab1",
+    "group": "grp1",
+    "page": "",
+    "ui": "",
+    "name": "CONVEYOR HOLD REQ",
+    "order": 4,
+    "width": "2",
+    "height": "2",
+    "head": "",
+    "templateScope": "local",
+    "className": "",
+    "format": "<template><div style=\"text-align:center;font-family:'IBM Plex Mono',monospace\"><div :style=\"{width:'64px',height:'64px',margin:'8px auto',borderRadius:'50%',border:'3px solid #2A2F3A',background: msg?.payload ? '#EF4444' : '#1F232C', boxShadow: msg?.payload ? '0 0 24px #EF4444' : 'none'}\"></div><div style=\"color:#E8EAED;font-size:13px\">CONVEYOR HOLD REQ</div><div style=\"color:#9AA0A6;font-size:11px\">Station.W14.Conveyor.HoldReq</div></div></template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "x": 820,
+    "y": 240,
+    "wires": [
+      []
+    ]
+  },
+  {
+    "id": "t4_tick",
+    "type": "inject",
+    "z": "tab1",
+    "name": "every 250 ms",
+    "repeat": "0.25",
+    "once": true,
+    "onceDelay": "1",
+    "topic": "",
+    "payload": "",
+    "payloadType": "date",
+    "x": 140,
+    "y": 300,
+    "wires": [
+      [
+        "t4_item"
+      ]
+    ]
+  },
+  {
+    "id": "t4_item",
+    "type": "OpcUa-Item",
+    "z": "tab1",
+    "item": "ns=2;s=Station.W14.InspectionOnline",
+    "datatype": "Boolean",
+    "value": "",
+    "name": "InspectionOnline",
+    "x": 360,
+    "y": 300,
+    "wires": [
+      [
+        "t4_read"
+      ]
+    ]
+  },
+  {
+    "id": "t4_read",
+    "type": "OpcUa-Client",
+    "z": "tab1",
+    "endpoint": "ep1",
+    "action": "read",
+    "deadbandtype": "a",
+    "deadbandvalue": 1,
+    "time": 10,
+    "timeUnit": "s",
+    "certificate": "n",
+    "localfile": "",
+    "localkeyfile": "",
+    "securitymode": "None",
+    "securitypolicy": "None",
+    "name": "read InspectionOnline",
+    "x": 580,
+    "y": 300,
+    "wires": [
+      [
+        "t4_lamp"
+      ]
+    ]
+  },
+  {
+    "id": "t4_lamp",
+    "type": "ui-template",
+    "z": "tab1",
+    "group": "grp1",
+    "page": "",
+    "ui": "",
+    "name": "INSPECTION ONLINE",
+    "order": 5,
+    "width": "2",
+    "height": "2",
+    "head": "",
+    "templateScope": "local",
+    "className": "",
+    "format": "<template><div style=\"text-align:center;font-family:'IBM Plex Mono',monospace\"><div :style=\"{width:'64px',height:'64px',margin:'8px auto',borderRadius:'50%',border:'3px solid #2A2F3A',background: msg?.payload ? '#22C55E' : '#1F232C', boxShadow: msg?.payload ? '0 0 24px #22C55E' : 'none'}\"></div><div style=\"color:#E8EAED;font-size:13px\">INSPECTION ONLINE</div><div style=\"color:#9AA0A6;font-size:11px\">Station.W14.InspectionOnline</div></div></template>",
+    "storeOutMessages": true,
+    "passthru": false,
+    "resendOnRefresh": true,
+    "x": 820,
+    "y": 300,
+    "wires": [
+      []
+    ]
+  }
+]

@@ -1,5 +1,5 @@
 {
-  "cad_revision": "cad",
+  "cad_revision": "C",
   "cameras": [
     {
       "aspect": 1.7777777777777777,
@@ -133,7 +133,7 @@
     }
   ],
   "profile": "wheel-fitment-rl",
-  "profile_version": "bdea81aa8b67",
+  "profile_version": "cfb6f63f46a0",
   "schema": "torquesense.procedure/1",
   "steps": [
     {
