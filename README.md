@@ -70,7 +70,7 @@ copy .env.example .env            # fill in your own Supabase values; .env is gi
 
 Without a camera or trained model, the engine runs on the `replay` provider (recorded detections)
 or the `schematic` provider (states read from the pixels of schematic sample videos). Verify a sample
-frame by frame: `torquesense --sample samples\door-trim --verify-media all`.
+frame by frame: `torquesense --sample samples\door-trim-harness --verify-media all`.
 
 ## Repository map
 
