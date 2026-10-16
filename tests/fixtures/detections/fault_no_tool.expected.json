@@ -1,0 +1,57 @@
+{
+ "scenario": "fault_no_tool",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "EVIDENCE_MISSING",
+   "step": "torque",
+   "ip": "bolt-1",
+   "signal": "Station.W14.Nutrunner.ResultOK",
+   "window_ms": [
+    4533.333333333333,
+    4666.666666666667
+   ]
+  },
+  {
+   "kind": "EVIDENCE_MISSING",
+   "step": "torque",
+   "ip": "bolt-3",
+   "signal": "Station.W14.Nutrunner.ResultOK",
+   "window_ms": [
+    5333.333333333333,
+    5466.666666666667
+   ]
+  },
+  {
+   "kind": "EVIDENCE_MISSING",
+   "step": "torque",
+   "ip": "bolt-5",
+   "signal": "Station.W14.Nutrunner.ResultOK",
+   "window_ms": [
+    6133.333333333333,
+    6266.666666666667
+   ]
+  },
+  {
+   "kind": "EVIDENCE_MISSING",
+   "step": "torque",
+   "ip": "bolt-2",
+   "signal": "Station.W14.Nutrunner.ResultOK",
+   "window_ms": [
+    8933.333333333334,
+    9066.666666666666
+   ]
+  },
+  {
+   "kind": "EVIDENCE_MISSING",
+   "step": "torque",
+   "ip": "bolt-4",
+   "signal": "Station.W14.Nutrunner.ResultOK",
+   "window_ms": [
+    8933.333333333334,
+    9066.666666666666
+   ]
+  }
+ ]
+}

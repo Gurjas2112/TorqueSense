@@ -1,0 +1,6 @@
+{
+ "scenario": "edge_hand_occlusion",
+ "release_ok": true,
+ "must_alert": false,
+ "violations": []
+}

@@ -1,0 +1,6 @@
+{
+ "scenario": "edge_second_person",
+ "release_ok": true,
+ "must_alert": false,
+ "violations": []
+}

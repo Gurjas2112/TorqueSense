@@ -1,0 +1,95 @@
+# The ten scenario sequences of spec Sections 21 and 31, as data. synth/scenarios.py turns each one
+# into per-frame perception output (tests/fixtures/detections/<name>.json) and its expected verdict
+# (<name>.expected.json, from the reference interpreter); synth/generate.py renders the same timeline
+# with BlenderProc once the CAD exists. Each scenario starts from a trace's committed states and adds
+# what a camera adds: hands, occlusion, single-frame flicker, confidence in the ambiguous band.
+fps: 30
+scenarios:
+  cycle_correct_01:
+    title: Correct cycle
+    trace: correct
+    hands: [{from: 900, to: 6400, count: 1}]
+
+  fault_missing_bolt:
+    title: Skip bolt 3
+    events:
+      - {t: 1000, ip: bolt-1, state: seated}
+      - {t: 1100, ip: bolt-2, state: seated}
+      - {t: 1300, ip: bolt-4, state: seated}
+      - {t: 1400, ip: bolt-5, state: seated}
+      - {t: 2900, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 3000, ip: bolt-1, state: fastened}
+      - {t: 3700, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 3800, ip: bolt-5, state: fastened}
+      - {t: 4500, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 4600, ip: bolt-2, state: fastened}
+      - {t: 5300, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 5400, ip: bolt-4, state: fastened}
+    release_at: 24000
+    hands: [{from: 900, to: 5600, count: 1}]
+
+  fault_adjacent_order:
+    title: Adjacent order
+    trace: adjacent_order
+    hands: [{from: 900, to: 6400, count: 1}]
+
+  fault_interrupt_resume:
+    title: Interrupt and resume — the hero fault
+    events:
+      - {t: 1000, ip: bolt-1, state: seated}
+      - {t: 1100, ip: bolt-2, state: seated}
+      - {t: 1200, ip: bolt-3, state: seated}
+      - {t: 1300, ip: bolt-4, state: seated}
+      - {t: 1400, ip: bolt-5, state: seated}
+      - {t: 2900, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 3000, ip: bolt-1, state: fastened}
+      - {t: 3700, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 3800, ip: bolt-3, state: fastened}
+      # called away for six seconds; resumes from bolt 2, sequentially
+      - {t: 9900, tag: Station.W14.Nutrunner.ResultOK, value: true}
+      - {t: 10000, ip: bolt-2, state: fastened}
+    release_at: 14000
+    hands: [{from: 900, to: 3900, count: 1}, {from: 9700, to: 10200, count: 1}]
+
+  fault_wheel_off_axis:
+    title: Wheel off-axis — bolt 4 cannot start
+    events:
+      - {t: 1000, ip: bolt-1, state: seated}
+      - {t: 1100, ip: bolt-2, state: seated}
+      - {t: 1200, ip: bolt-3, state: seated}
+      - {t: 1400, ip: bolt-5, state: seated}
+    release_at: 24000
+    hands: [{from: 900, to: 8000, count: 1}]
+    anchor_residual_px: 9.5
+
+  fault_no_tool:
+    title: Tool never picked — no nutrunner result
+    trace: no_nutrunner_result
+    hands: [{from: 900, to: 6400, count: 1}]
+
+  fault_loosened_bolt:
+    title: Bolt 3 backed off after torque
+    trace: loosened_bolt
+    hands: [{from: 900, to: 7200, count: 1}]
+
+  fault_torque_before_all_started:
+    title: Torquing before every bolt is started
+    trace: torque_before_all_started
+    hands: [{from: 900, to: 6400, count: 1}]
+
+  edge_hand_occlusion:
+    title: Hand occlusion mid-sequence — must not alert
+    trace: correct
+    hands: [{from: 900, to: 6400, count: 1}]
+    occlude:
+      - {ip: bolt-5, from: 3900, to: 4500}     # a glove over bolt 5 just before it is torqued
+      - {ip: bolt-2, from: 4700, to: 5300}
+    flicker:
+      - {ip: bolt-4, at: 2000, state: absent}   # one frame of detector noise: debounce must absorb it
+    ambiguous:
+      - {ip: bolt-3, from: 3700, to: 3800, conf: 0.5}
+
+  edge_second_person:
+    title: Second person in frame — must not alert
+    trace: correct
+    hands: [{from: 900, to: 6400, count: 1}, {from: 2500, to: 5000, count: 2}]

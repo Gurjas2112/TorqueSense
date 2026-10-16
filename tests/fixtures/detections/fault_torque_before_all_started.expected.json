@@ -1,0 +1,55 @@
+{
+ "scenario": "fault_torque_before_all_started",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-1",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    2933.3333333333335,
+    3066.6666666666665
+   ]
+  },
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-3",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    3733.3333333333335,
+    3866.6666666666665
+   ]
+  },
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-5",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    4533.333333333333,
+    4666.666666666667
+   ]
+  },
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-2",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    5333.333333333333,
+    5466.666666666667
+   ]
+  }
+ ]
+}

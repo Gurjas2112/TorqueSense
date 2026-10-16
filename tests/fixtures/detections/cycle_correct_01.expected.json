@@ -1,0 +1,6 @@
+{
+ "scenario": "cycle_correct_01",
+ "release_ok": true,
+ "must_alert": false,
+ "violations": []
+}

@@ -1,0 +1,47 @@
+{
+ "scenario": "fault_adjacent_order",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "SEQUENCE",
+   "step": "torque",
+   "observed": "bolt-2",
+   "expected": "bolt-3",
+   "window_ms": [
+    3733.3333333333335,
+    3866.6666666666665
+   ]
+  },
+  {
+   "kind": "SEQUENCE",
+   "step": "torque",
+   "observed": "bolt-3",
+   "expected": "bolt-5",
+   "window_ms": [
+    4533.333333333333,
+    4666.666666666667
+   ]
+  },
+  {
+   "kind": "SEQUENCE",
+   "step": "torque",
+   "observed": "bolt-4",
+   "expected": "bolt-2",
+   "window_ms": [
+    5333.333333333333,
+    5466.666666666667
+   ]
+  },
+  {
+   "kind": "SEQUENCE",
+   "step": "torque",
+   "observed": "bolt-5",
+   "expected": "bolt-4",
+   "window_ms": [
+    6133.333333333333,
+    6266.666666666667
+   ]
+  }
+ ]
+}

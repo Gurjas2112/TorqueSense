@@ -1,0 +1,44 @@
+{
+ "scenario": "fault_wheel_off_axis",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "STEP_TIMEOUT",
+   "step": "hand_start",
+   "missing": [
+    "bolt-4"
+   ],
+   "window_ms": [
+    23933.333333333332,
+    24066.666666666668
+   ]
+  },
+  {
+   "kind": "INCOMPLETE_AT_RELEASE",
+   "step": "hand_start",
+   "missing": [
+    "bolt-4"
+   ],
+   "window_ms": [
+    23933.333333333332,
+    24066.666666666668
+   ]
+  },
+  {
+   "kind": "INCOMPLETE_AT_RELEASE",
+   "step": "torque",
+   "missing": [
+    "bolt-1",
+    "bolt-3",
+    "bolt-5",
+    "bolt-2",
+    "bolt-4"
+   ],
+   "window_ms": [
+    23933.333333333332,
+    24066.666666666668
+   ]
+  }
+ ]
+}

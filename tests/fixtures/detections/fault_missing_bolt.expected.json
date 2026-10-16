@@ -1,0 +1,88 @@
+{
+ "scenario": "fault_missing_bolt",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-1",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    2933.3333333333335,
+    3066.6666666666665
+   ]
+  },
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-5",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    3733.3333333333335,
+    3866.6666666666665
+   ]
+  },
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-2",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    4533.333333333333,
+    4666.666666666667
+   ]
+  },
+  {
+   "kind": "PRECEDENCE",
+   "step": "torque",
+   "ip": "bolt-4",
+   "before": [
+    "hand_start"
+   ],
+   "window_ms": [
+    5333.333333333333,
+    5466.666666666667
+   ]
+  },
+  {
+   "kind": "STEP_TIMEOUT",
+   "step": "hand_start",
+   "missing": [
+    "bolt-3"
+   ],
+   "window_ms": [
+    23933.333333333332,
+    24066.666666666668
+   ]
+  },
+  {
+   "kind": "INCOMPLETE_AT_RELEASE",
+   "step": "hand_start",
+   "missing": [
+    "bolt-3"
+   ],
+   "window_ms": [
+    23933.333333333332,
+    24066.666666666668
+   ]
+  },
+  {
+   "kind": "INCOMPLETE_AT_RELEASE",
+   "step": "torque",
+   "missing": [
+    "bolt-3"
+   ],
+   "window_ms": [
+    23933.333333333332,
+    24066.666666666668
+   ]
+  }
+ ]
+}

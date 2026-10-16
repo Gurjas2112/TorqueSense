@@ -1,0 +1,118 @@
+{
+ "scenario": "fault_wheel_off_axis",
+ "title": "Wheel off-axis \u2014 bolt 4 cannot start",
+ "profile": "wheel-fitment-rl",
+ "fps": 30.0,
+ "frame_ms": 33.333333333333336,
+ "n_frames": 750,
+ "release_at_ms": 24000,
+ "ips": [
+  "bolt-1",
+  "bolt-2",
+  "bolt-3",
+  "bolt-4",
+  "bolt-5"
+ ],
+ "states": [
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ]
+ ],
+ "keyframes": [
+  {
+   "frame": 0,
+   "ip": 0,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 1,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 2,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 3,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 4,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 29,
+   "ip": 0,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 32,
+   "ip": 1,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 35,
+   "ip": 2,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 41,
+   "ip": 4,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  }
+ ],
+ "hands": [
+  {
+   "from_frame": 27,
+   "to_frame": 240,
+   "count": 1
+  }
+ ],
+ "tags": [],
+ "anchor_residual_px": 9.5,
+ "synthetic": true
+}

@@ -1,0 +1,29 @@
+{
+ "scenario": "fault_interrupt_resume",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "SEQUENCE",
+   "step": "torque",
+   "observed": "bolt-2",
+   "expected": "bolt-5",
+   "window_ms": [
+    9933.333333333334,
+    10066.666666666666
+   ]
+  },
+  {
+   "kind": "INCOMPLETE_AT_RELEASE",
+   "step": "torque",
+   "missing": [
+    "bolt-5",
+    "bolt-4"
+   ],
+   "window_ms": [
+    13933.333333333334,
+    14066.666666666666
+   ]
+  }
+ ]
+}

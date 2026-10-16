@@ -1,0 +1,191 @@
+{
+ "scenario": "edge_second_person",
+ "title": "Second person in frame \u2014 must not alert",
+ "profile": "wheel-fitment-rl",
+ "fps": 30.0,
+ "frame_ms": 33.333333333333336,
+ "n_frames": 390,
+ "release_at_ms": 12000,
+ "ips": [
+  "bolt-1",
+  "bolt-2",
+  "bolt-3",
+  "bolt-4",
+  "bolt-5"
+ ],
+ "states": [
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ],
+  [
+   "absent",
+   "seated",
+   "fastened"
+  ]
+ ],
+ "keyframes": [
+  {
+   "frame": 0,
+   "ip": 0,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 1,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 2,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 3,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 0,
+   "ip": 4,
+   "rank": 0,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 29,
+   "ip": 0,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 32,
+   "ip": 1,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 35,
+   "ip": 2,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 38,
+   "ip": 3,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 41,
+   "ip": 4,
+   "rank": 1,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 89,
+   "ip": 0,
+   "rank": 2,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 113,
+   "ip": 2,
+   "rank": 2,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 137,
+   "ip": 4,
+   "rank": 2,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 161,
+   "ip": 1,
+   "rank": 2,
+   "conf": 0.95,
+   "flags": 1
+  },
+  {
+   "frame": 185,
+   "ip": 3,
+   "rank": 2,
+   "conf": 0.95,
+   "flags": 1
+  }
+ ],
+ "hands": [
+  {
+   "from_frame": 27,
+   "to_frame": 192,
+   "count": 1
+  },
+  {
+   "from_frame": 75,
+   "to_frame": 150,
+   "count": 2
+  }
+ ],
+ "tags": [
+  {
+   "t_ms": 2900,
+   "tag": "Station.W14.Nutrunner.ResultOK",
+   "value": true
+  },
+  {
+   "t_ms": 3700,
+   "tag": "Station.W14.Nutrunner.ResultOK",
+   "value": true
+  },
+  {
+   "t_ms": 4500,
+   "tag": "Station.W14.Nutrunner.ResultOK",
+   "value": true
+  },
+  {
+   "t_ms": 5300,
+   "tag": "Station.W14.Nutrunner.ResultOK",
+   "value": true
+  },
+  {
+   "t_ms": 6100,
+   "tag": "Station.W14.Nutrunner.ResultOK",
+   "value": true
+  }
+ ],
+ "anchor_residual_px": 1.2,
+ "synthetic": true
+}

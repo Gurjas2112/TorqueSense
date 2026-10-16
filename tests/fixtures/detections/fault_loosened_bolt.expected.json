@@ -1,0 +1,32 @@
+{
+ "scenario": "fault_loosened_bolt",
+ "release_ok": false,
+ "must_alert": true,
+ "violations": [
+  {
+   "kind": "REGRESSION",
+   "step": "torque",
+   "ip": "bolt-3",
+   "now": "seated",
+   "window_ms": [
+    6933.333333333333,
+    7066.666666666667
+   ]
+  },
+  {
+   "kind": "INCOMPLETE_AT_RELEASE",
+   "step": "torque",
+   "missing": [
+    "bolt-1",
+    "bolt-3",
+    "bolt-5",
+    "bolt-2",
+    "bolt-4"
+   ],
+   "window_ms": [
+    11933.333333333334,
+    12066.666666666666
+   ]
+  }
+ ]
+}
