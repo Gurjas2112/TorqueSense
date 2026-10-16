@@ -19,6 +19,7 @@
 
 #include "Affinity.hpp"
 #include "LineSimulator.hpp"
+#include "SchematicLayout.hpp"
 #include "contracts.hpp"
 #include "sunverify/procedure/Describe.hpp"
 #include "sunverify/procedure/XlsxReporter.hpp"
@@ -142,6 +143,18 @@ struct IoSide::Impl {
 
   explicit Impl(Pipeline& pp) : p(pp), cfg(pp.config()), prof(pp.profile()) {
     project_points();
+    if (std::string(pp.provider()) == "schematic") {
+      // the frame on screen tiles every camera (synth/schematic.py): overlay each point where it is drawn,
+      // in that frame's full-resolution pixels, not in its own camera's frame
+      std::ifstream in(cfg.profile_dir / "procedure.json");
+      const SchematicLayout lay = schematic_layout(json::parse(in));
+      const double k = 1920.0 / cfg.process_width;
+      for (std::size_t i = 0; i < lay.pts.size() && i < u_px.size(); ++i) {
+        u_px[i] = lay.pts[i].x * k;
+        v_px[i] = lay.pts[i].y * k;
+      }
+      frame_w = 1920;
+    }
     report.station = cfg.station_id;
     report.profile = prof.name();
     report.profile_version = prof.version();

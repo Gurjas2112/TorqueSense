@@ -230,3 +230,13 @@ INCOMPLETE_AT_RELEASE clips    evidence 1.4 ms  | Release requested with step 'c
 Windshield and electronics enclosure stay at procedure level, as Section 22 plans: both pass the
 conformance suite in the C++ engine and the reference (22 traces, 0 disagreements) and their media
 pass `MediaConformance`. `python samples\run_samples.py --template` PASS, 6/6 kinds.
+
+## The recorded demo run — 2026-10-16
+
+`app_screenshots_screen_recording/` (16 screenshots, 116 s video) was captured from the live stack:
+two engines, soft PLC, Node-RED, Florence-2, API, Supabase, Vercel. During the first recording attempt
+W-14 recorded one alert at **193.5 ms engine / 226.7 ms evidence** (n = 20; p50 2.5 / 8.6 ms) while
+two engines, Florence-2, Node-RED, a headless browser and video encoding shared the laptop — inside the
+one-second requirement, far outside the ~36 ms seen unloaded, and unexplained. The second (published)
+run measured evidence p99 36.7 ms (W-14) and 38.1 ms (D-07). The outlier is recorded here rather than
+re-run away; I4 remains not run.

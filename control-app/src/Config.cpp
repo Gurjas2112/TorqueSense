@@ -86,6 +86,7 @@ StationConfig load_station_config(const std::filesystem::path& path) {
   c.heartbeat_ms = get(he, "heartbeat_ms", c.heartbeat_ms);
 
   if (const char* k = std::getenv("API_KEY")) c.api_key = k;
+  if (const char* u = std::getenv("TS_API_URL")) c.api_url = u;   // the launcher's choice of API port
   if (c.provider != "replay" && c.provider != "schematic")
     throw std::runtime_error("perception.provider '" + c.provider +
                              "' needs the ONNX Runtime build (SUNVERIFY_WITH_CUDA) and a trained model — "

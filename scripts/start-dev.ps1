@@ -11,7 +11,8 @@ param(
     [switch]$NoFlorence,
     [switch]$NoNodeRed,
     [switch]$Kiosk,
-    [switch]$Door
+    [switch]$Door,
+    [int]$ApiPort = 8000
 )
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
@@ -29,6 +30,8 @@ foreach ($line in Get-Content (Join-Path $root '.env')) {
 }
 if ($NoFlorence) { $env:TS_FLORENCE = '0' }
 $env:TS_DEMO_BASELINE_BUCKETS = '12'
+$api = "http://127.0.0.1:$ApiPort"
+$env:TS_API_URL = $api
 
 function Start-Bg([string]$name, [string]$exe, [string[]]$arguments) {
     $p = Start-Process -FilePath $exe -ArgumentList $arguments -WorkingDirectory $root -WindowStyle Hidden -PassThru `
@@ -48,8 +51,8 @@ function Wait-Url([string]$url, [int]$seconds) {
 Remove-Item -ErrorAction SilentlyContinue (Join-Path $logs 'pids.txt')
 Start-Bg 'softplc' (Join-Path $build 'softplc\softplc.exe') @('4840', '--station', 'W14', '--station', 'D07', '--bool', 'Station.W14.Nutrunner.ResultOK', '--bool', 'Station.D07.ConnectorLock')
 Start-Bg 'sidecar' $py @('-m', 'uvicorn', 'sidecar.main:app', '--host', '127.0.0.1', '--port', '8001', '--env-file', '.env')
-Start-Bg 'api' $py @('-m', 'uvicorn', 'api.main:app', '--host', '127.0.0.1', '--port', '8000', '--env-file', '.env')
-if (-not (Wait-Url 'http://127.0.0.1:8000/health' 30)) { throw 'the API did not come up: see var\logs\api.err.log' }
+Start-Bg 'api' $py @('-m', 'uvicorn', 'api.main:app', '--host', '127.0.0.1', '--port', "$ApiPort", '--env-file', '.env')
+if (-not (Wait-Url "$api/health" 30)) { throw 'the API did not come up: see var\logs\api.err.log' }
 
 $nodeRed = Join-Path $root 'tools\node-red\node_modules\node-red\red.js'
 if (-not $NoNodeRed -and (Test-Path $nodeRed)) {
@@ -69,19 +72,19 @@ if ($Door) {
 
 $agent = Join-Path $root 'build\fleet-agent\fleet-agent.exe'
 if (Test-Path $agent) {
-    Start-Bg 'agent-w14' $agent @('-station', 'W-14', '-engine', 'http://127.0.0.1:8095/health', '-api', 'http://127.0.0.1:8000/v1/health/host',
+    Start-Bg 'agent-w14' $agent @('-station', 'W-14', '-engine', 'http://127.0.0.1:8095/health', '-api', "$api/v1/health/host",
         '-disk', 'C:\', '-spool', (Join-Path $root 'var\spool\agent-w14.jsonl'))
     if ($Door) {
-        Start-Bg 'agent-d07' $agent @('-station', 'D-07', '-engine', 'http://127.0.0.1:8195/health', '-api', 'http://127.0.0.1:8000/v1/health/host',
+        Start-Bg 'agent-d07' $agent @('-station', 'D-07', '-engine', 'http://127.0.0.1:8195/health', '-api', "$api/v1/health/host",
             '-disk', 'C:\', '-spool', (Join-Path $root 'var\spool\agent-d07.jsonl'))
     }
 }
 
 Write-Host ''
-Write-Host 'dashboard  http://127.0.0.1:8000/          HMI http://127.0.0.1:8000/hmi/W-14'
-Write-Host 'harness    http://127.0.0.1:8000/harness   fleet http://127.0.0.1:8000/fleet'
+Write-Host "dashboard  $api/          HMI $api/hmi/W-14"
+Write-Host "harness    $api/harness   fleet $api/fleet"
 Write-Host 'node-red   http://127.0.0.1:1880/dashboard/tags'
-if ($Door) { Write-Host 'line       http://127.0.0.1:8000/line?stations=W-14,D-07' }
+if ($Door) { Write-Host "line       $api/line?stations=W-14,D-07" }
 if ($Kiosk) {
-    Start-Process msedge -ArgumentList '--kiosk', 'http://127.0.0.1:8000/hmi/W-14', '--edge-kiosk-type=fullscreen', '--user-data-dir=C:\dev\tools\edge-kiosk'
+    Start-Process msedge -ArgumentList '--kiosk', "$api/hmi/W-14", '--edge-kiosk-type=fullscreen', '--user-data-dir=C:\dev\tools\edge-kiosk'
 }
