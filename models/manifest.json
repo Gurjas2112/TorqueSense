@@ -1,0 +1,3 @@
+{
+  "_comment": "SHA-256 of every ONNX model the engine may load; the engine refuses a file whose hash differs (I12). Keys starting with _ are not models. Filled from training/colab_train.ipynb (Phase 3)."
+}
