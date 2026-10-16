@@ -1,8 +1,14 @@
 // torquesense — one station's verification engine (spec Section 14).
-// Phase 1: --version, which reports the build and which execution providers actually load.
+//
+//   torquesense --version                                   build, ONNX Runtime, the providers that load
+//   torquesense --conformance samples [--json out.json]     every sample trace through this engine (I16)
+//   torquesense --sample <dir> --replay-trace <trace.yaml>  one trace, printed
 #include <cstdio>
 #include <cstring>
+#include <filesystem>
 #include <string>
+
+#include "Conformance.hpp"
 
 #ifdef SUNVERIFY_WITH_CUDA
 #include <onnxruntime_cxx_api.h>
@@ -46,17 +52,46 @@ void print_providers() {
 #endif
 }
 
+const char* arg_after(int argc, char** argv, const char* flag) {
+  for (int i = 1; i + 1 < argc; ++i)
+    if (std::strcmp(argv[i], flag) == 0) return argv[i + 1];
+  return nullptr;
+}
+
+bool has(int argc, char** argv, const char* flag) {
+  for (int i = 1; i < argc; ++i)
+    if (std::strcmp(argv[i], flag) == 0) return true;
+  return false;
+}
+
+int usage() {
+  std::fprintf(stderr,
+               "usage: torquesense --version\n"
+               "       torquesense --conformance <samples-dir> [--template] [--json <out.json>]\n"
+               "       torquesense --sample <dir> --replay-trace <trace.yaml>\n");
+  return 2;
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
-  for (int i = 1; i < argc; ++i) {
-    if (std::strcmp(argv[i], "--version") == 0) {
-      std::printf("torquesense %s (GCC %d.%d.%d, __cplusplus %ld)\n", TORQUESENSE_VERSION, __GNUC__,
-                  __GNUC_MINOR__, __GNUC_PATCHLEVEL__, static_cast<long>(__cplusplus));
+  try {
+    if (has(argc, argv, "--version")) {
+      std::printf("torquesense %s (GCC %d.%d.%d, __cplusplus %ld)\n", TORQUESENSE_VERSION, __GNUC__, __GNUC_MINOR__,
+                  __GNUC_PATCHLEVEL__, static_cast<long>(__cplusplus));
       print_providers();
       return 0;
     }
+    if (const char* dir = arg_after(argc, argv, "--conformance")) {
+      const char* json = arg_after(argc, argv, "--json");
+      return sunverify::app::run_conformance(dir, json ? json : "", has(argc, argv, "--template"));
+    }
+    if (const char* sample = arg_after(argc, argv, "--sample")) {
+      if (const char* trace = arg_after(argc, argv, "--replay-trace")) return sunverify::app::run_one_trace(sample, trace);
+    }
+  } catch (const std::exception& e) {
+    std::fprintf(stderr, "torquesense: %s\n", e.what());
+    return 1;
   }
-  std::fprintf(stderr, "usage: torquesense --version\n");
-  return 2;
+  return usage();
 }

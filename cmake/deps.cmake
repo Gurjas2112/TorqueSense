@@ -39,7 +39,7 @@ else()
   set(UA_ARCH posix)
 endif()
 add_library(open62541 STATIC ${CMAKE_SOURCE_DIR}/third_party/open62541/${UA_ARCH}/open62541.c)
-target_include_directories(open62541 PUBLIC ${CMAKE_SOURCE_DIR}/third_party/open62541/${UA_ARCH})
+target_include_directories(open62541 SYSTEM PUBLIC ${CMAKE_SOURCE_DIR}/third_party/open62541/${UA_ARCH})   # vendored: not held to I5
 if(WIN32)
   target_link_libraries(open62541 PUBLIC ws2_32 iphlpapi)
 endif()

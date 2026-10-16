@@ -11,7 +11,7 @@ jobs:
       - run: |
           sudo apt-get update
           sudo apt-get install -y clang ninja-build libgtest-dev libgmock-dev libbenchmark-dev \
-                                  nlohmann-json3-dev libspdlog-dev libyaml-cpp-dev
+                                  nlohmann-json3-dev libspdlog-dev libyaml-cpp-dev python3-yaml
       - run: cmake --preset ${{ matrix.preset }} && cmake --build --preset ${{ matrix.preset }}
       - run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure --repeat until-fail:5
 

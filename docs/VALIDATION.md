@@ -47,3 +47,42 @@ affinity_prev=65535 eco=1 map=0000025b93840000 seq=1 align=64
 ## Latency (I4), accuracy (I10), VRAM (I7), TensorRT gate
 
 **Not run.** They need the G2 stack and a trained detector (Phases 3, 6, 12).
+
+## The engine agrees with the reference (I16) — 2026-10-16
+
+```text
+> torquesense --conformance samples --template
+sample                    IPs  min px   traces  derived order (C++ engine)
+_template                   4    27.7    2/2    fasten: line 2,3,1  PASS
+desk-cover-4screw           6    27.2    4/4    screws: circle 1,3,2,4  PASS
+desk-harness-clips          7    16.6    3/3    —  PASS
+door-trim-harness           8    17.4    3/3    —  PASS
+electronics-enclosure       8    17.8    2/2    cover_screws: field 2,5,3,4,6,1  PASS
+wheel-hub-5lug              5    25.6    6/6    torque: circle 1,3,5,2,4  PASS
+windshield-gasket           9    16.6    2/2    —  PASS
+
+violation kinds exercised: 6/6
+
+> python tests\differential\differential.py --engine build\windows-ci\control-app\torquesense.exe
+differential: 22 traces, 0 disagreement(s)
+```
+
+The differential test compares complete violation lists — kind, step, time and every detail field.
+
+## Zero allocation on the verify path (I1)
+
+`NoAllocation.ProcedureEngineOverTenThousandEvents`: 0 allocations over 10,000 events (good and
+faulty cycles). The full `Pipeline::tick()` test follows in Phase 6.
+
+## Fail-visible (I13) — soft PLC built with GCC 16.2 against open62541 1.4.21
+
+```text
+> python tests\plc\test_heartbeat.py
+advertised endpoint URL: ['opc.tcp://127.0.0.1:14840']
+before first beat  -> Amber: True | Online: False
+while beating      -> Amber: False | Online: True
+engine stopped     -> Amber after 1.97 s | Online: False
+```
+
+The last beat was written 0.4 s before the clock started: AMBER came 2.37 s after the last
+heartbeat, inside the 2.5 s bound.
