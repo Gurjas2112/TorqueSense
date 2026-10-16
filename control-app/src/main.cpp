@@ -5,6 +5,8 @@
 //   torquesense --sample <dir> --replay-trace <trace.yaml>  one trace, printed
 //   torquesense --config config\station_w14.yaml [--record web/public/replay/session.jsonl] [--seconds N]
 //                                                           run the station
+//   torquesense --config config\station_w14_gpu.yaml --build-trt-cache
+//                                                           build the TensorRT engine once, off stage
 #include <atomic>
 #include <chrono>
 #include <csignal>
@@ -31,6 +33,7 @@ namespace {
 void print_providers() {
 #ifdef SUNVERIFY_WITH_CUDA
   std::printf("onnxruntime %s\n", Ort::GetVersionString().c_str());
+  Ort::Env env(ORT_LOGGING_LEVEL_WARNING, "torquesense");   // providers log through the environment's logger
   const OrtApi& api = Ort::GetApi();
   {
     Ort::SessionOptions so;
@@ -113,8 +116,31 @@ int usage() {
                "       torquesense --sample <dir> --verify-media all|<trace> [--frames-csv <out.csv>]\n"
                "       torquesense --sample <dir> --classify-image <frame.png>\n"
                "       torquesense --probe-camera uvc|stream [--device 0 | --url <mjpeg>] [--size 1280x720] [--fps 30]\n"
-               "       torquesense --config <station.yaml> [--record <session.jsonl>] [--seconds N]\n");
+               "       torquesense --config <station.yaml> [--record <session.jsonl>] [--seconds N]\n"
+               "       torquesense --config <station.yaml> --build-trt-cache\n");
   return 2;
+}
+
+// Section 30, rule 2: the TensorRT engine is built once, during setup, never during a shift. This is
+// the one run where an empty cache may be filled; afterwards a missing cache refuses to start.
+int build_trt_cache(const char* config) {
+  using namespace sunverify::app;
+  StationConfig cfg = load_station_config(config);
+  if (cfg.provider != "tensorrt") {
+    std::fprintf(stderr, "--build-trt-cache: %s runs provider %s, not tensorrt\n", config, cfg.provider.c_str());
+    return 2;
+  }
+  cfg.allow_trt_build = true;
+  cfg.alert_backend = "none";
+  cfg.sidecar_enabled = false;
+  const auto t0 = std::chrono::steady_clock::now();
+  Pipeline p{cfg};
+  const double s = std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count();
+  const auto* d = p.gpu_detector();
+  std::printf("TensorRT engine %s in %.1f s under %s; detector median %.2f ms after warm-up\n",
+              d && !d->degraded() ? "built and cached" : "NOT built (provider degraded to cuda)", s,
+              (cfg.trt_cache_root / cfg.trt_version).string().c_str(), d ? d->warm_median_ms() : 0.0);
+  return d && !d->degraded() ? 0 : 1;
 }
 
 }  // namespace
@@ -140,6 +166,8 @@ int main(int argc, char** argv) {
       if (const char* f = arg_after(argc, argv, "--fps")) cs.fps = std::atof(f);
       return sunverify::app::probe_camera(cs);
     }
+    if (const char* config = arg_after(argc, argv, "--config"); config && has(argc, argv, "--build-trt-cache"))
+      return build_trt_cache(config);
     if (const char* config = arg_after(argc, argv, "--config"))
       return run_station(config, arg_after(argc, argv, "--record"), arg_after(argc, argv, "--seconds"));
     if (const char* sample = arg_after(argc, argv, "--sample")) {

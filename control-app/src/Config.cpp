@@ -49,6 +49,12 @@ StationConfig load_station_config(const std::filesystem::path& path) {
   c.conf_floor = get(pe, "conf_floor", c.conf_floor);
   c.debounce_frames = get(pe, "debounce_frames", c.debounce_frames);
   c.crop_pool_size = get(pe, "crop_pool_size", c.crop_pool_size);
+  c.detector_model = get(pe, "detector_model", c.detector_model.string());
+  c.classifier_model = get(pe, "classifier_model", c.classifier_model.string());
+  c.gpu_mem_limit_mb = get(pe, "gpu_mem_limit_mb", c.gpu_mem_limit_mb);
+  c.warmup_runs = get(pe, "warmup_runs", c.warmup_runs);
+  c.trt_cache_root = get(pe, "trt_cache", c.trt_cache_root.string());
+  c.trt_version = get(pe, "trt_version", c.trt_version);
 
   const auto pr = y["profile"];
   c.profile_dir = get(pr, "dir", c.profile_dir.string());
@@ -87,9 +93,17 @@ StationConfig load_station_config(const std::filesystem::path& path) {
 
   if (const char* k = std::getenv("API_KEY")) c.api_key = k;
   if (const char* u = std::getenv("TS_API_URL")) c.api_url = u;   // the launcher's choice of API port
-  if (c.provider != "replay" && c.provider != "schematic")
+#ifdef SUNVERIFY_WITH_CUDA
+  const bool gpu_built = true;
+#else
+  const bool gpu_built = false;
+#endif
+  const bool gpu = c.provider == "cuda" || c.provider == "tensorrt";
+  if (!gpu && c.provider != "replay" && c.provider != "schematic")
+    throw std::runtime_error("perception.provider '" + c.provider + "': expected replay, schematic, cuda or tensorrt");
+  if (gpu && !gpu_built)
     throw std::runtime_error("perception.provider '" + c.provider +
-                             "' needs the ONNX Runtime build (SUNVERIFY_WITH_CUDA) and a trained model — "
+                             "' needs the ONNX Runtime build (windows-release preset, SUNVERIFY_WITH_CUDA) — "
                              "this build runs the replay and schematic providers only");
   return c;
 }

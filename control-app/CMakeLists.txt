@@ -6,7 +6,10 @@ add_library(torquesense_core STATIC src/Conformance.cpp src/VerifyCore.cpp src/C
 target_include_directories(torquesense_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(torquesense_core PUBLIC sunverify_perception sunverify_procedure sunverify_report sunverify_ipc
                       cad_extract yaml-cpp::yaml-cpp nlohmann_json::nlohmann_json Threads::Threads
-                      PRIVATE sunverify_warnings open62541 ixwebsocket httplib::httplib hdr_histogram_static)
+                      PRIVATE sunverify_warnings open62541 ixwebsocket httplib::httplib hdr_histogram_static picosha2)
+if(SUNVERIFY_WITH_CUDA)
+  target_compile_definitions(torquesense_core PRIVATE SUNVERIFY_WITH_CUDA=1)
+endif()
 if(OpenCV_FOUND)
   target_compile_definitions(torquesense_core PRIVATE SUNVERIFY_WITH_OPENCV=1)
   target_link_libraries(torquesense_core PRIVATE ${OpenCV_LIBS})

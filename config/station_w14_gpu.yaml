@@ -1,0 +1,79 @@
+# Station W-14 on the GPU detector (spec Sections 9, 13, 30): the same station as station_w14.yaml, with
+# states read from the pixels of the rendered scenario videos by the trained models — YOLO11n for hands and
+# tools, the threaded_fastener classifier at each bolt — on ONNX Runtime's CUDA provider. This is the
+# configuration the I4 latency gate runs (Jenkinsfile, `latency_test --config config/station_w14_gpu.yaml`).
+#
+#   torquesense --config config\station_w14_gpu.yaml                       # windows-release build
+#   provider: tensorrt  →  torquesense --config … --build-trt-cache first (Section 30, rule 2)
+station:
+  id: W-14
+  name: "Wheel & Tyre Fitment, Line 2"
+  takt_seconds: 58
+
+source:
+  kind: file                                  # file | uvc | stream  (Section 8)
+  scenarios_dir: data/scenarios_rendered      # <scenario>.mp4 rendered from the CAD (synth/render_plan.py)
+  playlist: [cycle_correct_01, fault_interrupt_resume, cycle_correct_01, fault_adjacent_order,
+             edge_hand_occlusion, fault_missing_bolt, cycle_correct_01, fault_no_tool]
+  fps: 30
+  process_width: 1920                         # full resolution: the crops need it (Section 9)
+  process_height: 1080
+
+threads:                                      # logical CPUs: one per physical core 4..7
+  capture: 8
+  inference: 10
+  verify: 12
+  alert: 14
+  priority_class: high                        # never realtime
+
+perception:
+  provider: cuda                              # cuda | tensorrt (TensorRT first, CUDA behind it)
+  fixtures: tests/fixtures/detections         # ReplayDetector input, one per scenario
+  model_manifest: models/manifest.json        # SHA-256 checked before load (I12)
+  model_version: yolo11n-w14-s20260721+mnv3s-tf-s20260721
+  detector_model: models/yolo11n_wheel.onnx
+  classifier_model: models/threaded_fastener.onnx
+  gpu_mem_limit_mb: 1024                      # the CUDA provider's arena cap (Section 13)
+  warmup_runs: 20
+  trt_cache: cache/trt                        # <TensorRT version>/<model sha8>/ — never reused across models
+  conf_commit: 0.65
+  conf_floor: 0.35
+  debounce_frames: 2
+  crop_pool_size: 4
+
+profile:
+  dir: samples/wheel-hub-5lug                 # procedure.json, compiled by cad-extract
+  advisory_only: false
+
+alert:
+  backend: opcua                              # opcua | none (tests only)
+  endpoint: opc.tcp://127.0.0.1:4840
+  prefix: Station.W14
+
+line_simulator:                               # stands in for the nutrunner and the line PLC: writes each
+  enabled: true                               # scenario's plant signals and release request to the PLC
+
+clip_ring:
+  name: W-14
+  slots: 180
+  slot_bytes: 786432                          # a full-resolution JPEG
+  jpeg_quality: 80
+
+sidecar:
+  enabled: true
+  url: http://127.0.0.1:8001
+  timeout_ms: 1500
+  failure_threshold: 3
+  circuit_open_seconds: 60
+  queue_depth: 16
+
+io:
+  websocket_port: 8080                        # W-15 adds 100 to all three ports, W-16 adds 200, …
+  mjpeg_port: 8090
+  control_port: 8095
+  api_url: http://127.0.0.1:8000
+  event_spool: var/spool/W-14.jsonl           # events survive an API outage
+
+health:
+  bucket_s: 300                               # 5 in demo mode
+  heartbeat_ms: 500

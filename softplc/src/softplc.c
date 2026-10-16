@@ -49,7 +49,12 @@ static void set_bool(UA_Server *s, const char *id, UA_Boolean v) {
 }
 
 static void tag_name(char *out, const Station *st, const char *leaf) {
-    snprintf(out, NAME_LEN, "Station.%s.%s", st->id, leaf);
+    /* a truncated tag would address a different node: refuse it rather than publish it */
+    int n = snprintf(out, NAME_LEN, "Station.%s.%s", st->id, leaf);
+    if (n < 0 || n >= NAME_LEN) {
+        fprintf(stderr, "softplc: tag name too long: Station.%s.%s\n", st->id, leaf);
+        exit(2);
+    }
 }
 
 /* Every 250 ms, per station: has the heartbeat moved? */

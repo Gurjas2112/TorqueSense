@@ -28,6 +28,14 @@ struct StationConfig {
   float conf_commit = 0.65f, conf_floor = 0.35f;
   int debounce_frames = 2;
   int crop_pool_size = 4;
+  // provider cuda | tensorrt: the GPU detector (perception/src/OnnxDetector.cpp), models checked against
+  // the manifest's SHA-256 before load (I12)
+  std::filesystem::path detector_model = "models/yolo11n_wheel.onnx";
+  std::filesystem::path classifier_model = "models/threaded_fastener.onnx";
+  int gpu_mem_limit_mb = 1024, warmup_runs = 20;
+  std::filesystem::path trt_cache_root = "cache/trt";
+  std::string trt_version = "10.13.3";
+  bool allow_trt_build = false;          // `torquesense --build-trt-cache` only, never in the station config
 
   std::filesystem::path profile_dir = "samples/wheel-hub-5lug";
   bool advisory_only = false;

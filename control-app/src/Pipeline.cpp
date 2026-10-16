@@ -8,6 +8,8 @@
 #include <filesystem>
 #include <stdexcept>
 
+#include <picosha2.h>
+
 #include "Affinity.hpp"
 #include "Conformance.hpp"
 #include "SchematicLayout.hpp"
@@ -40,6 +42,62 @@ void pin(const char* name, int cpu, bool enabled) {
 
 void copy_text(std::array<char, 160>& dst, const char* a, const char* b, const char* c) {
   std::snprintf(dst.data(), dst.size(), "%s %s %s", a, b, c);   // fixed buffer: no allocation
+}
+
+// I12: a model loads only if its SHA-256 is the one the manifest records for its file name.
+std::string check_model(const std::filesystem::path& manifest, const std::filesystem::path& model) {
+  std::ifstream mf(manifest);
+  if (!mf) throw std::runtime_error("no model manifest at " + manifest.string() + " (I12)");
+  const auto m = nlohmann::json::parse(mf);
+  const std::string key = model.filename().string();
+  if (!m.contains(key) || !m[key].contains("sha256"))
+    throw std::runtime_error(key + " is not recorded in " + manifest.string() + " — the engine loads no unrecorded model (I12)");
+  std::ifstream in(model, std::ios::binary);
+  if (!in) throw std::runtime_error("model file missing: " + model.string());
+  std::vector<unsigned char> bytes((std::istreambuf_iterator<char>(in)), std::istreambuf_iterator<char>());
+  const std::string got = picosha2::hash256_hex_string(bytes);
+  if (got != m[key]["sha256"].get<std::string>())
+    throw std::runtime_error(model.string() + ": SHA-256 " + got.substr(0, 12) + "… differs from the manifest's " +
+                             m[key]["sha256"].get<std::string>().substr(0, 12) + "… — refusing to load it (I12)");
+  return got;
+}
+
+// Every inspection point at its CAD position, projected through the profile's one camera into the
+// processed frame — the same projection the renderer and SchematicLayout use (camera looking down its
+// forward axis, world +Y up when it looks straight down). The crop is 3 x the face's projected size.
+std::vector<perception::CropPoint> crop_points(const nlohmann::json& proc, int w, int h) {
+  const auto& cams = proc["cameras"];
+  if (cams.size() != 1)
+    throw std::runtime_error("the GPU detector runs one camera per engine; this profile has " + std::to_string(cams.size()));
+  const auto& c = cams[0];
+  double P[3], L[3];
+  for (int i = 0; i < 3; ++i) {
+    P[i] = c["position_mm"][i].get<double>();
+    L[i] = c["look_at_mm"][i].get<double>();
+  }
+  double f[3] = {L[0] - P[0], L[1] - P[1], L[2] - P[2]};
+  const double fn = std::sqrt(f[0] * f[0] + f[1] * f[1] + f[2] * f[2]);
+  for (double& v : f) v /= fn;
+  const double up[3] = {0, std::abs(f[2]) < 0.99 ? 0.0 : 1.0, std::abs(f[2]) < 0.99 ? 1.0 : 0.0};
+  double r[3] = {f[1] * up[2] - f[2] * up[1], f[2] * up[0] - f[0] * up[2], f[0] * up[1] - f[1] * up[0]};
+  const double rn = std::sqrt(r[0] * r[0] + r[1] * r[1] + r[2] * r[2]);
+  for (double& v : r) v /= rn;
+  const double u3[3] = {r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]};
+  const double W = c["width_px"].get<double>(), H = W / c["aspect"].get<double>(), fp = c["f_px"].get<double>();
+  const double sx = w / W, sy = h / H;
+  std::vector<perception::CropPoint> out;
+  for (const auto& ip : proc["inspection_points"]) {
+    double d[3];
+    for (int i = 0; i < 3; ++i) d[i] = ip["position_mm"][i].get<double>() - P[i];
+    const double z = d[0] * f[0] + d[1] * f[1] + d[2] * f[2];
+    perception::CropPoint cp;
+    cp.u = static_cast<float>((W / 2 + fp * (d[0] * r[0] + d[1] * r[1] + d[2] * r[2]) / z) * sx);
+    cp.v = static_cast<float>((H / 2 - fp * (d[0] * u3[0] + d[1] * u3[1] + d[2] * u3[2]) / z) * sy);
+    cp.side = static_cast<float>(3.0 * ip["feature_px"].get<double>() * sx);
+    cp.n_states = static_cast<std::uint8_t>(ip["states"].size());
+    out.push_back(cp);
+  }
+  return out;
 }
 
 }  // namespace
@@ -82,6 +140,29 @@ Pipeline::Pipeline(StationConfig cfg) : cfg_(std::move(cfg)) {
     }
   } else if (detector_->load_dir(cfg_.fixtures) == 0) {
     throw std::runtime_error("no replay fixtures in " + cfg_.fixtures.string() + " — run synth/scenarios.py");
+  }
+  if (cfg_.provider == "cuda" || cfg_.provider == "tensorrt") {
+    // The scenarios still come from the fixtures (names, plant signals, release times); the states come
+    // from the frames, through the trained models. A model that fails I12 or a provider that does not
+    // load stops the engine here: there is never a silent drop to the CPU or to replay.
+    check_model(cfg_.model_manifest, cfg_.classifier_model);
+    const std::string sha = check_model(cfg_.model_manifest, cfg_.detector_model);
+    perception::OnnxConfig oc;
+    oc.execution_provider = cfg_.provider;
+    oc.detector_model = cfg_.detector_model;
+    oc.classifier_model = cfg_.classifier_model;
+    oc.gpu_mem_limit_mb = cfg_.gpu_mem_limit_mb;
+    oc.warmup_runs = cfg_.warmup_runs;
+    oc.trt_cache_dir = cfg_.trt_cache_root / cfg_.trt_version / sha.substr(0, 8);   // a new model or TensorRT never reuses a stale engine
+    oc.allow_trt_build = cfg_.allow_trt_build;
+    oc.det_conf = cfg_.conf_floor;
+    std::ifstream in(cfg_.profile_dir / "procedure.json");
+    std::string why;
+    onnx_ = perception::OnnxDetector::create(oc, crop_points(nlohmann::json::parse(in), cfg_.process_width, cfg_.process_height),
+                                             cfg_.process_width, cfg_.process_height, why);
+    if (!onnx_) throw std::runtime_error("GPU detector: " + why);
+    std::fprintf(stderr, "[engine] provider %s%s: detector median %.2f ms after warm-up\n", onnx_->provider(),
+                 onnx_->degraded() ? " (DEGRADED from tensorrt)" : "", onnx_->warm_median_ms());
   }
   for (const auto& name : cfg_.playlist)
     if (detector_->find(name) < 0) throw std::runtime_error("playlist names unknown scenario " + name);
@@ -209,7 +290,9 @@ void Pipeline::inference_loop() {
       continue;
     }
     if (m.new_cycle) detector_->select(m.scenario);
-    if (from_pixels_) {
+    if (onnx_) {
+      onnx_->infer(pool_->data(m.pool_index), cfg_.process_width * 3, *sv);
+    } else if (from_pixels_) {
       schematic_.classify(pool_->data(m.pool_index), cfg_.process_width, cfg_.process_height, cfg_.process_width * 3, *sv);
       sv->hands = sv->tools = 0;
       sv->anchor_residual_px = 0;
