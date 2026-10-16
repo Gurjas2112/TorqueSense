@@ -1,0 +1,20 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: torquesense
+labels:
+  - pairs: { app.kubernetes.io/part-of: torquesense }
+    includeSelectors: false
+resources:
+  - namespace.yaml
+  - timescaledb.yaml
+  - api.yaml
+  - engine-w14.yaml
+  - fleet-agent.yaml
+configMapGenerator:
+  - name: station-w14
+    files:
+      - station.yaml=station_w14.yaml
+      - procedure.json=procedure_W14.json
+secretGenerator:
+  - name: torquesense-secrets
+    envs: [secrets.env]              # gitignored; CI writes it from repository secrets

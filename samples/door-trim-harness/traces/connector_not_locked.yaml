@@ -1,0 +1,17 @@
+# The connector looks mated but its lock switch never closed: half-mated.
+trace: connector_not_locked
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 100, ip: clip-1, state: closed}
+  - {t: 200, ip: clip-2, state: closed}
+  - {t: 300, ip: clip-3, state: closed}
+  - {t: 400, ip: clip-4, state: closed}
+  - {t: 500, ip: clip-5, state: closed}
+  - {t: 600, ip: clip-6, state: closed}
+  - {t: 1000, ip: connector-1, state: mated}
+  - {t: 5000, ip: panel-1, state: installed}
+  - {t: 5500, tick: true}
+release_at: 6000
+expect:
+  release_ok: false
+  violations:
+    - {kind: EVIDENCE_MISSING, step: connector, ip: connector-1}

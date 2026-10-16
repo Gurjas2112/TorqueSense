@@ -1,0 +1,72 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "base", "hidden": true, "generator": "Ninja",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": { "CMAKE_EXPORT_COMPILE_COMMANDS": "ON" }
+    },
+    {
+      "name": "windows", "hidden": true, "inherits": "base",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "cacheVariables": { "CMAKE_C_COMPILER": "gcc", "CMAKE_CXX_COMPILER": "g++" }
+    },
+    {
+      "name": "windows-release", "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "SUNVERIFY_WITH_CUDA": "ON",
+        "ONNXRUNTIME_ROOT": "$env{ORT_ROOT}"
+      }
+    },
+    {
+      "name": "windows-debug", "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_FLAGS_DEBUG": "-Og -g3",
+        "SUNVERIFY_WITH_CUDA": "ON",
+        "ONNXRUNTIME_ROOT": "$env{ORT_ROOT}"
+      }
+    },
+    {
+      "name": "windows-ci", "inherits": "windows",
+      "cacheVariables": { "CMAKE_BUILD_TYPE": "Debug", "SUNVERIFY_WITH_CUDA": "OFF" }
+    },
+    {
+      "name": "linux-asan", "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug", "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CXX_FLAGS": "-fsanitize=address,undefined -fno-omit-frame-pointer -g -O1",
+        "SUNVERIFY_WITH_CUDA": "OFF", "SUNVERIFY_HEADLESS": "ON"
+      }
+    },
+    {
+      "name": "linux-tsan", "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug", "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_CXX_FLAGS": "-fsanitize=thread -g -O1",
+        "SUNVERIFY_WITH_CUDA": "OFF", "SUNVERIFY_HEADLESS": "ON"
+      }
+    },
+    {
+      "name": "linux-headless", "inherits": "base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "SUNVERIFY_WITH_CUDA": "OFF", "SUNVERIFY_HEADLESS": "ON"
+      }
+    }
+  ],
+  "buildPresets": [
+    { "name": "windows-release", "configurePreset": "windows-release" },
+    { "name": "windows-debug",   "configurePreset": "windows-debug" },
+    { "name": "windows-ci",      "configurePreset": "windows-ci" },
+    { "name": "linux-asan",      "configurePreset": "linux-asan" },
+    { "name": "linux-tsan",      "configurePreset": "linux-tsan" },
+    { "name": "linux-headless",  "configurePreset": "linux-headless" }
+  ],
+  "testPresets": [
+    { "name": "windows-release", "configurePreset": "windows-release", "output": { "outputOnFailure": true } },
+    { "name": "windows-ci",      "configurePreset": "windows-ci",      "output": { "outputOnFailure": true } },
+    { "name": "linux-tsan",      "configurePreset": "linux-tsan",      "output": { "outputOnFailure": true } }
+  ]
+}

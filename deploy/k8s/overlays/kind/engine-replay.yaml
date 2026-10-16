@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine-w14
+spec:
+  template:
+    spec:
+      containers:
+        - name: engine
+          imagePullPolicy: Never              # images are side-loaded with `kind load`
+          args: ["--config", "/etc/torquesense/station.yaml", "--loop"]
+          resources:
+            requests: { cpu: 500m, memory: 128Mi }

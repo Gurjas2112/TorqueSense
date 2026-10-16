@@ -1,0 +1,17 @@
+# The cable is clipped but never plugged in; the cover goes on.
+trace: plug_not_mated
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 2000, ip: clip-1, state: closed}
+  - {t: 3500, ip: clip-2, state: closed}
+  - {t: 5000, ip: clip-3, state: closed}
+  - {t: 6500, ip: clip-4, state: closed}
+  - {t: 8000, ip: clip-5, state: closed}
+  - {t: 20000, ip: cover-1, state: installed}
+  - {t: 46000, tick: true}
+release_at: 47000
+expect:
+  release_ok: false
+  violations:
+    - {kind: PRECEDENCE, step: cover, before: [connector]}
+    - {kind: STEP_TIMEOUT, step: connector, missing: [connector-1]}
+    - {kind: INCOMPLETE_AT_RELEASE, step: connector}

@@ -1,0 +1,17 @@
+# Segment 6 still proud when the glass went on.
+trace: glass_before_gasket_seated
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 100, ip: gasket-1, state: seated}
+  - {t: 200, ip: gasket-2, state: seated}
+  - {t: 300, ip: gasket-3, state: seated}
+  - {t: 400, ip: gasket-4, state: seated}
+  - {t: 500, ip: gasket-5, state: seated}
+  - {t: 600, ip: gasket-7, state: seated}
+  - {t: 700, ip: gasket-8, state: seated}
+  - {t: 2000, ip: glass-1, state: placed}
+release_at: 3000
+expect:
+  release_ok: false
+  violations:
+    - {kind: PRECEDENCE, step: glass, before: [gasket]}
+    - {kind: INCOMPLETE_AT_RELEASE, step: gasket, missing: [gasket-6]}

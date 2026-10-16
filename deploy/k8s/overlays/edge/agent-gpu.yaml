@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fleet-agent
+spec:
+  template:
+    spec:
+      containers:
+        - name: agent
+          args:
+            - -station=W-14
+            - -engine=http://engine-w14:8095/health
+            - -api=http://api:8000/v1/health/host
+            - -disk=/host-data
+            - -spool=/tmp/spool/fleet-agent.jsonl
+            - -gpu-source=dcgm                      # no nvidia-smi without claiming the GPU
+            - -dcgm-url=http://dcgm-local.gpu-operator.svc:9400/metrics
+            - -sm-clock-max=2130                    # placeholder: this GPU's max SM clock, from nvidia-smi -q -d CLOCK at commissioning

@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: engine-w14
+spec:
+  template:
+    spec:
+      nodeSelector: { torquesense.io/station: w-14 }   # this station's edge PC, nowhere else
+      # No runtimeClassName: GPU Operator 25.10+ injects devices through CDI.
+      containers:
+        - name: engine
+          resources:
+            limits: { nvidia.com/gpu: 1, memory: 2Gi }

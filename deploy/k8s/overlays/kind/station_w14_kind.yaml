@@ -1,0 +1,7 @@
+station:
+  id: W-14
+source:
+  kind: detections
+  path: /opt/torquesense/fixtures/fault_adjacent_order.json
+alert:
+  endpoint: opc.tcp://softplc:4840

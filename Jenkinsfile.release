@@ -1,0 +1,121 @@
+// Jenkinsfile.release: the release gate, on HSGPC. A tag makes GitHub Actions build an attested
+// DRAFT release; this job installs that exact zip beside the live release (without switching),
+// runs every GPU gate against it, adds the model pack and gates.json, and publishes the release
+// only if the gate passes. Run it by hand with the tag, e.g. VERSION=v5.5.0.
+pipeline {
+  agent { label 'hsgpc-gpu' }
+  parameters {
+    string(name: 'VERSION', description: 'the tag, e.g. v5.5.0')
+  }
+  options {
+    timeout(time: 3, unit: 'HOURS')
+    disableConcurrentBuilds()
+    buildDiscarder(logRotator(numToKeepStr: '20'))
+    timestamps()
+  }
+  environment {
+    PY      = 'C:\\dev\\torquesense\\.venv\\Scripts\\python.exe'
+    REPO    = 'Gurjas2112/torquesense'
+    ROOT    = 'C:\\TorqueSense'
+    REL     = "C:\\TorqueSense\\releases\\${params.VERSION}"
+    GH_TOKEN = credentials('github-release-token')   // fine-grained: this repository, contents read/write
+  }
+  stages {
+    stage('Version') {
+      steps {
+        script {
+          if (!(params.VERSION ==~ /^v\d+\.\d+\.\d+$/)) { error "VERSION must look like v5.5.0, got '${params.VERSION}'" }
+        }
+      }
+    }
+    stage('Conditions') {
+      steps {
+        powershell '''
+          $b  = Get-CimInstance -Namespace root/wmi -ClassName BatteryStatus -ErrorAction SilentlyContinue | Select-Object -First 1
+          $ac = if ($b) { [bool]$b.PowerOnline } else { $true }
+          $g  = nvidia-smi --query-gpu=clocks.sm,clocks.max.sm,temperature.gpu,driver_version --format=csv,noheader
+          @{ ac_power = $ac; gpu = "$g"; at = (Get-Date).ToString("o") } | ConvertTo-Json | Set-Content conditions.json
+          if (-not $ac) { Write-Error "On battery: a release is never gated on battery"; exit 3 }
+        '''
+      }
+    }
+    stage('Download the draft') {
+      steps {
+        bat 'if exist rel rmdir /s /q rel'
+        bat 'gh release download %VERSION% -R %REPO% -D rel -p "torquesense-%VERSION%-win64.zip" -p SHA256SUMS'
+      }
+    }
+    stage('Model pack') {
+      // the model is in the local DVC store, never on GitHub until now; the zip's manifest decides
+      steps {
+        bat '"%PY%" -m dvc pull models'
+        powershell '''
+          Compress-Archive -Path models\\* -DestinationPath "rel\\models-$env:VERSION.zip" -Force
+        '''
+      }
+    }
+    stage('Stage beside the live release') {
+      steps {
+        powershell '''
+          & scripts\\station\\install-release.ps1 -Version $env:VERSION -ZipDir rel -StageOnly -SkipGates
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+        '''
+      }
+    }
+    stage('Maintenance window') {
+      // the live station gives up the GPU: every process stopped, HMI AMBER, until post{} resumes it
+      steps {
+        powershell '''
+          try { Invoke-RestMethod -Method Post 'http://127.0.0.1:8099/maintenance?on=1' -TimeoutSec 10 | Out-Null }
+          catch { Write-Output 'no live supervisor: nothing to pause' }
+          Start-Sleep -Seconds 15
+        '''
+      }
+    }
+    stage('Gates') {
+      steps {
+        powershell '''
+          $ErrorActionPreference = 'Stop'
+          Import-Module .\\scripts\\station\\TorqueSense.Station.psm1 -Force
+          $env:Path = (Get-RuntimePath $env:ROOT $env:REL) + ";$env:SystemRoot\\System32;$env:SystemRoot"
+          $bin = Join-Path $env:REL 'bin'
+          $cfg = Join-Path $env:ROOT 'config\\station_w14.yaml'
+          $scn = 'data\\scenarios\\fault_interrupt_resume.mp4'
+          & "$bin\\torquesense.exe" --conformance (Join-Path $env:REL 'samples'); $conf = ($LASTEXITCODE -eq 0)
+          & "$bin\\torquesense.exe" --build-trt-cache --config $cfg --release $env:REL
+          & "$bin\\provider_parity.exe" --config $cfg --release $env:REL --clip data\\real_val\\parity_200.mp4 --scenarios data\\scenarios --json parity.json
+          foreach ($p in 'cuda', 'tensorrt') {
+            & "$bin\\latency_test.exe" --provider $p --release $env:REL --scenario $scn --runs 100 `
+                --budget-evidence-p99-ms 150 --histogram "latency-$p.hgrm" --summary-json "lat-$p.json"
+          }
+          & "$bin\\soak_test.exe" --release $env:REL --minutes 10 --stations 4 --summary-json soak.json
+          $gateArgs = @('--version', $env:VERSION, '--conditions', 'conditions.json', '--parity', 'parity.json',
+                    '--latency', 'cuda=lat-cuda.json', 'tensorrt=lat-tensorrt.json', '--soak', 'soak.json',
+                    '--models', (Join-Path $env:REL 'models\\manifest.json'), '--out', 'rel\\gates.json')
+          if ($conf) { $gateArgs += '--conformance-ok' }
+          & $env:PY scripts\\release\\gates.py @gateArgs
+          exit $LASTEXITCODE
+        '''
+      }
+    }
+    stage('Publish') {
+      steps {
+        bat 'gh release upload %VERSION% -R %REPO% --clobber rel\\gates.json rel\\models-%VERSION%.zip'
+        bat 'gh release edit %VERSION% -R %REPO% --draft=false --latest'
+      }
+    }
+  }
+  post {
+    always {
+      powershell '''
+        try { Invoke-RestMethod -Method Post 'http://127.0.0.1:8099/maintenance?on=0' -TimeoutSec 10 | Out-Null }
+        catch { Write-Output 'no live supervisor to resume' }
+      '''
+      archiveArtifacts artifacts: 'conditions.json, parity.json, lat-*.json, latency-*.hgrm, soak.json, rel/gates.json', allowEmptyArchive: true
+    }
+    failure {
+      // a failed gate leaves the draft unpublished and the staged folder in place for inspection
+      echo "Release gate failed: ${params.VERSION} stays a draft. Staged copy: ${env.REL}"
+    }
+  }
+}

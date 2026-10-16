@@ -1,0 +1,45 @@
+# Door trim: harness clips, connector, trim panel — PS4 example
+# Procedure-level sample: traces only until door-trim renders exist.
+profile: door-trim-harness-fl
+title: "Door trim: harness clips, connector, trim panel — PS4 example"
+geometry: cad                 # cad: positions from the STEP file | measured: with a ruler
+registration: fixed
+
+cameras:
+  - {id: cam-1, width_px: 1920, hfov_deg: 50, position_mm: [150, 0, 420], look_at_mm: [150, 0, 0]}
+  - {id: cam-2, width_px: 1920, hfov_deg: 50, position_mm: [500, 0, 420], look_at_mm: [500, 0, 0]}
+  - {id: cam-3, width_px: 1920, hfov_deg: 50, position_mm: [850, 0, 420], look_at_mm: [850, 0, 0]}
+sources:                      # one per camera: file | uvc | stream
+  cam-1: {kind: file, path: media/cam-1.mp4}
+  cam-2: {kind: file, path: media/cam-2.mp4}
+  cam-3: {kind: file, path: media/cam-3.mp4}
+
+groups:
+  - id: clip
+    family: snap_clip
+    states: [open, closed]
+    feature_mm: 4
+    members:
+      - {position_mm: [0, 0, 0]}
+      - {position_mm: [200, 0, 0]}
+      - {position_mm: [400, 0, 0]}
+      - {position_mm: [600, 0, 0]}
+      - {position_mm: [800, 0, 0]}
+      - {position_mm: [1000, 0, 0]}
+  - id: connector
+    family: connector
+    states: [unmated, mated]
+    feature_mm: 6
+    members:
+      - {position_mm: [900, 80, 0]}
+  - id: panel
+    family: panel
+    states: [absent, installed]
+    feature_mm: 60
+    members:
+      - {position_mm: [500, 0, 0]}
+
+steps:
+  - {id: clips, group: clip, kind: complete, state: closed, max_duration_s: 40}
+  - {id: connector, group: connector, kind: complete, state: mated, max_duration_s: 20, evidence: {tag: Station.D07.ConnectorLock, equals: true, within_ms: 1000}}
+  - {id: trim_panel, group: panel, kind: complete, state: installed, requires: [clips, connector], max_duration_s: 30}

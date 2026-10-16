@@ -1,0 +1,14 @@
+# TEMPLATE — one fault per file. Name it after what went wrong.
+trace: wrong_order
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 1000, ip: part-1, state: present}
+  - {t: 3000, ip: screw-1, state: fastened}
+  - {t: 5000, ip: screw-2, state: fastened}
+  - {t: 7000, ip: screw-3, state: fastened}
+release_at: 10000
+expect:
+  release_ok: false
+  violations:
+    - {kind: SEQUENCE, step: fasten, observed: screw-1}
+    - {kind: SEQUENCE, step: fasten}
+    - {kind: SEQUENCE, step: fasten}

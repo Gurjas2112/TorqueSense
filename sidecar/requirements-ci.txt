@@ -1,0 +1,7 @@
+# What the sidecar's tests need in hosted CI. Florence-2 and torch are mocked there; the real
+# sidecar's runtime dependencies are in requirements-runtime.in.
+fastapi
+httpx
+pyyaml
+numpy
+pillow

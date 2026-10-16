@@ -1,0 +1,12 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+  - softplc.yaml
+patches:
+  - path: engine-replay.yaml
+configMapGenerator:
+  - name: station-w14
+    behavior: merge
+    files:
+      - station.yaml=station_w14_kind.yaml      # source.kind: detections · alert: opc.tcp://softplc:4840

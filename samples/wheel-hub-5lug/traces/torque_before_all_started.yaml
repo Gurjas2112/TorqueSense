@@ -1,0 +1,25 @@
+# Torquing began before bolt 4 was even started: every rundown until then is early.
+trace: torque_before_all_started
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 1000, ip: bolt-1, state: seated}
+  - {t: 1100, ip: bolt-2, state: seated}
+  - {t: 1200, ip: bolt-3, state: seated}
+  - {t: 1400, ip: bolt-5, state: seated}
+  - {t: 2900, tag: Station.W14.Nutrunner.ResultOK, value: true}
+  - {t: 3000, ip: bolt-1, state: fastened}
+  - {t: 3700, tag: Station.W14.Nutrunner.ResultOK, value: true}
+  - {t: 3800, ip: bolt-3, state: fastened}
+  - {t: 4500, tag: Station.W14.Nutrunner.ResultOK, value: true}
+  - {t: 4600, ip: bolt-5, state: fastened}
+  - {t: 5300, tag: Station.W14.Nutrunner.ResultOK, value: true}
+  - {t: 5400, ip: bolt-2, state: fastened}
+  - {t: 6100, tag: Station.W14.Nutrunner.ResultOK, value: true}
+  - {t: 6200, ip: bolt-4, state: fastened}
+release_at: 12000
+expect:
+  release_ok: false
+  violations:
+    - {kind: PRECEDENCE, step: torque, ip: bolt-1, before: [hand_start]}
+    - {kind: PRECEDENCE, step: torque, ip: bolt-3}
+    - {kind: PRECEDENCE, step: torque, ip: bolt-5}
+    - {kind: PRECEDENCE, step: torque, ip: bolt-2}

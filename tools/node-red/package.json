@@ -1,0 +1,11 @@
+{
+  "name": "torquesense-node-red",
+  "private": true,
+  "description": "The tag monitor, run natively by the supervisor: Node-RED and its two nodes, pinned exactly.",
+  "engines": { "node": ">=22.9" },
+  "dependencies": {
+    "node-red": "5.0.8",
+    "node-red-contrib-opcua": "0.2.355",
+    "@flowfuse/node-red-dashboard": "1.33.0"
+  }
+}

@@ -1,0 +1,29 @@
+# Production is deferred on purpose (spec Appendix D). The images and manifests are kept, and this
+# workflow still proves they work in a throwaway kind cluster — but only when run by hand, so the
+# prototype's CI stays fast and its minutes go to the engine.
+name: deferred-production
+on: workflow_dispatch
+permissions: { contents: read }
+
+jobs:
+  k8s-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: Build images
+        run: |
+          docker buildx build --load -t torquesense/engine:ci      -f docker/engine.Dockerfile      --cache-from type=gha,scope=engine --cache-to type=gha,mode=max,scope=engine .
+          docker buildx build --load -t torquesense/api:ci         -f docker/api.Dockerfile         --cache-from type=gha,scope=api    --cache-to type=gha,mode=max,scope=api    .
+          docker buildx build --load -t torquesense/fleet-agent:ci -f docker/fleet-agent.Dockerfile --cache-from type=gha,scope=agent --cache-to type=gha,mode=max,scope=agent .
+      - uses: helm/kind-action@v1
+        with: { cluster_name: ts }
+      - run: for i in engine api fleet-agent; do kind load docker-image torquesense/$i:ci --name ts; done
+      - run: kubectl apply -k deploy/k8s/overlays/kind
+      - run: |
+          kubectl -n torquesense rollout status statefulset/timescaledb --timeout=180s
+          kubectl -n torquesense wait --for=condition=available deployment --all --timeout=300s
+          kubectl -n torquesense rollout status daemonset/fleet-agent --timeout=120s
+      - run: pip install httpx asyncua && python tests/k8s/smoke.py
+      - if: failure()
+        run: kubectl -n torquesense get pods -o wide && kubectl -n torquesense logs -l app.kubernetes.io/part-of=torquesense --tail=100 --prefix

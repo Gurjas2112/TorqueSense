@@ -1,0 +1,14 @@
+# Cable pressed into all five clips in any order, plug mated, cover on.
+trace: correct
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 2000, ip: clip-3, state: closed}
+  - {t: 3500, ip: clip-2, state: closed}
+  - {t: 5000, ip: clip-4, state: closed}
+  - {t: 6500, ip: clip-1, state: closed}
+  - {t: 8000, ip: clip-5, state: closed}
+  - {t: 12000, ip: connector-1, state: mated}
+  - {t: 20000, ip: cover-1, state: installed}
+release_at: 25000
+expect:
+  release_ok: true
+  violations: []

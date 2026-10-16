@@ -1,0 +1,40 @@
+# Desk sample 1 — any small box with a four-screw lid, e.g. a 100 × 100 mm PVC junction box.
+# Physical, filmed top-down by a phone on a stand. No CAD: positions measured with a ruler from
+# the crosshair on the printed placement sheet (samples/_print/placement_sheet_a4.pdf).
+profile: desk-cover-4screw
+title: "Box lid with four screws, then a label"
+geometry: measured                 # cad: positions from the STEP file | measured: with a ruler
+registration: {fiducial: aruco, dictionary: DICT_4X4_50, id: 0, size_mm: 40, centre_mm: [0, -90, 0]}
+
+cameras:                           # hfov is a placeholder until scripts/calibrate.py writes fx
+  - {id: phone, width_px: 1920, hfov_deg: 69, position_mm: [0, 0, 350], look_at_mm: [0, 0, 0]}
+sources:
+  phone: {kind: stream, url: "http://192.168.43.1:8080/video", width: 1920, height: 1080, fps: 30}
+
+groups:
+  - id: lid
+    family: panel
+    states: [absent, placed]
+    feature_mm: 80
+    members:
+      - {position_mm: [0, 0, 0]}
+  - id: screw                      # numbered clockwise from top-left, as you look down
+    family: threaded_fastener
+    states: [absent, seated, fastened]
+    feature_mm: 7                  # the screw head
+    members:
+      - {position_mm: [-40, 40, 0]}
+      - {position_mm: [40, 40, 0]}
+      - {position_mm: [40, -40, 0]}
+      - {position_mm: [-40, -40, 0]}
+  - id: label
+    family: label
+    states: [absent, applied]
+    feature_mm: 25
+    members:
+      - {position_mm: [0, -15, 0]}
+
+steps:
+  - {id: lid, group: lid, kind: complete, state: placed, max_duration_s: 15}
+  - {id: screws, group: screw, kind: sequence, order: derive, state: fastened, requires: [lid], max_duration_s: 60}
+  - {id: label, group: label, kind: complete, state: applied, requires: [screws], max_duration_s: 15}

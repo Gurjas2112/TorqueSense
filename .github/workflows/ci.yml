@@ -1,0 +1,106 @@
+name: ci
+on: [push, pull_request]
+permissions: { contents: read }
+
+jobs:
+  linux-sanitizers:
+    runs-on: ubuntu-24.04
+    strategy: { matrix: { preset: [linux-asan, linux-tsan] } }
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          sudo apt-get update
+          sudo apt-get install -y clang ninja-build libgtest-dev libgmock-dev libbenchmark-dev \
+                                  nlohmann-json3-dev libspdlog-dev
+      - run: cmake --preset ${{ matrix.preset }} && cmake --build --preset ${{ matrix.preset }}
+      - run: ctest --test-dir build/${{ matrix.preset }} --output-on-failure --repeat until-fail:5
+
+  windows-mingw:                       # the same compiler as the laptop: MSYS2 UCRT64 GCC
+    runs-on: windows-latest
+    defaults: { run: { shell: "msys2 {0}" } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: git
+          pacboy: >-
+            toolchain:p cmake:p ninja:p opencv:p opencascade:p
+            spdlog:p gtest:p benchmark:p nlohmann-json:p
+      - run: cmake --preset windows-ci && cmake --build --preset windows-ci
+      - run: ctest --preset windows-ci
+
+  samples:                             # the conformance suite: every assembly, one contract
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pyyaml pytest
+      - run: python samples/run_samples.py --template
+      - run: pytest reference/tests
+
+  fleet-agent:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version-file: fleet-agent/go.mod }
+      - working-directory: fleet-agent
+        run: |
+          test -z "$(gofmt -l .)"
+          go vet ./...
+          go test -race ./...
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o /dev/null .
+          GOOS=linux   GOARCH=amd64 CGO_ENABLED=0 go build -o /dev/null .
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go vet ./...          # the job-object code
+          GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o /dev/null ./cmd/supervisor
+          go run ./cmd/supervisor -config ../config/supervisor.template.json -check && exit 1 || true   # unregistered: must refuse
+
+  station-scripts:                     # the station's PowerShell, linted for Windows PowerShell 5.1
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - shell: pwsh
+        run: |
+          Install-Module PSScriptAnalyzer -RequiredVersion 1.23.0 -Scope CurrentUser -Force
+          $r = Invoke-ScriptAnalyzer -Path scripts/station -Recurse -Settings scripts/station/PSScriptAnalyzerSettings.psd1
+          $r | Format-Table -AutoSize
+          if ($r) { exit 1 }
+          Get-ChildItem scripts/station -Include *.ps1, *.psm1 -Recurse | ForEach-Object {
+            if ([IO.File]::ReadAllBytes($_.FullName) | Where-Object { $_ -gt 127 }) { throw "$($_.Name): non-ASCII; 5.1 would misread it" }
+          }
+
+  release-tools:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pytest fastapi httpx
+      - run: pytest scripts/tests scripts/release/tests api/tests/test_spa.py sidecar/tests
+
+  python:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install -r sidecar/requirements-ci.txt -r api/requirements.txt pytest
+      - run: pytest sidecar/tests api/tests      # includes the EWMA drift tests; Florence is mocked
+
+  web:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: cd web && npm ci && npx vitest run
+      - run: cd web && npx playwright install --with-deps chromium && npx playwright test
+
+  contracts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/gen-contracts.sh && git diff --exit-code

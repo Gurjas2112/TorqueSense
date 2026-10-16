@@ -1,0 +1,42 @@
+# TEMPLATE — copy this folder to samples/<your-assembly>/ and edit. Nothing in the engine changes.
+#
+# 1. Name the profile and say where positions come from.
+profile: my-assembly
+title: "One line: what is assembled, and what must not go wrong"
+geometry: measured                 # cad: positions from the STEP file | measured: with a ruler
+registration: {fiducial: aruco, dictionary: DICT_4X4_50, id: 0, size_mm: 40, centre_mm: [0, -90, 0]}
+                                   # or: fixed — camera and fixture never move
+
+# 2. Cameras: where each one is, in the same millimetres as the points. hfov until calibrated.
+cameras:
+  - {id: cam, width_px: 1920, hfov_deg: 69, position_mm: [0, 0, 350], look_at_mm: [0, 0, 0]}
+sources:                           # file: a recording | uvc: a webcam | stream: a phone over Wi-Fi
+  cam: {kind: file, path: media/correct.mp4}
+
+# 3. Inspection points, in groups. A group shares one state family (ordered: earlier → later)
+#    and one feature size — the smallest thing that tells its states apart. Families in use:
+#    threaded_fastener [absent, seated, fastened] · snap_clip [open, closed] ·
+#    connector [unmated, mated] · seal_segment [unseated, seated] · panel [absent, placed|installed] ·
+#    label [absent, applied] · presence [absent, present]
+groups:
+  - id: part
+    family: presence
+    states: [absent, present]
+    feature_mm: 30
+    members:
+      - {position_mm: [0, 0, 0]}
+  - id: screw
+    family: threaded_fastener
+    states: [absent, seated, fastened]
+    feature_mm: 7
+    members:                       # number them the way a work instruction would
+      - {position_mm: [-30, 0, 0]}
+      - {position_mm: [0, 0, 0]}
+      - {position_mm: [30, 0, 0]}
+
+# 4. Steps. kind: complete (any order) | sequence (order: derive from geometry, or listed).
+#    requires: steps that must finish first. Every step needs max_duration_s — it is how a
+#    skipped step is caught. Optional evidence: {tag, equals, within_ms} from the PLC.
+steps:
+  - {id: place, group: part, kind: complete, state: present, max_duration_s: 15}
+  - {id: fasten, group: screw, kind: sequence, order: derive, state: fastened, requires: [place], max_duration_s: 40}

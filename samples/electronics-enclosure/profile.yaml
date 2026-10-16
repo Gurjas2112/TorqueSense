@@ -1,0 +1,41 @@
+# Electronics enclosure: connector, six cover screws, label — not automotive
+# Procedure-level sample: traces only.
+profile: enclosure-cover
+title: "Electronics enclosure: connector, six cover screws, label — not automotive"
+geometry: cad                 # cad: positions from the STEP file | measured: with a ruler
+registration: fixed
+
+cameras:
+  - {id: cam-1, width_px: 1280, hfov_deg: 50, position_mm: [0, 0, 350], look_at_mm: [0, 0, 0]}
+sources:                      # one per camera: file | uvc | stream
+  cam-1: {kind: file, path: media/correct.mp4}
+
+groups:
+  - id: connector
+    family: connector
+    states: [unmated, mated]
+    feature_mm: 6
+    members:
+      - {position_mm: [40, 20, 0]}
+  - id: screw
+    family: threaded_fastener
+    states: [absent, seated, fastened]
+    feature_mm: 5
+    members:
+      - {position_mm: [-100, 50, 0]}
+      - {position_mm: [0, 50, 0]}
+      - {position_mm: [100, 50, 0]}
+      - {position_mm: [-100, -50, 0]}
+      - {position_mm: [0, -50, 0]}
+      - {position_mm: [100, -50, 0]}
+  - id: label
+    family: label
+    states: [absent, applied]
+    feature_mm: 20
+    members:
+      - {position_mm: [-60, 0, 0]}
+
+steps:
+  - {id: connector, group: connector, kind: complete, state: mated, max_duration_s: 15}
+  - {id: cover_screws, group: screw, kind: sequence, order: derive, state: fastened, requires: [connector], max_duration_s: 40}
+  - {id: label, group: label, kind: complete, state: applied, requires: [cover_screws], max_duration_s: 10}

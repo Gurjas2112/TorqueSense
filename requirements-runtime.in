@@ -1,0 +1,23 @@
+# What a release runs — the API and the sidecar — and nothing it does not. Training, rendering and
+# test tools stay in the development venv. Compile the lock on HSGPC, commit it, and never edit it by hand:
+#
+#   uv pip compile requirements-runtime.in -o requirements.lock --generate-hashes ^
+#       --python-version 3.12 --python-platform x86_64-pc-windows-msvc ^
+#       --index-url https://download.pytorch.org/whl/cu130 --extra-index-url https://pypi.org/simple ^
+#       --index-strategy unsafe-best-match --emit-index-url
+#
+# The installer runs `pip install --require-hashes --no-deps -r requirements.lock`, so a changed or
+# substituted wheel fails the install instead of shipping.
+torch
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+psycopg[binary]
+boto3
+transformers
+huggingface_hub
+pillow
+numpy
+av
+pyyaml

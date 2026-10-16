@@ -1,0 +1,17 @@
+# Clip 4 left open and the panel fitted over it — the defect a camera can only catch before the panel goes on.
+trace: panel_hides_open_clip
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 100, ip: clip-1, state: closed}
+  - {t: 200, ip: clip-2, state: closed}
+  - {t: 300, ip: clip-3, state: closed}
+  - {t: 400, ip: clip-5, state: closed}
+  - {t: 500, ip: clip-6, state: closed}
+  - {t: 900, tag: Station.D07.ConnectorLock, value: true}
+  - {t: 1000, ip: connector-1, state: mated}
+  - {t: 5000, ip: panel-1, state: installed}
+release_at: 6000
+expect:
+  release_ok: false
+  violations:
+    - {kind: PRECEDENCE, step: trim_panel, ip: panel-1, before: [clips]}
+    - {kind: INCOMPLETE_AT_RELEASE, step: clips, missing: [clip-4]}

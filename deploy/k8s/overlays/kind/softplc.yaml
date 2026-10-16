@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: softplc
+  labels: { app.kubernetes.io/name: softplc }
+spec:
+  replicas: 1
+  selector:
+    matchLabels: { app.kubernetes.io/name: softplc }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: softplc }
+    spec:
+      containers:
+        - name: softplc
+          image: torquesense/engine:ci
+          imagePullPolicy: Never
+          # No advertised-URL override: open62541 1.4 binds to whatever serverUrls names, and a
+          # Service name resolves to a ClusterIP the pod cannot bind. Default config listens on
+          # all interfaces and echoes each client's own URL back in GetEndpoints.
+          command: ["/usr/local/bin/softplc", "4840"]
+          ports: [{ name: opcua, containerPort: 4840 }]
+          resources:
+            requests: { cpu: 50m, memory: 32Mi }
+            limits: { memory: 128Mi }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: softplc
+spec:
+  selector: { app.kubernetes.io/name: softplc }
+  ports: [{ name: opcua, port: 4840, targetPort: opcua }]

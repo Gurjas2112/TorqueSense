@@ -1,0 +1,42 @@
+# Desk sample 2 — the door-harness problem at desk scale. A board stands upright 400 mm in
+# front of the laptop: a USB cable is pressed into five adhesive cable clips, plugged into a USB
+# socket fixed to the board, and a card cover goes on last. Filmed by the laptop's own webcam.
+# No CAD: positions measured with a ruler from the crosshair on the board.
+profile: desk-harness-clips
+title: "Cable into five clips, connector mated, then the cover"
+geometry: measured
+registration: {fiducial: aruco, dictionary: DICT_4X4_50, id: 1, size_mm: 40, centre_mm: [-150, -60, 0]}
+
+cameras:                           # the board faces the camera; hfov until calibration
+  - {id: webcam, width_px: 1280, hfov_deg: 70, position_mm: [0, 0, 400], look_at_mm: [0, 0, 0]}
+sources:
+  webcam: {kind: uvc, device: 0, width: 1280, height: 720, fps: 30, fourcc: MJPG}
+
+groups:
+  - id: clip
+    family: snap_clip
+    states: [open, closed]
+    feature_mm: 8                  # the clip's flap
+    members:
+      - {position_mm: [-120, 40, 0]}
+      - {position_mm: [-60, 40, 0]}
+      - {position_mm: [0, 40, 0]}
+      - {position_mm: [60, 40, 0]}
+      - {position_mm: [120, 40, 0]}
+  - id: connector
+    family: connector
+    states: [unmated, mated]
+    feature_mm: 12                 # the plug's shell where it meets the socket
+    members:
+      - {position_mm: [150, -40, 0]}
+  - id: cover
+    family: panel
+    states: [absent, installed]
+    feature_mm: 100
+    members:
+      - {position_mm: [0, 0, 0]}
+
+steps:
+  - {id: clips, group: clip, kind: complete, state: closed, max_duration_s: 45}
+  - {id: connector, group: connector, kind: complete, state: mated, max_duration_s: 20}
+  - {id: cover, group: cover, kind: complete, state: installed, requires: [clips, connector], max_duration_s: 20}

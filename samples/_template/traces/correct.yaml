@@ -1,0 +1,11 @@
+# TEMPLATE — the right way. Copy, rename the points to yours, keep the name 'correct'.
+trace: correct
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 1000, ip: part-1, state: present}
+  - {t: 3000, ip: screw-2, state: fastened}
+  - {t: 5000, ip: screw-3, state: fastened}
+  - {t: 7000, ip: screw-1, state: fastened}
+release_at: 10000
+expect:
+  release_ok: true
+  violations: []

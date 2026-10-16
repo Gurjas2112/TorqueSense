@@ -1,0 +1,39 @@
+# One agent per node: the DaemonSet is the natural shape for "a watcher on every machine".
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fleet-agent
+  labels: { app.kubernetes.io/name: fleet-agent }
+spec:
+  selector:
+    matchLabels: { app.kubernetes.io/name: fleet-agent }
+  template:
+    metadata:
+      labels: { app.kubernetes.io/name: fleet-agent }
+    spec:
+      securityContext: { runAsNonRoot: true, runAsUser: 65532 }
+      containers:
+        - name: agent
+          image: torquesense/fleet-agent:ci
+          args:
+            - -station=W-14
+            - -engine=http://engine-w14:8095/health
+            - -api=http://api:8000/v1/health/host
+            - -disk=/host-data
+            - -spool=/tmp/spool/fleet-agent.jsonl
+          env:
+            - name: NODE_NAME
+              valueFrom: { fieldRef: { fieldPath: spec.nodeName } }
+            - name: API_KEY
+              valueFrom: { secretKeyRef: { name: torquesense-secrets, key: API_KEY } }
+          resources:
+            requests: { cpu: 10m, memory: 16Mi }
+            limits: { memory: 64Mi }
+          volumeMounts:
+            - { name: host-data, mountPath: /host-data, readOnly: true }
+            - { name: spool, mountPath: /tmp/spool }
+      volumes:
+        - name: host-data
+          hostPath: { path: /var/lib/torquesense, type: DirectoryOrCreate }
+        - name: spool
+          emptyDir: { sizeLimit: 16Mi }

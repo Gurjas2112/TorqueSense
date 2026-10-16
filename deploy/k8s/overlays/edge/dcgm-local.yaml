@@ -1,0 +1,11 @@
+# The GPU Operator runs dcgm-exporter on every GPU node. This Service keeps each agent's
+# request on its own node, so the figures it reports are its own GPU's.
+apiVersion: v1
+kind: Service
+metadata:
+  name: dcgm-local
+  namespace: gpu-operator
+spec:
+  selector: { app: nvidia-dcgm-exporter }
+  internalTrafficPolicy: Local
+  ports: [{ name: metrics, port: 9400, targetPort: 9400 }]

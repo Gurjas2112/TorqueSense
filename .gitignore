@@ -1,0 +1,84 @@
+# I8 — never commit weights, renders, videos, secrets, the outbox or TensorRT caches.
+
+# secrets
+.env
+.env.*
+!.env.example
+web/.env.local
+web/.env.*.local
+deploy/k8s/base/secrets.env
+config/*.local.yaml
+.vercel/
+web/.vercel/
+
+# the outbox and spools
+outbox.db
+outbox.db-*
+*.db-wal
+*.db-shm
+var/
+data/
+models/*
+!models/manifest.json
+
+# weights, renders, videos, engine caches
+*.onnx
+!tools/check-mingw/mul2.onnx
+*.pt
+*.pth
+*.engine
+*.trt
+*.plan
+cache/
+*.mp4
+*.avi
+*.mkv
+*.mov
+*.webm
+# the deliverable recordings for the PS are the one exception, kept small (see docs/adr/0010)
+!app_screenshots_screen_recording/*.mp4
+!app_screenshots_screen_recording/*.webm
+samples/*/media/*
+!samples/*/media/README.md
+
+# build trees
+build/
+out/
+*.exe
+*.obj
+*.o
+*.a
+*.lib
+*.dll
+*.hgrm.tmp
+compile_commands.json
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# Node
+node_modules/
+web/dist/
+web/test-results/
+web/playwright-report/
+web/blob-report/
+
+# Go
+fleet-agent/fleet-agent
+fleet-agent/supervisor
+
+# editors and OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store
+
+# Supabase CLI local state
+supabase/.temp/
+supabase/.branches/

@@ -1,0 +1,112 @@
+# release.yml — a tag builds the Windows release, attests it, and opens a DRAFT GitHub release.
+# The laptop's release gate (Jenkinsfile.release) then adds the model pack and gates.json and
+# publishes it. Nothing here needs a GPU; everything that does runs on the laptop.
+name: release
+on:
+  push:
+    tags: ["v*.*.*"]
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write        # create the draft release
+      id-token: write        # sign the attestation
+      attestations: write
+    env:
+      VERSION: ${{ github.ref_name }}
+      ORT_VERSION: "1.28.0"
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: msys2
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: git
+          pacboy: >-
+            toolchain:p cmake:p ninja:p opencv:p opencascade:p
+            spdlog:p gtest:p benchmark:p nlohmann-json:p
+      - uses: actions/setup-go@v5
+        with: { go-version-file: fleet-agent/go.mod }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+
+      - name: ONNX Runtime ${{ env.ORT_VERSION }}, CUDA 13 build
+        shell: pwsh
+        run: |
+          $zip = "onnxruntime-win-x64-gpu_cuda13-$env:ORT_VERSION.zip"
+          Invoke-WebRequest "https://github.com/microsoft/onnxruntime/releases/download/v$env:ORT_VERSION/$zip" -OutFile $zip
+          Expand-Archive $zip C:\ort
+          "ORT_ROOT=C:\ort\onnxruntime-win-x64-gpu_cuda13-$env:ORT_VERSION" | Out-File $env:GITHUB_ENV -Append
+
+      - name: Engine, soft PLC and test tools (MSYS2 GCC)
+        shell: msys2 {0}
+        run: |
+          cmake --preset windows-release -DTORQUESENSE_VERSION="$VERSION"
+          cmake --build --preset windows-release
+          ctest --test-dir build/windows-release --label-exclude gpu --output-on-failure
+
+      - name: Supervisor and fleet agent
+        working-directory: fleet-agent
+        run: |
+          go test ./...
+          go build -trimpath -ldflags="-s -w" -o ../build/go/supervisor.exe ./cmd/supervisor
+          go build -trimpath -ldflags="-s -w" -o ../build/go/fleet-agent.exe .
+
+      - name: Dashboard and Node-RED
+        shell: pwsh
+        run: |
+          cd web; npm ci; npm run build; cd ..
+          cd tools/node-red; npm ci --omit=dev; cd ../..
+
+      - name: Stage the release
+        shell: pwsh
+        env:
+          MSYS2_BIN: ${{ steps.msys2.outputs.msys2-location }}\ucrt64\bin
+        run: |
+          $s = "stage"
+          $b = "build/windows-release"
+          python scripts/release/bundle.py --out "$s/bin" `
+            --exe "$b/control-app/torquesense.exe" "$b/softplc/softplc.exe" `
+                  "$b/tests/latency_test.exe" "$b/tests/provider_parity.exe" "$b/tests/soak_test.exe" `
+                  build/go/supervisor.exe build/go/fleet-agent.exe `
+            --also "$env:ORT_ROOT/lib/onnxruntime_providers_shared.dll" `
+                   "$env:ORT_ROOT/lib/onnxruntime_providers_cuda.dll" `
+                   "$env:ORT_ROOT/lib/onnxruntime_providers_tensorrt.dll" `
+            --search "$env:MSYS2_BIN" "$env:ORT_ROOT/lib" --system-dir C:/Windows/System32
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          New-Item -ItemType Directory -Force "$s/web", "$s/models", "$s/node-red", "$s/config" | Out-Null
+          Copy-Item -Recurse web/dist "$s/web/dist"
+          Copy-Item -Recurse api, sidecar, profiles, samples, scripts "$s/"
+          Copy-Item models/manifest.json "$s/models/"
+          Copy-Item -Recurse tools/node-red/node_modules "$s/node-red/"
+          Copy-Item softplc/node-red/flows.json "$s/node-red/"
+          Copy-Item config/*.template.* "$s/config/"
+          Copy-Item requirements.lock "$s/"
+          @{ version = $env:VERSION; commit = "${{ github.sha }}"; built = (Get-Date).ToUniversalTime().ToString("o");
+             onnxruntime = $env:ORT_VERSION; tensorrt = "10.13.3.9" } | ConvertTo-Json | Set-Content "$s/release.json"
+          Compress-Archive -Path "$s/*" -DestinationPath "torquesense-$env:VERSION-win64.zip"
+          $h = (Get-FileHash "torquesense-$env:VERSION-win64.zip" -Algorithm SHA256).Hash.ToLower()
+          "$h  torquesense-$env:VERSION-win64.zip" | Set-Content SHA256SUMS -Encoding ascii
+
+      - name: Attest build provenance
+        uses: actions/attest@v4
+        with:
+          subject-path: torquesense-${{ env.VERSION }}-win64.zip
+
+      - name: Draft release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create $env:VERSION --draft --verify-tag --title "TorqueSense $env:VERSION" `
+            --notes "Draft: waiting for the release gate on HSGPC (models, latency, parity, soak)." `
+            "torquesense-$env:VERSION-win64.zip" SHA256SUMS

@@ -1,0 +1,69 @@
+{
+  "vars": {
+    "release":   "C:\\TorqueSense\\current",
+    "config":    "C:\\TorqueSense\\config",
+    "data":      "C:\\TorqueSense\\data",
+    "node":      "C:\\Program Files\\nodejs\\node.exe",
+    "cuda_bin":  "",
+    "cudnn_bin": "",
+    "trt_lib":   "C:\\dev\\tools\\TensorRT\\lib"
+  },
+  "path": ["{release}\\bin", "{cuda_bin}", "{cudnn_bin}", "{trt_lib}"],
+  "log_dir": "{data}\\logs",
+  "log_max_bytes": 10485760,
+  "log_keep": 5,
+  "listen": "127.0.0.1:8099",
+  "backoff": { "min": "1s", "max": "30s", "stable_after": "60s", "loop_starts": 5, "loop_window": "5m" },
+  "processes": [
+    {
+      "name": "softplc",
+      "exe": "{release}\\bin\\softplc.exe",
+      "args": ["4840"],
+      "ready": "tcp://127.0.0.1:4840"
+    },
+    {
+      "name": "api",
+      "exe": "{release}\\venv\\Scripts\\python.exe",
+      "args": ["-m", "uvicorn", "api.main:app", "--host", "127.0.0.1", "--port", "8000", "--env-file", "{config}\\.env"],
+      "dir": "{release}",
+      "env": { "OUTBOX_PATH": "{data}\\outbox.db", "TS_WEB_DIST": "{release}\\web\\dist" },
+      "ready": "http://127.0.0.1:8000/health"
+    },
+    {
+      "name": "sidecar",
+      "exe": "{release}\\venv\\Scripts\\python.exe",
+      "args": ["-m", "uvicorn", "sidecar.main:app", "--host", "127.0.0.1", "--port", "8001", "--env-file", "{config}\\.env"],
+      "dir": "{release}",
+      "env": { "HF_HOME": "{data}\\hf-cache", "HF_HUB_OFFLINE": "1" },
+      "ready": "http://127.0.0.1:8001/health",
+      "ready_timeout": "180s"
+    },
+    {
+      "name": "node-red",
+      "exe": "{node}",
+      "args": ["{release}\\node-red\\node_modules\\node-red\\red.js", "-p", "1880", "-u", "{data}\\node-red", "{release}\\node-red\\flows.json"],
+      "ready": "http://127.0.0.1:1880/",
+      "after": ["softplc"]
+    },
+    {
+      "name": "engine-w14",
+      "exe": "{release}\\bin\\torquesense.exe",
+      "args": ["--config", "{config}\\station_w14.yaml", "--release", "{release}"],
+      "dir": "{release}",
+      "env_file": "{config}\\.env",
+      "ready": "http://127.0.0.1:8095/health",
+      "ready_timeout": "120s",
+      "stop_url": "http://127.0.0.1:8095/shutdown",
+      "stop_grace": "5s",
+      "after": ["softplc", "api", "sidecar"]
+    },
+    {
+      "name": "agent-w14",
+      "exe": "{release}\\bin\\fleet-agent.exe",
+      "args": ["-station", "W-14", "-engine", "http://127.0.0.1:8095/health",
+               "-api", "http://127.0.0.1:8000/v1/health/host", "-disk", "C:\\", "-spool", "{data}\\spool\\agent-w14.jsonl"],
+      "env_file": "{config}\\.env",
+      "after": ["api"]
+    }
+  ]
+}

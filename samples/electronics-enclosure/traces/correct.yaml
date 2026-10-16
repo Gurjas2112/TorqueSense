@@ -1,0 +1,15 @@
+# Connector, six cover screws centre-out (2, 5, 3, 4, 6, 1), then the label.
+trace: correct
+events:                # t: ms from cycle start · ip+state: a committed state · tag+value: a plant signal
+  - {t: 100, ip: connector-1, state: mated}
+  - {t: 1000, ip: screw-2, state: fastened}
+  - {t: 1300, ip: screw-5, state: fastened}
+  - {t: 1600, ip: screw-3, state: fastened}
+  - {t: 1900, ip: screw-4, state: fastened}
+  - {t: 2200, ip: screw-6, state: fastened}
+  - {t: 2500, ip: screw-1, state: fastened}
+  - {t: 4000, ip: label-1, state: applied}
+release_at: 5000
+expect:
+  release_ok: true
+  violations: []
