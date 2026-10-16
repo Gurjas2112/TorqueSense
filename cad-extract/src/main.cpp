@@ -25,7 +25,9 @@ std::string slurp(const fs::path& p) {
   std::ifstream f(p, std::ios::binary);
   std::ostringstream ss;
   ss << f.rdbuf();
-  return ss.str();
+  std::string s = ss.str();
+  std::erase(s, '\r');            // compare text, not the checkout's line endings
+  return s;
 }
 
 void write(const fs::path& p, const nlohmann::json& j) {

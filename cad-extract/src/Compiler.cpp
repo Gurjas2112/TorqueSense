@@ -228,7 +228,9 @@ std::string profile_hash(const std::filesystem::path& dir) {
   for (const char* name : {"profile.yaml", "assembly.step", "cameras.yaml"}) {
     const auto p = dir / name;
     if (!std::filesystem::exists(p)) continue;
-    const std::string bytes = read_file(p);
+    std::string bytes = read_file(p);
+    // a profile's identity is its text, not the checkout's line endings (autocrlf on Windows)
+    std::erase(bytes, '\r');
     const std::string tag = std::string(name) + "\n";
     h.process(tag.begin(), tag.end());
     h.process(bytes.begin(), bytes.end());
