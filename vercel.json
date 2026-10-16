@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "cd web && npm ci --no-audit --no-fund",
+  "buildCommand": "cd web && npx vite build --mode replay --outDir dist-replay",
+  "outputDirectory": "web/dist-replay",
+  "rewrites": [{ "source": "/((?!assets/|replay/).*)", "destination": "/index.html" }],
+  "headers": [{ "source": "/replay/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }]
+}

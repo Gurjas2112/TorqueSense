@@ -1,0 +1,9 @@
+# Tier 1 (spec Section 32): Vercel serves the dashboard's replay build and nothing else. Only web/ is
+# uploaded — in particular api/ must never become a serverless function: the API runs on the station.
+/*
+!/web
+!/vercel.json
+/web/node_modules
+/web/dist
+/web/dist-replay
+/web/test-results
