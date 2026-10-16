@@ -83,7 +83,7 @@ int run_station(const char* config, const char* record, const char* seconds) {
   if (record) io.record_to(record);
   std::printf("torquesense %s: station %s, profile %s (%s), %zu scenarios, provider %s\n", TORQUESENSE_VERSION,
               cfg.station_id.c_str(), p.profile().name().c_str(), p.profile().version().c_str(),
-              p.detector().scenarios().size(), p.detector().provider());
+              p.detector().scenarios().size(), p.provider());
   std::printf("  ws :%d  mjpeg :%d  control :%d  plc %s (%s)\n", cfg.ws_port, cfg.mjpeg_port, cfg.control_port,
               cfg.opcua_endpoint.c_str(), cfg.alert_backend.c_str());
   std::fflush(stdout);

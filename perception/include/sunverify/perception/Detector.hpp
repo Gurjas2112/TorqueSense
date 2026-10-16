@@ -58,6 +58,11 @@ class ReplayDetector final : public IDetector {
   std::size_t load_dir(const std::filesystem::path& dir);
   const std::vector<ReplayScenario>& scenarios() const noexcept { return scenarios_; }
   int find(const std::string& name) const noexcept;
+  // A scenario with no recorded detector output: its frames are classified from pixels instead.
+  int add(ReplayScenario s) {
+    scenarios_.push_back(std::move(s));
+    return static_cast<int>(scenarios_.size()) - 1;
+  }
 
   // Selects the scenario the next frames come from (the cycle boundary). Index change only.
   void select(int scenario) noexcept;

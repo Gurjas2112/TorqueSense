@@ -1,10 +1,16 @@
 #include "Pipeline.hpp"
 
 #include <cstdio>
+#include <cmath>
 #include <cstring>
+#include <fstream>
+#include <algorithm>
+#include <filesystem>
 #include <stdexcept>
 
 #include "Affinity.hpp"
+#include "Conformance.hpp"
+#include "SchematicLayout.hpp"
 #include "sources/FrameSource.hpp"
 #include "sunverify/procedure/Heartbeat.hpp"
 #include "sunverify/procedure/OpcUaAlerter.hpp"
@@ -48,8 +54,35 @@ Pipeline::Pipeline(StationConfig cfg) : cfg_(std::move(cfg)) {
     v.push_back(static_cast<float>(ip.position_mm[1]));
   }
   detector_ = std::make_unique<perception::ReplayDetector>(ids, u, v);
-  if (detector_->load_dir(cfg_.fixtures) == 0)
+  if (cfg_.provider == "schematic") {
+    // Any sample folder, live: its traces are the scenarios, its media/<trace>.mp4 the frames, and the
+    // states are read from the pixels (perception/src/SchematicDetector.cpp). No code per assembly.
+    from_pixels_ = true;
+    std::ifstream in(cfg_.profile_dir / "procedure.json");
+    const SchematicLayout lay = schematic_layout(nlohmann::json::parse(in));
+    schematic_.set_points(lay.pts.data(), static_cast<std::uint16_t>(lay.pts.size()), lay.radius);
+    std::vector<std::filesystem::path> traces;
+    for (const auto& e : std::filesystem::directory_iterator(cfg_.profile_dir / "traces"))
+      if (e.path().extension() == ".yaml") traces.push_back(e.path());
+    std::sort(traces.begin(), traces.end());
+    for (const auto& t : traces) {
+      const TraceSpec spec = load_trace(profile_, t);
+      perception::ReplayScenario sc;
+      sc.name = t.stem().string();
+      sc.title = profile_.name() + " / " + sc.name;
+      sc.fps = cfg_.fps;
+      sc.release_at_ms = spec.release_at_ms;
+      // as synth/sample_media.py draws it: to the release frame, then one second more
+      sc.n_frames = static_cast<std::uint64_t>(std::ceil(spec.release_at_ms * cfg_.fps / 1000.0 - 1e-9)) +
+                    static_cast<std::uint64_t>(cfg_.fps);
+      for (const auto& g : spec.signals)
+        if (g.tag >= 0) sc.tags.push_back({g.t_ms, profile_.tags()[static_cast<std::size_t>(g.tag)], g.value.number != 0});
+      sc.must_alert = !spec.expect_release_ok;
+      detector_->add(std::move(sc));
+    }
+  } else if (detector_->load_dir(cfg_.fixtures) == 0) {
     throw std::runtime_error("no replay fixtures in " + cfg_.fixtures.string() + " — run synth/scenarios.py");
+  }
   for (const auto& name : cfg_.playlist)
     if (detector_->find(name) < 0) throw std::runtime_error("playlist names unknown scenario " + name);
 
@@ -176,7 +209,13 @@ void Pipeline::inference_loop() {
       continue;
     }
     if (m.new_cycle) detector_->select(m.scenario);
-    detector_->infer(m.frame_in_cycle, *sv);
+    if (from_pixels_) {
+      schematic_.classify(pool_->data(m.pool_index), cfg_.process_width, cfg_.process_height, cfg_.process_width * 3, *sv);
+      sv->hands = sv->tools = 0;
+      sv->anchor_residual_px = 0;
+    } else {
+      detector_->infer(m.frame_in_cycle, *sv);
+    }
     pool_->release(m.pool_index);
     sv->frame_seq = m.frame_seq;
     sv->t_capture_ns = m.t_capture_ns;

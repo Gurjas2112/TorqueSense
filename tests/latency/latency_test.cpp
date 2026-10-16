@@ -75,7 +75,7 @@ int main(int argc, char** argv) {
   }
   const auto& s = p.detector().scenarios()[static_cast<std::size_t>(idx)];
   std::printf("latency_test: %d runs of %s (%.1f s each), provider %s, PLC %s (%s)\n", runs, scenario.c_str(),
-              s.n_frames / s.fps, p.detector().provider(), cfg.opcua_endpoint.c_str(), cfg.alert_backend.c_str());
+              s.n_frames / s.fps, p.provider(), cfg.opcua_endpoint.c_str(), cfg.alert_backend.c_str());
   std::printf("conditions before: %s\n", before.c_str());
   std::fflush(stdout);
 
@@ -99,7 +99,7 @@ int main(int argc, char** argv) {
   std::printf("frames verified %llu, dropped %llu, fps %.2f\n", health["frames_verified"].get<unsigned long long>(),
               health["frames_dropped"].get<unsigned long long>(), health["fps"].get<double>());
   std::printf("conditions after: %s\n", after.c_str());
-  const bool replay = std::string(p.detector().provider()) == "replay";
+  const bool replay = std::string(p.provider()) == "replay";
   if (replay)
     std::printf("NOTE: replay provider — no detector inference in the loop. This measures the engine, rings and the "
                 "OPC-UA write, not I4 (which needs the GPU detector on locked clocks).\n");
@@ -108,7 +108,7 @@ int main(int argc, char** argv) {
   const bool pass = ev["n"].get<long long>() > 0 && ev["p99_ms"].get<double>() <= budget;
   if (summary) {
     std::ofstream out(summary);
-    out << nlohmann::json{{"scenario", scenario}, {"runs", runs}, {"provider", p.detector().provider()},
+    out << nlohmann::json{{"scenario", scenario}, {"runs", runs}, {"provider", p.provider()},
                           {"budget_evidence_p99_ms", budget}, {"pass", pass}, {"engine", en}, {"evidence", ev},
                           {"fps", health["fps"]}, {"frames_dropped", health["frames_dropped"]},
                           {"conditions_before", before}, {"conditions_after", after},

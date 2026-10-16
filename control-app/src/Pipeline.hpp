@@ -17,6 +17,7 @@
 #include "VerifyCore.hpp"
 #include "sunverify/ipc/SharedClipRing.hpp"
 #include "sunverify/perception/Detector.hpp"
+#include "sunverify/perception/SchematicDetector.hpp"
 #include "sunverify/perception/FramePool.hpp"
 #include "sunverify/perception/SpscRingBuffer.hpp"
 #include "sunverify/procedure/IAlerter.hpp"
@@ -55,6 +56,8 @@ class Pipeline {
   const StationConfig& config() const noexcept { return cfg_; }
   const procedure::Profile& profile() const noexcept { return profile_; }
   const perception::ReplayDetector& detector() const noexcept { return *detector_; }
+  // replay: recorded detector output · schematic: states read from the frames' pixels
+  const char* provider() const noexcept { return from_pixels_ ? "schematic" : detector_->provider(); }
   PipelineCounters& counters() noexcept { return counters_; }
   ipc::SharedClipRing* clip_ring() noexcept { return ring_.get(); }
   std::string source_description() const;
@@ -74,7 +77,9 @@ class Pipeline {
 
   StationConfig cfg_;
   procedure::Profile profile_;
-  std::unique_ptr<perception::ReplayDetector> detector_;
+  std::unique_ptr<perception::ReplayDetector> detector_;      // scenarios; replayed output when provider is replay
+  perception::SchematicDetector schematic_;                    // provider schematic: states from the pixels
+  bool from_pixels_ = false;
   std::unique_ptr<IFrameSource> source_;
   std::unique_ptr<perception::FramePool> pool_;
   std::unique_ptr<ipc::SharedClipRing> ring_;

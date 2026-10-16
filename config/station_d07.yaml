@@ -1,0 +1,71 @@
+# Station D-07 — front-door trim: harness clips, connector, trim panel (spec Section 3, Neha; Section 22, profiles track).
+# The second station: every port is W-14's plus 100. Perception reads the sample's media from the pixels
+# (provider schematic) — the same engine binary as the wheel, a different folder. Paths are relative to the repository root,
+# where scripts/start-dev.ps1 starts the engine. Prototype edition: perception runs as the replay
+# provider until a trained model and the GPU stack exist (docs/SPEC.md preface P.3).
+station:
+  id: D-07
+  name: "Front Door Trim, Line 3"
+  takt_seconds: 64
+
+source:
+  kind: file                                  # file | uvc | stream  (Section 8)
+  scenarios_dir: samples/door-trim-harness/media   # <trace>.mp4 (synth/sample_media.py)
+  playlist: [correct, panel_hides_open_clip, correct, connector_not_locked]
+  fps: 30
+  process_width: 960
+  process_height: 540
+
+threads:                                      # logical CPUs: one per physical core 4..7
+  capture: 9
+  inference: 11
+  verify: 13
+  alert: 15
+  priority_class: high                        # never realtime
+
+perception:
+  provider: schematic                         # states from the pixels of the sample media
+  fixtures: tests/fixtures/detections         # ReplayDetector input, one per scenario
+  model_manifest: models/manifest.json        # SHA-256 checked before load (I12)
+  model_version: schematic-detector-v1
+  conf_commit: 0.65
+  conf_floor: 0.35
+  debounce_frames: 2
+  crop_pool_size: 4
+
+profile:
+  dir: samples/door-trim-harness                 # procedure.json, compiled by cad-extract
+  advisory_only: false
+
+alert:
+  backend: opcua                              # opcua | none (tests only)
+  endpoint: opc.tcp://127.0.0.1:4840
+  prefix: Station.D07
+
+line_simulator:                               # stands in for the nutrunner and the line PLC: writes each
+  enabled: true                               # scenario's plant signals and release request to the PLC
+
+clip_ring:
+  name: D-07
+  slots: 180
+  slot_bytes: 262144
+  jpeg_quality: 80
+
+sidecar:
+  enabled: true
+  url: http://127.0.0.1:8001
+  timeout_ms: 1500
+  failure_threshold: 3
+  circuit_open_seconds: 60
+  queue_depth: 16
+
+io:
+  websocket_port: 8180                        # W-15 adds 100 to all three ports, W-16 adds 200, …
+  mjpeg_port: 8190
+  control_port: 8195
+  api_url: http://127.0.0.1:8000
+  event_spool: var/spool/D-07.jsonl           # events survive an API outage
+
+health:
+  bucket_s: 300                               # 5 in demo mode
+  heartbeat_ms: 500

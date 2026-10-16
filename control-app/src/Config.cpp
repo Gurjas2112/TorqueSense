@@ -86,10 +86,10 @@ StationConfig load_station_config(const std::filesystem::path& path) {
   c.heartbeat_ms = get(he, "heartbeat_ms", c.heartbeat_ms);
 
   if (const char* k = std::getenv("API_KEY")) c.api_key = k;
-  if (c.provider != "replay")
+  if (c.provider != "replay" && c.provider != "schematic")
     throw std::runtime_error("perception.provider '" + c.provider +
                              "' needs the ONNX Runtime build (SUNVERIFY_WITH_CUDA) and a trained model — "
-                             "this build runs the replay provider only");
+                             "this build runs the replay and schematic providers only");
   return c;
 }
 

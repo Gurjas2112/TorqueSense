@@ -346,7 +346,7 @@ struct IoSide::Impl {
     st.profile_version = prof.version();
     st.cad_revision = prof.cad_revision();
     st.model_version = cfg.model_version;
-    st.provider = p.detector().provider();
+    st.provider = p.provider();
     st.degraded = std::nullopt;
     st.advisory_only = cfg.advisory_only;
     std::vector<c::StepState> steps;
@@ -569,7 +569,7 @@ struct IoSide::Impl {
               {"profile_version", prof.version()},
               {"model_version", cfg.model_version},
               {"cad_revision", prof.cad_revision()},
-              {"provider", p.detector().provider()},
+              {"provider", p.provider()},
               {"degraded", nullptr},
               {"fps", up_s > 0 ? static_cast<double>(k.frames_verified) / up_s : 0.0},
               {"evidence_p99_ms", evidence_h.p(99)},

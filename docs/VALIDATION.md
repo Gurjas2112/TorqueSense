@@ -213,3 +213,20 @@ are answered from the 256-entry cache. Not yet measured: the agreement rate on a
 
 Node-RED 5.0.8 (tools/node-red) reads the soft PLC's tags over OPC-UA and lights GREEN and
 INSPECTION ONLINE live; the demo stack runs natively from `scripts/start-dev.ps1`.
+
+## Profiles track (Phase 10): a second assembly, live, from the pixels — 2026-10-16
+
+Station D-07 (`config/station_d07.yaml`) runs `samples/door-trim-harness` in the same engine binary as
+the wheel, with perception provider `schematic`: frames from the sample's media through FileSource,
+states read from the pixels by SchematicDetector, plant signals (the connector lock) through the soft
+PLC. After four cycles (correct · panel over an open clip · correct · connector not locked):
+
+```text
+D-07 /health: provider schematic · profile door-trim-harness-fl · fps 30.00 · frames dropped 0 · PLC connected
+PRECEDENCE trim_panel panel-1  evidence 36.1 ms | Panel 1 installed before step 'clips' was complete.
+INCOMPLETE_AT_RELEASE clips    evidence 1.4 ms  | Release requested with step 'clips' unfinished. Missing: clip 4.
+```
+
+Windshield and electronics enclosure stay at procedure level, as Section 22 plans: both pass the
+conformance suite in the C++ engine and the reference (22 traces, 0 disagreements) and their media
+pass `MediaConformance`. `python samples\run_samples.py --template` PASS, 6/6 kinds.
