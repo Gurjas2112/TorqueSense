@@ -40,6 +40,11 @@ cache/
 !app_screenshots_screen_recording/*.webm
 samples/*/media/*
 !samples/*/media/README.md
+# schematic sample media, verified frame by frame by ctest (docs/adr/0012)
+!samples/*/media/*.mp4
+!samples/*/media/*/
+!samples/*/media/*/*.png
+!samples/*/media/*/frames.json
 
 # build trees
 build/

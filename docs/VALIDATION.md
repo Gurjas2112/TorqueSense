@@ -119,3 +119,50 @@ What this does and does not show:
 - **Conditions not controlled:** clocks unlocked, other work running (builds, history seeding), and the
   process was descheduled for part of the run — the average of 18.8 fps and 901 dropped frames show
   it. 199 of the expected 200 alerts were acknowledged; the last cycle ended with the run.
+
+## Sample media through perception, frame by frame — 2026-10-16
+
+Schematic videos and keyframes in `samples/*/media/` (docs/adr/0012), read from the pixels by
+SchematicDetector, committed through the debounce, run through the interpreter:
+
+```text
+ (my-assembly): schematic media through SchematicDetector -> debounce -> interpreter
+  correct                      330 frames    4 commits     0 unread  release ok     no violation                             PASS
+  wrong_order                  330 frames    4 commits     0 unread  release held   SEQUENCE,SEQUENCE,SEQUENCE               PASS
+  videos 2/2 PASS · keyframe images 10 all read as expected
+ (desk-cover-4screw): schematic media through SchematicDetector -> debounce -> interpreter
+  correct                      930 frames   10 commits     0 unread  release ok     no violation                             PASS
+  round_the_box                930 frames   10 commits     0 unread  release held   SEQUENCE,SEQUENCE                        PASS
+  screw_backed_out             930 frames   11 commits     0 unread  release held   REGRESSION,INCOMPLETE_AT_RELEASE         PASS
+  screw_left_out              2160 frames    8 commits     0 unread  release held   PRECEDENCE,STEP_TIMEOUT,INCOMPLETE_AT_RELEASE PASS
+  videos 4/4 PASS · keyframe images 43 all read as expected
+ (desk-harness-clips): schematic media through SchematicDetector -> debounce -> interpreter
+  correct                      780 frames    7 commits     0 unread  release ok     no violation                             PASS
+  cover_over_open_clip         780 frames    6 commits     0 unread  release held   PRECEDENCE,INCOMPLETE_AT_RELEASE         PASS
+  plug_not_mated              1440 frames    6 commits     0 unread  release held   PRECEDENCE,STEP_TIMEOUT,INCOMPLETE_AT_RELEASE PASS
+  videos 3/3 PASS · keyframe images 22 all read as expected
+ (door-trim-harness-fl): schematic media through SchematicDetector -> debounce -> interpreter
+  connector_not_locked         210 frames    8 commits     0 unread  release held   EVIDENCE_MISSING                         PASS
+  correct                      210 frames    8 commits     0 unread  release ok     no violation                             PASS
+  panel_hides_open_clip        210 frames    7 commits     0 unread  release held   PRECEDENCE,INCOMPLETE_AT_RELEASE         PASS
+  videos 3/3 PASS · keyframe images 26 all read as expected
+ (enclosure-cover): schematic media through SchematicDetector -> debounce -> interpreter
+  correct                      180 frames    8 commits     0 unread  release ok     no violation                             PASS
+  label_forgotten              180 frames    7 commits     0 unread  release held   INCOMPLETE_AT_RELEASE                    PASS
+  videos 2/2 PASS · keyframe images 17 all read as expected
+ (wheel-fitment-rl): schematic media through SchematicDetector -> debounce -> interpreter
+  adjacent_order               390 frames   10 commits     0 unread  release held   SEQUENCE,SEQUENCE,SEQUENCE,SEQUENCE      PASS
+  correct                      390 frames   10 commits     0 unread  release ok     no violation                             PASS
+  loosened_bolt                390 frames   11 commits     0 unread  release held   REGRESSION,INCOMPLETE_AT_RELEASE         PASS
+  missing_bolt                 960 frames    8 commits     0 unread  release held   PRECEDENCE,PRECEDENCE,PRECEDENCE,PRECEDENCE,STEP_TIMEOUT,INCOMPLETE_AT_RELEASE,INCOMPLETE_AT_RELEASE PASS
+  no_nutrunner_result          390 frames   10 commits     0 unread  release held   EVIDENCE_MISSING,EVIDENCE_MISSING,EVIDENCE_MISSING,EVIDENCE_MISSING,EVIDENCE_MISSING PASS
+  torque_before_all_started    390 frames    9 commits     0 unread  release held   PRECEDENCE,PRECEDENCE,PRECEDENCE,PRECEDENCE PASS
+  videos 6/6 PASS · keyframe images 64 all read as expected
+ (windshield-bond): schematic media through SchematicDetector -> debounce -> interpreter
+  correct                      120 frames    9 commits     0 unread  release ok     no violation                             PASS
+  glass_before_gasket_seated   120 frames    8 commits     0 unread  release held   PRECEDENCE,INCOMPLETE_AT_RELEASE         PASS
+  videos 2/2 PASS · keyframe images 19 all read as expected
+```
+
+This proves the media path and the procedure on frames. It is not an accuracy figure: the frames are
+drawings in a known colour code, and SchematicDetector is valid on nothing else.

@@ -2,7 +2,7 @@
 # torquesense_core holds everything but main(), so the scenario, allocation and latency tests drive
 # the same code the station runs.
 add_library(torquesense_core STATIC src/Conformance.cpp src/VerifyCore.cpp src/Config.cpp src/Affinity.cpp
-            src/Pipeline.cpp src/IoSide.cpp src/LineSimulator.cpp src/sources/FileSource.cpp)
+            src/Pipeline.cpp src/IoSide.cpp src/LineSimulator.cpp src/sources/FileSource.cpp src/MediaVerify.cpp)
 target_include_directories(torquesense_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(torquesense_core PUBLIC sunverify_perception sunverify_procedure sunverify_report sunverify_ipc
                       cad_extract yaml-cpp::yaml-cpp nlohmann_json::nlohmann_json Threads::Threads
@@ -36,4 +36,15 @@ endif()
 if(TS_PYTHON)
   add_test(NAME Differential.reference
            COMMAND ${TS_PYTHON} ${CMAKE_SOURCE_DIR}/tests/differential/differential.py --engine $<TARGET_FILE:torquesense>)
+endif()
+
+# Each sample's media must raise its traces' violations through perception, frame by frame (spec Section 12).
+if(OpenCV_FOUND)
+  file(GLOB _media_samples LIST_DIRECTORIES true ${CMAKE_SOURCE_DIR}/samples/*)
+  foreach(_s IN LISTS _media_samples)
+    if(EXISTS ${_s}/media AND EXISTS ${_s}/traces)
+      get_filename_component(_n ${_s} NAME)
+      add_test(NAME MediaConformance.${_n} COMMAND torquesense --sample ${_s} --verify-media all)
+    endif()
+  endforeach()
 endif()

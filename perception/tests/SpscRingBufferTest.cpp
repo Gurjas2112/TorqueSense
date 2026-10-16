@@ -128,3 +128,36 @@ TEST(FramePool, LeaseOnOneThreadReturnOnAnother) {
   while (pool.lease()) ++back;
   EXPECT_EQ(back, 4) << "every frame came home";
 }
+
+#include "sunverify/perception/SchematicDetector.hpp"
+
+TEST(SchematicDetector, ReadsEachColourClassAndToleratesCompression) {
+  using R = SchematicDetector::Read;
+  EXPECT_EQ(SchematicDetector::read(31, 35, 44), R::kRing);      // the tile inside an empty ring
+  EXPECT_EQ(SchematicDetector::read(160, 166, 170), R::kMiddle);  // grey metal
+  EXPECT_EQ(SchematicDetector::read(36, 190, 245), R::kLast);     // the yellow mark
+  EXPECT_EQ(SchematicDetector::read(50, 175, 230), R::kLast);     // the same, after MPEG-4
+  EXPECT_EQ(SchematicDetector::read(60, 90, 150), R::kGlove);     // a hand over the point: no answer
+  EXPECT_EQ(SchematicDetector::read(200, 40, 40), R::kUnknown);
+}
+
+TEST(SchematicDetector, ClassifiesAFrameIntoRanks) {
+  std::vector<std::uint8_t> img(64 * 32 * 3, 30);                  // dark: rank 0 everywhere
+  auto paint = [&](int cx, int cy, std::uint8_t b, std::uint8_t g, std::uint8_t r) {
+    for (int y = cy - 3; y <= cy + 3; ++y)
+      for (int x = cx - 3; x <= cx + 3; ++x) {
+        auto* p = &img[(y * 64 + x) * 3];
+        p[0] = b; p[1] = g; p[2] = r;
+      }
+  };
+  paint(16, 16, 160, 166, 170);
+  paint(48, 16, 36, 190, 245);
+  const SchematicDetector::Point pts[] = {{16, 16, 3}, {48, 16, 3}, {8, 8, 2}};
+  SchematicDetector d;
+  d.set_points(pts, 3, 9);
+  auto sv = std::make_unique<StateVector>();
+  d.classify(img.data(), 64, 32, 64 * 3, *sv);
+  EXPECT_EQ(sv->ips[0].rank, 1);   // seated
+  EXPECT_EQ(sv->ips[1].rank, 2);   // fastened
+  EXPECT_EQ(sv->ips[2].rank, 0);   // absent
+}

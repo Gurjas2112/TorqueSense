@@ -1,0 +1,76 @@
+{
+ "sample": "_template",
+ "trace": "wrong_order",
+ "fps": 30.0,
+ "release_ok": false,
+ "frames": [
+  {
+   "file": "frame_0000.png",
+   "frame": 0,
+   "t_ms": 0.0,
+   "expect": {
+    "part-1": "absent",
+    "screw-1": "absent",
+    "screw-2": "absent",
+    "screw-3": "absent"
+   },
+   "changed": []
+  },
+  {
+   "file": "frame_0029.png",
+   "frame": 29,
+   "t_ms": 966.7,
+   "expect": {
+    "part-1": "present",
+    "screw-1": "absent",
+    "screw-2": "absent",
+    "screw-3": "absent"
+   },
+   "changed": [
+    "part-1"
+   ]
+  },
+  {
+   "file": "frame_0089.png",
+   "frame": 89,
+   "t_ms": 2966.7,
+   "expect": {
+    "part-1": "present",
+    "screw-1": "fastened",
+    "screw-2": "absent",
+    "screw-3": "absent"
+   },
+   "changed": [
+    "screw-1"
+   ]
+  },
+  {
+   "file": "frame_0149.png",
+   "frame": 149,
+   "t_ms": 4966.7,
+   "expect": {
+    "part-1": "present",
+    "screw-1": "fastened",
+    "screw-2": "fastened",
+    "screw-3": "absent"
+   },
+   "changed": [
+    "screw-2"
+   ]
+  },
+  {
+   "file": "frame_0209.png",
+   "frame": 209,
+   "t_ms": 6966.7,
+   "expect": {
+    "part-1": "present",
+    "screw-1": "fastened",
+    "screw-2": "fastened",
+    "screw-3": "fastened"
+   },
+   "changed": [
+    "screw-3"
+   ]
+  }
+ ]
+}

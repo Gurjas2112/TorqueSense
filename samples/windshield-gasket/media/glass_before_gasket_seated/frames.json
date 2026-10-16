@@ -1,0 +1,177 @@
+{
+ "sample": "windshield-gasket",
+ "trace": "glass_before_gasket_seated",
+ "fps": 30.0,
+ "release_ok": false,
+ "frames": [
+  {
+   "file": "frame_0000.png",
+   "frame": 0,
+   "t_ms": 0.0,
+   "expect": {
+    "gasket-1": "unseated",
+    "gasket-2": "unseated",
+    "gasket-3": "unseated",
+    "gasket-4": "unseated",
+    "gasket-5": "unseated",
+    "gasket-6": "unseated",
+    "gasket-7": "unseated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": []
+  },
+  {
+   "file": "frame_0002.png",
+   "frame": 2,
+   "t_ms": 66.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "unseated",
+    "gasket-3": "unseated",
+    "gasket-4": "unseated",
+    "gasket-5": "unseated",
+    "gasket-6": "unseated",
+    "gasket-7": "unseated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-1"
+   ]
+  },
+  {
+   "file": "frame_0005.png",
+   "frame": 5,
+   "t_ms": 166.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "unseated",
+    "gasket-4": "unseated",
+    "gasket-5": "unseated",
+    "gasket-6": "unseated",
+    "gasket-7": "unseated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-2"
+   ]
+  },
+  {
+   "file": "frame_0008.png",
+   "frame": 8,
+   "t_ms": 266.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "seated",
+    "gasket-4": "unseated",
+    "gasket-5": "unseated",
+    "gasket-6": "unseated",
+    "gasket-7": "unseated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-3"
+   ]
+  },
+  {
+   "file": "frame_0011.png",
+   "frame": 11,
+   "t_ms": 366.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "seated",
+    "gasket-4": "seated",
+    "gasket-5": "unseated",
+    "gasket-6": "unseated",
+    "gasket-7": "unseated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-4"
+   ]
+  },
+  {
+   "file": "frame_0014.png",
+   "frame": 14,
+   "t_ms": 466.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "seated",
+    "gasket-4": "seated",
+    "gasket-5": "seated",
+    "gasket-6": "unseated",
+    "gasket-7": "unseated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-5"
+   ]
+  },
+  {
+   "file": "frame_0017.png",
+   "frame": 17,
+   "t_ms": 566.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "seated",
+    "gasket-4": "seated",
+    "gasket-5": "seated",
+    "gasket-6": "unseated",
+    "gasket-7": "seated",
+    "gasket-8": "unseated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-7"
+   ]
+  },
+  {
+   "file": "frame_0020.png",
+   "frame": 20,
+   "t_ms": 666.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "seated",
+    "gasket-4": "seated",
+    "gasket-5": "seated",
+    "gasket-6": "unseated",
+    "gasket-7": "seated",
+    "gasket-8": "seated",
+    "glass-1": "absent"
+   },
+   "changed": [
+    "gasket-8"
+   ]
+  },
+  {
+   "file": "frame_0059.png",
+   "frame": 59,
+   "t_ms": 1966.7,
+   "expect": {
+    "gasket-1": "seated",
+    "gasket-2": "seated",
+    "gasket-3": "seated",
+    "gasket-4": "seated",
+    "gasket-5": "seated",
+    "gasket-6": "unseated",
+    "gasket-7": "seated",
+    "gasket-8": "seated",
+    "glass-1": "placed"
+   },
+   "changed": [
+    "glass-1"
+   ]
+  }
+ ]
+}

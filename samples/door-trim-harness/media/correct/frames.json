@@ -1,0 +1,168 @@
+{
+ "sample": "door-trim-harness",
+ "trace": "correct",
+ "fps": 30.0,
+ "release_ok": true,
+ "frames": [
+  {
+   "file": "frame_0000.png",
+   "frame": 0,
+   "t_ms": 0.0,
+   "expect": {
+    "clip-1": "open",
+    "clip-2": "open",
+    "clip-3": "open",
+    "clip-4": "open",
+    "clip-5": "open",
+    "clip-6": "open",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": []
+  },
+  {
+   "file": "frame_0002.png",
+   "frame": 2,
+   "t_ms": 66.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "open",
+    "clip-4": "open",
+    "clip-5": "open",
+    "clip-6": "open",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "clip-1"
+   ]
+  },
+  {
+   "file": "frame_0005.png",
+   "frame": 5,
+   "t_ms": 166.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "open",
+    "clip-4": "open",
+    "clip-5": "open",
+    "clip-6": "open",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "clip-2"
+   ]
+  },
+  {
+   "file": "frame_0008.png",
+   "frame": 8,
+   "t_ms": 266.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "closed",
+    "clip-4": "open",
+    "clip-5": "open",
+    "clip-6": "open",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "clip-3"
+   ]
+  },
+  {
+   "file": "frame_0011.png",
+   "frame": 11,
+   "t_ms": 366.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "open",
+    "clip-6": "open",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "clip-4"
+   ]
+  },
+  {
+   "file": "frame_0014.png",
+   "frame": 14,
+   "t_ms": 466.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "clip-6": "open",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "clip-5"
+   ]
+  },
+  {
+   "file": "frame_0017.png",
+   "frame": 17,
+   "t_ms": 566.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "clip-6": "closed",
+    "connector-1": "unmated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "clip-6"
+   ]
+  },
+  {
+   "file": "frame_0029.png",
+   "frame": 29,
+   "t_ms": 966.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "clip-6": "closed",
+    "connector-1": "mated",
+    "panel-1": "absent"
+   },
+   "changed": [
+    "connector-1"
+   ]
+  },
+  {
+   "file": "frame_0149.png",
+   "frame": 149,
+   "t_ms": 4966.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "closed",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "clip-6": "closed",
+    "connector-1": "mated",
+    "panel-1": "installed"
+   },
+   "changed": [
+    "panel-1"
+   ]
+  }
+ ]
+}

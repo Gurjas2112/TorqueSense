@@ -1,0 +1,186 @@
+{
+ "sample": "wheel-hub-5lug",
+ "trace": "loosened_bolt",
+ "fps": 30.0,
+ "release_ok": false,
+ "frames": [
+  {
+   "file": "frame_0000.png",
+   "frame": 0,
+   "t_ms": 0.0,
+   "expect": {
+    "bolt-1": "absent",
+    "bolt-2": "absent",
+    "bolt-3": "absent",
+    "bolt-4": "absent",
+    "bolt-5": "absent"
+   },
+   "changed": []
+  },
+  {
+   "file": "frame_0029.png",
+   "frame": 29,
+   "t_ms": 966.7,
+   "expect": {
+    "bolt-1": "seated",
+    "bolt-2": "absent",
+    "bolt-3": "absent",
+    "bolt-4": "absent",
+    "bolt-5": "absent"
+   },
+   "changed": [
+    "bolt-1"
+   ]
+  },
+  {
+   "file": "frame_0032.png",
+   "frame": 32,
+   "t_ms": 1066.7,
+   "expect": {
+    "bolt-1": "seated",
+    "bolt-2": "seated",
+    "bolt-3": "absent",
+    "bolt-4": "absent",
+    "bolt-5": "absent"
+   },
+   "changed": [
+    "bolt-2"
+   ]
+  },
+  {
+   "file": "frame_0035.png",
+   "frame": 35,
+   "t_ms": 1166.7,
+   "expect": {
+    "bolt-1": "seated",
+    "bolt-2": "seated",
+    "bolt-3": "seated",
+    "bolt-4": "absent",
+    "bolt-5": "absent"
+   },
+   "changed": [
+    "bolt-3"
+   ]
+  },
+  {
+   "file": "frame_0038.png",
+   "frame": 38,
+   "t_ms": 1266.7,
+   "expect": {
+    "bolt-1": "seated",
+    "bolt-2": "seated",
+    "bolt-3": "seated",
+    "bolt-4": "seated",
+    "bolt-5": "absent"
+   },
+   "changed": [
+    "bolt-4"
+   ]
+  },
+  {
+   "file": "frame_0041.png",
+   "frame": 41,
+   "t_ms": 1366.7,
+   "expect": {
+    "bolt-1": "seated",
+    "bolt-2": "seated",
+    "bolt-3": "seated",
+    "bolt-4": "seated",
+    "bolt-5": "seated"
+   },
+   "changed": [
+    "bolt-5"
+   ]
+  },
+  {
+   "file": "frame_0089.png",
+   "frame": 89,
+   "t_ms": 2966.7,
+   "expect": {
+    "bolt-1": "fastened",
+    "bolt-2": "seated",
+    "bolt-3": "seated",
+    "bolt-4": "seated",
+    "bolt-5": "seated"
+   },
+   "changed": [
+    "bolt-1"
+   ]
+  },
+  {
+   "file": "frame_0113.png",
+   "frame": 113,
+   "t_ms": 3766.7,
+   "expect": {
+    "bolt-1": "fastened",
+    "bolt-2": "seated",
+    "bolt-3": "fastened",
+    "bolt-4": "seated",
+    "bolt-5": "seated"
+   },
+   "changed": [
+    "bolt-3"
+   ]
+  },
+  {
+   "file": "frame_0137.png",
+   "frame": 137,
+   "t_ms": 4566.7,
+   "expect": {
+    "bolt-1": "fastened",
+    "bolt-2": "seated",
+    "bolt-3": "fastened",
+    "bolt-4": "seated",
+    "bolt-5": "fastened"
+   },
+   "changed": [
+    "bolt-5"
+   ]
+  },
+  {
+   "file": "frame_0161.png",
+   "frame": 161,
+   "t_ms": 5366.7,
+   "expect": {
+    "bolt-1": "fastened",
+    "bolt-2": "fastened",
+    "bolt-3": "fastened",
+    "bolt-4": "seated",
+    "bolt-5": "fastened"
+   },
+   "changed": [
+    "bolt-2"
+   ]
+  },
+  {
+   "file": "frame_0185.png",
+   "frame": 185,
+   "t_ms": 6166.7,
+   "expect": {
+    "bolt-1": "fastened",
+    "bolt-2": "fastened",
+    "bolt-3": "fastened",
+    "bolt-4": "fastened",
+    "bolt-5": "fastened"
+   },
+   "changed": [
+    "bolt-4"
+   ]
+  },
+  {
+   "file": "frame_0209.png",
+   "frame": 209,
+   "t_ms": 6966.7,
+   "expect": {
+    "bolt-1": "fastened",
+    "bolt-2": "fastened",
+    "bolt-3": "seated",
+    "bolt-4": "fastened",
+    "bolt-5": "fastened"
+   },
+   "changed": [
+    "bolt-3"
+   ]
+  }
+ ]
+}

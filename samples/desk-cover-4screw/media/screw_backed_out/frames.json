@@ -1,0 +1,198 @@
+{
+ "sample": "desk-cover-4screw",
+ "trace": "screw_backed_out",
+ "fps": 30.0,
+ "release_ok": false,
+ "frames": [
+  {
+   "file": "frame_0000.png",
+   "frame": 0,
+   "t_ms": 0.0,
+   "expect": {
+    "lid-1": "absent",
+    "screw-1": "absent",
+    "screw-2": "absent",
+    "screw-3": "absent",
+    "screw-4": "absent",
+    "label-1": "absent"
+   },
+   "changed": []
+  },
+  {
+   "file": "frame_0059.png",
+   "frame": 59,
+   "t_ms": 1966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "absent",
+    "screw-2": "absent",
+    "screw-3": "absent",
+    "screw-4": "absent",
+    "label-1": "absent"
+   },
+   "changed": [
+    "lid-1"
+   ]
+  },
+  {
+   "file": "frame_0119.png",
+   "frame": 119,
+   "t_ms": 3966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "seated",
+    "screw-2": "absent",
+    "screw-3": "absent",
+    "screw-4": "absent",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-1"
+   ]
+  },
+  {
+   "file": "frame_0149.png",
+   "frame": 149,
+   "t_ms": 4966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "seated",
+    "screw-2": "seated",
+    "screw-3": "absent",
+    "screw-4": "absent",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-2"
+   ]
+  },
+  {
+   "file": "frame_0179.png",
+   "frame": 179,
+   "t_ms": 5966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "seated",
+    "screw-2": "seated",
+    "screw-3": "seated",
+    "screw-4": "absent",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-3"
+   ]
+  },
+  {
+   "file": "frame_0209.png",
+   "frame": 209,
+   "t_ms": 6966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "seated",
+    "screw-2": "seated",
+    "screw-3": "seated",
+    "screw-4": "seated",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-4"
+   ]
+  },
+  {
+   "file": "frame_0299.png",
+   "frame": 299,
+   "t_ms": 9966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "fastened",
+    "screw-2": "seated",
+    "screw-3": "seated",
+    "screw-4": "seated",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-1"
+   ]
+  },
+  {
+   "file": "frame_0389.png",
+   "frame": 389,
+   "t_ms": 12966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "fastened",
+    "screw-2": "seated",
+    "screw-3": "fastened",
+    "screw-4": "seated",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-3"
+   ]
+  },
+  {
+   "file": "frame_0479.png",
+   "frame": 479,
+   "t_ms": 15966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "fastened",
+    "screw-2": "fastened",
+    "screw-3": "fastened",
+    "screw-4": "seated",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-2"
+   ]
+  },
+  {
+   "file": "frame_0569.png",
+   "frame": 569,
+   "t_ms": 18966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "fastened",
+    "screw-2": "fastened",
+    "screw-3": "fastened",
+    "screw-4": "fastened",
+    "label-1": "absent"
+   },
+   "changed": [
+    "screw-4"
+   ]
+  },
+  {
+   "file": "frame_0749.png",
+   "frame": 749,
+   "t_ms": 24966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "fastened",
+    "screw-2": "fastened",
+    "screw-3": "fastened",
+    "screw-4": "fastened",
+    "label-1": "applied"
+   },
+   "changed": [
+    "label-1"
+   ]
+  },
+  {
+   "file": "frame_0809.png",
+   "frame": 809,
+   "t_ms": 26966.7,
+   "expect": {
+    "lid-1": "placed",
+    "screw-1": "fastened",
+    "screw-2": "seated",
+    "screw-3": "fastened",
+    "screw-4": "fastened",
+    "label-1": "applied"
+   },
+   "changed": [
+    "screw-2"
+   ]
+  }
+ ]
+}

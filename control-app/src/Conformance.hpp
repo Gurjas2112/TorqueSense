@@ -4,6 +4,7 @@
 // with the reference interpreter (spec Section 12). Together they are the differential test (I16).
 #include <filesystem>
 #include <string>
+#include <vector>
 
 #include <nlohmann/json.hpp>
 
@@ -25,5 +26,22 @@ int run_conformance(const std::filesystem::path& samples_dir, const std::filesys
 
 // torquesense --sample <dir> --replay-trace <file>: one trace, printed.
 int run_one_trace(const std::filesystem::path& sample_dir, const std::filesystem::path& trace);
+
+// A trace file, parsed: its plant signals (a camera cannot see them), its release time and its expect: block.
+struct TraceSpec {
+  struct Signal {
+    std::int64_t t_ms;
+    int tag;
+    procedure::TagValue value;
+  };
+  std::vector<Signal> signals;
+  std::int64_t release_at_ms = 0;
+  bool expect_release_ok = false;
+  nlohmann::json expect_violations = nlohmann::json::array();
+};
+TraceSpec load_trace(const procedure::Profile& p, const std::filesystem::path& trace_yaml);
+
+// run_samples.matches(): the same count, and every key an expectation names has the same value ("" = match).
+std::string expect_matches(const nlohmann::json& expected, const nlohmann::json& got);
 
 }  // namespace sunverify::app

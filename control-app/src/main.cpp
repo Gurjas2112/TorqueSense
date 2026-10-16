@@ -15,6 +15,7 @@
 
 #include "Conformance.hpp"
 #include "IoSide.hpp"
+#include "MediaVerify.hpp"
 #include "Pipeline.hpp"
 
 #ifdef SUNVERIFY_WITH_CUDA
@@ -107,6 +108,8 @@ int usage() {
                "usage: torquesense --version\n"
                "       torquesense --conformance <samples-dir> [--template] [--json <out.json>]\n"
                "       torquesense --sample <dir> --replay-trace <trace.yaml>\n"
+               "       torquesense --sample <dir> --verify-media all|<trace> [--frames-csv <out.csv>]\n"
+               "       torquesense --sample <dir> --classify-image <frame.png>\n"
                "       torquesense --config <station.yaml> [--record <session.jsonl>] [--seconds N]\n");
   return 2;
 }
@@ -129,6 +132,11 @@ int main(int argc, char** argv) {
       return run_station(config, arg_after(argc, argv, "--record"), arg_after(argc, argv, "--seconds"));
     if (const char* sample = arg_after(argc, argv, "--sample")) {
       if (const char* trace = arg_after(argc, argv, "--replay-trace")) return sunverify::app::run_one_trace(sample, trace);
+      if (const char* which = arg_after(argc, argv, "--verify-media")) {
+        const char* csv = arg_after(argc, argv, "--frames-csv");
+        return sunverify::app::run_verify_media(sample, which, csv ? csv : "");
+      }
+      if (const char* img = arg_after(argc, argv, "--classify-image")) return sunverify::app::run_classify_image(sample, img);
     }
   } catch (const std::exception& e) {
     std::fprintf(stderr, "torquesense: %s\n", e.what());

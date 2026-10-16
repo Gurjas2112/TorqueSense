@@ -1,5 +1,5 @@
 # sunverify_perception — SpscRingBuffer, frame pools, StateVector, detectors (spec Sections 9, 14).
-add_library(sunverify_perception STATIC src/FramePool.cpp src/ReplayDetector.cpp src/Committer.cpp)
+add_library(sunverify_perception STATIC src/FramePool.cpp src/ReplayDetector.cpp src/Committer.cpp src/SchematicDetector.cpp)
 target_include_directories(sunverify_perception PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(sunverify_perception PRIVATE sunverify_warnings PUBLIC Threads::Threads nlohmann_json::nlohmann_json)
 

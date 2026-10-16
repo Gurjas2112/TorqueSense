@@ -1,0 +1,125 @@
+{
+ "sample": "desk-harness-clips",
+ "trace": "cover_over_open_clip",
+ "fps": 30.0,
+ "release_ok": false,
+ "frames": [
+  {
+   "file": "frame_0000.png",
+   "frame": 0,
+   "t_ms": 0.0,
+   "expect": {
+    "clip-1": "open",
+    "clip-2": "open",
+    "clip-3": "open",
+    "clip-4": "open",
+    "clip-5": "open",
+    "connector-1": "unmated",
+    "cover-1": "absent"
+   },
+   "changed": []
+  },
+  {
+   "file": "frame_0059.png",
+   "frame": 59,
+   "t_ms": 1966.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "open",
+    "clip-4": "open",
+    "clip-5": "open",
+    "connector-1": "unmated",
+    "cover-1": "absent"
+   },
+   "changed": [
+    "clip-1"
+   ]
+  },
+  {
+   "file": "frame_0104.png",
+   "frame": 104,
+   "t_ms": 3466.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "closed",
+    "clip-4": "open",
+    "clip-5": "open",
+    "connector-1": "unmated",
+    "cover-1": "absent"
+   },
+   "changed": [
+    "clip-3"
+   ]
+  },
+  {
+   "file": "frame_0149.png",
+   "frame": 149,
+   "t_ms": 4966.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "open",
+    "connector-1": "unmated",
+    "cover-1": "absent"
+   },
+   "changed": [
+    "clip-4"
+   ]
+  },
+  {
+   "file": "frame_0194.png",
+   "frame": 194,
+   "t_ms": 6466.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "connector-1": "unmated",
+    "cover-1": "absent"
+   },
+   "changed": [
+    "clip-5"
+   ]
+  },
+  {
+   "file": "frame_0359.png",
+   "frame": 359,
+   "t_ms": 11966.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "connector-1": "mated",
+    "cover-1": "absent"
+   },
+   "changed": [
+    "connector-1"
+   ]
+  },
+  {
+   "file": "frame_0599.png",
+   "frame": 599,
+   "t_ms": 19966.7,
+   "expect": {
+    "clip-1": "closed",
+    "clip-2": "open",
+    "clip-3": "closed",
+    "clip-4": "closed",
+    "clip-5": "closed",
+    "connector-1": "mated",
+    "cover-1": "installed"
+   },
+   "changed": [
+    "cover-1"
+   ]
+  }
+ ]
+}

@@ -209,3 +209,23 @@ int run_one_trace(const fs::path& sample_dir, const fs::path& trace) {
 }
 
 }  // namespace sunverify::app
+
+namespace sunverify::app {
+
+TraceSpec load_trace(const Profile& p, const fs::path& trace_yaml) {
+  const YAML::Node y = YAML::LoadFile(trace_yaml.string());
+  TraceSpec t;
+  for (const auto& ev : y["events"])
+    if (ev["tag"])
+      t.signals.push_back({ev["t"].as<std::int64_t>(), p.tag_index(ev["tag"].as<std::string>()),
+                           tag_value_from_json(p, yaml_scalar(ev["value"]))});
+  t.release_at_ms = y["release_at"].as<std::int64_t>();
+  const nlohmann::json exp = yaml_scalar(y["expect"]);
+  t.expect_release_ok = exp.value("release_ok", false);
+  if (exp.contains("violations") && !exp["violations"].is_null()) t.expect_violations = exp["violations"];
+  return t;
+}
+
+std::string expect_matches(const nlohmann::json& expected, const nlohmann::json& got) { return matches(expected, got); }
+
+}  // namespace sunverify::app
