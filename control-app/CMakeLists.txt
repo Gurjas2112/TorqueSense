@@ -2,7 +2,7 @@
 # torquesense_core holds everything but main(), so the scenario, allocation and latency tests drive
 # the same code the station runs.
 add_library(torquesense_core STATIC src/Conformance.cpp src/VerifyCore.cpp src/Config.cpp src/Affinity.cpp
-            src/Pipeline.cpp src/IoSide.cpp src/LineSimulator.cpp src/sources/FileSource.cpp src/MediaVerify.cpp src/SchematicLayout.cpp)
+            src/Pipeline.cpp src/IoSide.cpp src/LineSimulator.cpp src/sources/FileSource.cpp src/sources/CameraSource.cpp src/MediaVerify.cpp src/SchematicLayout.cpp)
 target_include_directories(torquesense_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/src)
 target_link_libraries(torquesense_core PUBLIC sunverify_perception sunverify_procedure sunverify_report sunverify_ipc
                       cad_extract yaml-cpp::yaml-cpp nlohmann_json::nlohmann_json Threads::Threads

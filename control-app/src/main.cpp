@@ -9,6 +9,7 @@
 #include <chrono>
 #include <csignal>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <filesystem>
 #include <string>
@@ -16,6 +17,7 @@
 #include "Conformance.hpp"
 #include "IoSide.hpp"
 #include "MediaVerify.hpp"
+#include "sources/CameraSource.hpp"
 #include "Pipeline.hpp"
 
 #ifdef SUNVERIFY_WITH_CUDA
@@ -110,6 +112,7 @@ int usage() {
                "       torquesense --sample <dir> --replay-trace <trace.yaml>\n"
                "       torquesense --sample <dir> --verify-media all|<trace> [--frames-csv <out.csv>]\n"
                "       torquesense --sample <dir> --classify-image <frame.png>\n"
+               "       torquesense --probe-camera uvc|stream [--device 0 | --url <mjpeg>] [--size 1280x720] [--fps 30]\n"
                "       torquesense --config <station.yaml> [--record <session.jsonl>] [--seconds N]\n");
   return 2;
 }
@@ -127,6 +130,15 @@ int main(int argc, char** argv) {
     if (const char* dir = arg_after(argc, argv, "--conformance")) {
       const char* json = arg_after(argc, argv, "--json");
       return sunverify::app::run_conformance(dir, json ? json : "", has(argc, argv, "--template"));
+    }
+    if (const char* kind = arg_after(argc, argv, "--probe-camera")) {   // Section 8: ask, read back, refuse a mismatch
+      sunverify::app::CameraSettings cs;
+      cs.kind = kind;
+      if (const char* d = arg_after(argc, argv, "--device")) cs.device = std::atoi(d);
+      if (const char* u = arg_after(argc, argv, "--url")) cs.url = u;
+      if (const char* z = arg_after(argc, argv, "--size")) std::sscanf(z, "%dx%d", &cs.width, &cs.height);
+      if (const char* f = arg_after(argc, argv, "--fps")) cs.fps = std::atof(f);
+      return sunverify::app::probe_camera(cs);
     }
     if (const char* config = arg_after(argc, argv, "--config"))
       return run_station(config, arg_after(argc, argv, "--record"), arg_after(argc, argv, "--seconds"));
