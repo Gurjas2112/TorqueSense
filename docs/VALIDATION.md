@@ -23,26 +23,77 @@ FAIL  TensorRT 10 (for the TensorRT EP)  missing from PATH: nvinfer_10.dll, nvon
 
 **G1: PASS.** Driver, compute capability and VRAM clear their floors.
 
-## Gate G2 — the GPU stack is live
+## Gate G2 — the GPU stack is live (2026-10-16)
 
-**Not run: blocked on 👤 installs** (spec Section 28 step 3): cuDNN 9 for CUDA 13, ONNX Runtime
-1.28.0 `onnxruntime-win-x64-gpu_cuda13`, TensorRT 10.13.3.9 (CUDA 13.0 zip). Until then:
-
-```text
-> g++ -std=c++20 -O2 -I"C:\dev\tools\onnxruntime\include" ort_check.cpp …
-ort_check.cpp:3:10: fatal error: onnxruntime_cxx_api.h: No such file or directory
-
-> cmake --preset windows-release
-CMake Error at CMakeLists.txt:19 (message):
-  SUNVERIFY_WITH_CUDA=ON but no ONNX Runtime at ONNXRUNTIME_ROOT=''.
-```
-
-The engine's Win32 calls do build and run under GCC:
+Installed without admin rights, each archive checked against its published SHA-256: cuDNN 9.27.0.42
+for CUDA 13 (NVIDIA's redistributable archive) at `C:\dev\tools\cudnn`, ONNX Runtime 1.28.0
+`onnxruntime-win-x64-gpu_cuda13` at `C:\dev\tools\onnxruntime`, TensorRT 10.13.3.9 (CUDA 13.0 zip) at
+`C:\dev\tools\TensorRT`. User variables: `ORT_ROOT`, and `PATH` gains the four `lib`/`bin` folders.
 
 ```text
-> g++ -std=c++20 -O2 platform_check.cpp -o platform_check.exe -lwinmm; .\platform_check.exe
-affinity_prev=65535 eco=1 map=0000025b93840000 seq=1 align=64
+> python scripts\gpu_preflight.py
+PASS  driver                             596.21 (need R580 or later)
+PASS  compute capability                 8.6 on NVIDIA GeForce RTX 3060 Laptop GPU (TensorRT needs SM 7.5 or later)
+PASS  VRAM                               6144 MiB (budgets assume about 6 GB)
+WARN  power telemetry                    not reported; record clocks and temperature only
+PASS  MSVC runtime (ONNX Runtime's DLLs need it) all on PATH
+PASS  CUDA 13 runtime                    all on PATH
+PASS  cuDNN 9                            all on PATH
+PASS  ONNX Runtime gpu_cuda13            all on PATH
+PASS  TensorRT 10 (for the TensorRT EP)  all on PATH
+
+> ort_check.exe mul2.onnx           (MinGW-w64 GCC 16.2 against the MSVC-built package)
+ORT 1.28.0, CUDA EP appended
+out[0]=2.000000
+
+> trt_check.exe mul2.onnx
+TensorRT EP appended
+CUDA EP appended behind it
+out[0]=2.000000
+
+> trtexec --onnx=yolo11n.onnx --fp16 --saveEngine=probe.engine        (stock YOLO11n, 640²)
+TensorRT version: 10.13.3
+GPU Compute Time: min = 1.64343 ms, max = 9.1904 ms, mean = 2.00833 ms, median = 1.9502 ms,
+                  percentile(99%) = 2.61841 ms
+&&&& PASSED TensorRT.trtexec [TensorRT v101303]
+
+> torquesense --version              (windows-release preset)
+torquesense 5.5.0-dev (GCC 16.2.0, __cplusplus 202002)
+onnxruntime 1.28.0
+provider tensorrt: loads
+provider cuda: loads
 ```
+
+**G2: PASS.** One trap found and fixed on the way: Windows ships `onnxruntime.dll` 1.17.1 in
+System32, and the loader searches System32 before PATH, so the first run failed with *"requested API
+version [28] is not available"*. The build now copies ORT's DLLs beside every executable that loads
+them (`perception/CMakeLists.txt`).
+
+## Phase 2 — CAD from FreeCAD, compiled (2026-10-16)
+
+`cad/build_wheel.py` in FreeCAD 1.1.4 (portable, checksum verified) → STEP + glTF → `cad-extract` (OCCT):
+
+```text
+> cad-extract cad\profiles\wheel-5lug
+wheel-fitment-rl: 5 inspection points, OCCT built in
+  torque: circle order bolt-1,bolt-3,bolt-5,bolt-2,bolt-4
+  coverage clean: every point >= 16 px on some camera
+> cad-extract cad\profiles\wheel-4lug
+wheel-fitment-rl: 4 inspection points, OCCT built in
+  torque: circle order bolt-1,bolt-3,bolt-2,bolt-4
+  coverage clean: every point >= 16 px on some camera
+```
+
+The five positions read from the STEP occurrences equal the profile's hand-entered ones to 0.01 mm
+(bolt-1 [0.0, 57.15, 0.0] … bolt-5 [-54.35, 17.66, 0.0]); all points `clear` of occlusion at 25.6 px.
+**Gate: PASS** (five fasteners at 114.3 mm PCD; `cmake --preset windows-release` configures).
+`CadFromFreeCad.wheel-5lug` and `.wheel-4lug` keep the compiled profiles current in ctest.
+
+## I9 — renders are reproducible (2026-10-16)
+
+`pytest synth/tests` with BlenderProc 2.8 (Blender 4.2.1, OptiX on the RTX 3060) and the FreeCAD glTF:
+`test_same_seed_same_render` renders 10 frames twice with seed 7 — identical labels, every frame's
+PSNR ≥ 45 dB. **4 passed** (the render test runs; it does not skip).
 
 ## Latency (I4), accuracy (I10), VRAM (I7), TensorRT gate
 
@@ -182,9 +233,26 @@ publishable key: reads anomalies, cycles, station_health, health_events, ftr_hou
                  health_chart_state and on every insert (RLS)
 ```
 
-**Not run:** the network-pull drill (pull the link mid-cycle; alerts continue; the outbox drains in
-order). It needs the adapter disabled by hand (👤); the ordering it relies on is covered by
-`api/tests/test_outbox.py` (a dropped link stops the flush, order survives, a restart loses nothing).
+## The network-pull drill (spec Section 32) — 2026-10-16
+
+`python scripts\drill_network_pull.py`: engine (replay provider, four fault scenarios on loop), soft
+PLC, and a drill API whose Postgres and S3 links to Supabase pass through a local relay; the relay is
+pulled 4 s into a cycle for 45 s, then restored. The laptop's adapter is not touched, so this proves the
+software claim; pulling the physical cable remains a step of the on-site rehearsal.
+
+```text
+{"t": 24.1, "phase": "link up",  "outbox_pending": 0,  "flushed": 4,  "alerts": 6,  "frames_verified": 727,  "plc_connected": true}
+{"t": 31.0, "phase": "PULLED",   "outbox_pending": 0,  "flushed": 6,  "alerts": 7,  "frames_verified": 933,  "plc_connected": true}
+{"t": 51.1, "phase": "down",     "outbox_pending": 9,  "flushed": 6,  "alerts": 15, "frames_verified": 1537, "plc_connected": true}
+{"t": 76.2, "phase": "RESTORED", "outbox_pending": 18, "flushed": 6,  "alerts": 21, "frames_verified": 2290, "plc_connected": true}
+{"t": 92.4, "phase": "drained",  "outbox_pending": 0,  "flushed": 27, "alerts": 25, "frames_verified": 2777, "plc_connected": true}
+PASS: 14 alerts and 1356 frames verified with the link down; outbox peaked at 18, drained=True;
+      14/14 queued anomalies in Supabase, in event order: True
+```
+
+**PASS.** Alerts and the HMI's frame stream carried on with no link; the outbox rose and drained in 16 s
+after the link returned; every anomaly queued during the outage is in Supabase (read back with the
+publishable key, as the Vercel page reads it), queued in event order.
 
 ## Florence-2 in the loop — 2026-10-16
 
