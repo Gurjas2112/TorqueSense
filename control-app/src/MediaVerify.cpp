@@ -213,6 +213,9 @@ bool verify_keyframes(Loaded& l, const fs::path& dir, int& images) {
 
 int run_verify_media(const fs::path& sample, const std::string& which, const fs::path& frames_csv) {
   Loaded l = load(sample);
+  fs::path norm = sample.lexically_normal();
+  if (norm.filename().empty()) norm = norm.parent_path();   // "samples/x/" names x, not ""
+  const std::string sample_name = norm.filename().string();
   std::unique_ptr<std::ofstream> csv;
   if (!frames_csv.empty()) {
     csv = std::make_unique<std::ofstream>(frames_csv, std::ios::binary);
@@ -221,7 +224,7 @@ int run_verify_media(const fs::path& sample, const std::string& which, const fs:
     *csv << '\n';
   }
   std::printf("%s (%s): schematic media through SchematicDetector -> debounce -> interpreter\n",
-              sample.filename().string().c_str(), l.profile.name().c_str());
+              sample_name.c_str(), l.profile.name().c_str());
   int videos = 0, passed = 0, images = 0;
   bool frames_ok = true;
   for (const auto& e : fs::directory_iterator(sample / "traces")) {

@@ -36,7 +36,9 @@ class FlushResult:
 
 class Outbox:
     def __init__(self, path: str):
-        self.db = sqlite3.connect(path, isolation_level=None)          # autocommit; one writer
+        # autocommit; one writer at a time — the API serialises put/flush under one lock, but they run on
+        # different threads (FastAPI's pool, the flusher), so the connection may not be thread-bound
+        self.db = sqlite3.connect(path, isolation_level=None, check_same_thread=False)
         self.db.execute("pragma journal_mode=wal")
         self.db.execute("pragma synchronous=full")                     # a power cut loses nothing acknowledged
         self.db.execute("""create table if not exists outbox (
@@ -91,6 +93,15 @@ TABLES = {
     "host_health":    ("host_health",        "station_id, node, ts"),
     "health_event":   ("health_events",      "event_id"),
 }
+# Two writes are not inserts. A chart's state is replaced every bucket (its 24 h baseline must survive a
+# restart, spec Section 19), and an engineer's review marks an existing anomaly. Both are still keyed,
+# in order and idempotent: replaying either one leaves the same row.
+UPSERTS = {
+    "health_chart_state": ("health_chart_state", "station_id, metric"),
+}
+UPDATES = {
+    "anomaly_review": ("anomalies", "event_id"),
+}
 
 
 class SupabaseSink:
@@ -107,7 +118,7 @@ class SupabaseSink:
         if self.conn is None or self.conn.closed:
             self.conn = self.psycopg.connect(self.conninfo, autocommit=True, connect_timeout=5,
                                              prepare_threshold=None)
-            for table, _ in TABLES.values():
+            for table, _ in [*TABLES.values(), *UPSERTS.values(), *UPDATES.values()]:
                 cur = self.conn.execute(
                     "select column_name from information_schema.columns "
                     "where table_schema = 'public' and table_name = %s", (table,))
@@ -116,9 +127,9 @@ class SupabaseSink:
 
     def deliver(self, kind, record, clip_path):
         from psycopg import sql, errors
-        if kind not in TABLES:
+        if kind not in TABLES and kind not in UPSERTS and kind not in UPDATES:
             raise Permanent(f"unknown kind {kind!r}")
-        table, conflict = TABLES[kind]
+        table, conflict = TABLES.get(kind) or UPSERTS.get(kind) or UPDATES[kind]
         try:
             conn = self._connect()
         except self.psycopg.OperationalError:
@@ -131,9 +142,25 @@ class SupabaseSink:
             self.s3.upload_file(clip_path, self.bucket, record["clip_key"],
                                 ExtraArgs={"ContentType": "video/mp4"})
         cols = list(record)
-        stmt = sql.SQL("insert into public.{} ({}) values ({}) on conflict ({}) do nothing").format(
-            sql.Identifier(table), sql.SQL(", ").join(map(sql.Identifier, cols)),
-            sql.SQL(", ").join(sql.Placeholder() * len(cols)), sql.SQL(conflict))
+        keys = [k.strip() for k in conflict.split(",")]
+        if kind in UPDATES:
+            if any(k not in record for k in keys):
+                raise Permanent(f"{kind} needs {keys}")
+            sets = [c for c in cols if c not in keys]
+            stmt = sql.SQL("update public.{} set {} where {}").format(
+                sql.Identifier(table),
+                sql.SQL(", ").join(sql.SQL("{} = {}").format(sql.Identifier(c), sql.Placeholder()) for c in sets),
+                sql.SQL(" and ").join(sql.SQL("{} = {}").format(sql.Identifier(k), sql.Placeholder()) for k in keys))
+            cols = sets + keys
+        elif kind in UPSERTS:
+            stmt = sql.SQL("insert into public.{} ({}) values ({}) on conflict ({}) do update set {}").format(
+                sql.Identifier(table), sql.SQL(", ").join(map(sql.Identifier, cols)),
+                sql.SQL(", ").join(sql.Placeholder() * len(cols)), sql.SQL(conflict),
+                sql.SQL(", ").join(sql.SQL("{0} = excluded.{0}").format(sql.Identifier(c)) for c in cols if c not in keys))
+        else:
+            stmt = sql.SQL("insert into public.{} ({}) values ({}) on conflict ({}) do nothing").format(
+                sql.Identifier(table), sql.SQL(", ").join(map(sql.Identifier, cols)),
+                sql.SQL(", ").join(sql.Placeholder() * len(cols)), sql.SQL(conflict))
         values = [self.psycopg.types.json.Jsonb(v) if isinstance(v, (dict, list)) else v
                   for v in (record[c] for c in cols)]
         try:

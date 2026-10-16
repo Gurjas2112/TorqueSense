@@ -152,3 +152,19 @@ def test_an_unreachable_database_keeps_everything_queued(tmp_path):
     ob.put("cycle", {"cycle_id": str(uuid.uuid4())}); ob.put("cycle", {"cycle_id": str(uuid.uuid4())})
     r = ob.flush(SupabaseSink("host=127.0.0.1 port=1 user=postgres dbname=postgres connect_timeout=2"))
     assert r.delivered == 0 and r.stopped_on and ob.pending() == 2
+
+
+@pg
+def test_chart_state_is_replaced_and_a_review_marks_the_anomaly(db):
+    sink = SupabaseSink(PG)
+    st = {"station_id": "W-14", "metric": "ip_conf_mean", "state": {"z": 0.1}, "updated_at": "2026-10-16T09:00:00Z"}
+    sink.deliver("health_chart_state", st, None)
+    sink.deliver("health_chart_state", dict(st, state={"z": 0.7}, updated_at="2026-10-16T09:05:00Z"), None)
+    assert db.execute("select state->>'z' from health_chart_state").fetchall() == [("0.7",)]
+    a = anomaly()
+    sink.deliver("anomaly", a, None)
+    sink.deliver("anomaly_review", {"event_id": a["event_id"], "false_positive": True,
+                                    "reviewed_at": "2026-10-16T18:00:00Z"}, None)
+    assert db.execute("select false_positive from anomalies").fetchone() == (True,)
+    with pytest.raises(Permanent):
+        sink.deliver("anomaly_review", {"false_positive": True}, None)       # no key: can never succeed

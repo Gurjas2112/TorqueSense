@@ -166,3 +166,22 @@ SchematicDetector, committed through the debounce, run through the interpreter:
 
 This proves the media path and the procedure on frames. It is not an accuracy figure: the frames are
 drawings in a known colour code, and SchematicDetector is valid on nothing else.
+
+## Records reach Supabase, end to end (Phase 7) — 2026-10-16
+
+Stack from `scripts/start-dev.ps1 -NoFlorence`: soft PLC, engine (replay provider), sidecar (clip
+writer), API with the outbox, fleet agent. The harness queued `fault_interrupt_resume`; the live
+project (`rfebayoatwpbuengzotw`, ap-southeast-2) then held:
+
+```text
+anomalies: SEQUENCE bolt-2 / expected bolt-5, evidence 36.2 ms, clip_key clips/W-14/2026/10/16/<cycle>/<event>.mp4
+           INCOMPLETE_AT_RELEASE, evidence 1.6 ms, with its clip
+API /health: outbox flushed 30, dead letters 0, last_error null
+clip (public URL): 200 video/mp4 · h264 960x540 yuv420p · 172 frames
+publishable key: reads anomalies, cycles, station_health, health_events, ftr_hourly; 401 on host_health,
+                 health_chart_state and on every insert (RLS)
+```
+
+**Not run:** the network-pull drill (pull the link mid-cycle; alerts continue; the outbox drains in
+order). It needs the adapter disabled by hand (👤); the ordering it relies on is covered by
+`api/tests/test_outbox.py` (a dropped link stops the flush, order survives, a restart loses nothing).
