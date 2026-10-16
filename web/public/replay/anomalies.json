@@ -1,0 +1,777 @@
+[
+ {
+  "event_id": "94c208e4-4060-4b75-b2ca-2d983908d251",
+  "ts": "2026-10-16T13:40:45.626000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "9536e87b-5c68-4789-835e-068ac1040e93",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "bolt-2",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-2",
+   "signal": "Station.W14.Nutrunner.ResultOK"
+  },
+  "engine_ms": 2.9163,
+  "evidence_ms": 2.9163,
+  "clip_key": null,
+  "narrative": "Bolt 2 looks fastened, but Station.W14.Nutrunner.ResultOK did not confirm it within 1500 ms.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "2db22479-fd1d-4b16-b623-a2fb3ad3b595",
+  "ts": "2026-10-16T13:40:44.860000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "9536e87b-5c68-4789-835e-068ac1040e93",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "bolt-5",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-5",
+   "signal": "Station.W14.Nutrunner.ResultOK"
+  },
+  "engine_ms": 2.2087,
+  "evidence_ms": 2.2087,
+  "clip_key": "clips/W-14/2026/10/16/9536e87b-5c68-4789-835e-068ac1040e93/2db22479-fd1d-4b16-b623-a2fb3ad3b595.mp4",
+  "narrative": "Bolt 5 looks fastened, but Station.W14.Nutrunner.ResultOK did not confirm it within 1500 ms.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "9c678dfc-ab51-4e5e-9264-bf95571361a7",
+  "ts": "2026-10-16T13:40:44.068000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "9536e87b-5c68-4789-835e-068ac1040e93",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "bolt-3",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-3",
+   "signal": "Station.W14.Nutrunner.ResultOK"
+  },
+  "engine_ms": 2.7883,
+  "evidence_ms": 2.7883,
+  "clip_key": "clips/W-14/2026/10/16/9536e87b-5c68-4789-835e-068ac1040e93/9c678dfc-ab51-4e5e-9264-bf95571361a7.mp4",
+  "narrative": "Bolt 3 looks fastened, but Station.W14.Nutrunner.ResultOK did not confirm it within 1500 ms.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "a85b5071-a9db-4e71-b0f9-346c35148ef0",
+  "ts": "2026-10-16T13:40:43.260000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "9536e87b-5c68-4789-835e-068ac1040e93",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "bolt-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-1",
+   "signal": "Station.W14.Nutrunner.ResultOK"
+  },
+  "engine_ms": 3.0631,
+  "evidence_ms": 3.0631,
+  "clip_key": "clips/W-14/2026/10/16/9536e87b-5c68-4789-835e-068ac1040e93/a85b5071-a9db-4e71-b0f9-346c35148ef0.mp4",
+  "narrative": "Bolt 1 looks fastened, but Station.W14.Nutrunner.ResultOK did not confirm it within 1500 ms.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "eddb6b27-0094-4e2c-8dd6-fd260f1177fa",
+  "ts": "2026-10-16T13:40:41.166000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "47d536aa-4d80-4231-baf0-d9dd562e0571",
+  "step_id": "connector",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "connector-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "connector-1",
+   "signal": "Station.D07.ConnectorLock"
+  },
+  "engine_ms": 2.2614,
+  "evidence_ms": 2.2614,
+  "clip_key": "clips/D-07/2026/10/16/47d536aa-4d80-4231-baf0-d9dd562e0571/eddb6b27-0094-4e2c-8dd6-fd260f1177fa.mp4",
+  "narrative": "Connector 1 looks mated, but Station.D07.ConnectorLock did not confirm it within 1000 ms.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "6719b906-0468-438f-a2ce-cdf5e5b24552",
+  "ts": "2026-10-16T13:40:31.209000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "c52dd9a8-964e-4757-9fb1-f708b0372148",
+  "step_id": "clips",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "clip-4"
+   ]
+  },
+  "engine_ms": 1.4254,
+  "evidence_ms": 1.4254,
+  "clip_key": "clips/D-07/2026/10/16/c52dd9a8-964e-4757-9fb1-f708b0372148/6719b906-0468-438f-a2ce-cdf5e5b24552.mp4",
+  "narrative": "Release requested with step 'clips' unfinished. Missing: clip 4. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "1bf9cad8-a01b-4ca5-a3a6-8e0a98da6927",
+  "ts": "2026-10-16T13:40:30.182000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "c52dd9a8-964e-4757-9fb1-f708b0372148",
+  "step_id": "trim_panel",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "panel-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "panel-1",
+   "before": [
+    "clips"
+   ]
+  },
+  "engine_ms": 2.6783,
+  "evidence_ms": 35.8413,
+  "clip_key": "clips/D-07/2026/10/16/c52dd9a8-964e-4757-9fb1-f708b0372148/1bf9cad8-a01b-4ca5-a3a6-8e0a98da6927.mp4",
+  "narrative": "Panel 1 installed before step 'clips' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "a7cbda73-db95-43e6-8d97-23d06d8cee56",
+  "ts": "2026-10-16T13:40:24.772000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "bolt-3"
+   ]
+  },
+  "engine_ms": 1.5267,
+  "evidence_ms": 1.5267,
+  "clip_key": "clips/W-14/2026/10/16/4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b/a7cbda73-db95-43e6-8d97-23d06d8cee56.mp4",
+  "narrative": "Release requested with step 'torque' unfinished. Missing: bolt 3. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "f510b18e-001b-4188-a3d7-11f9a599102a",
+  "ts": "2026-10-16T13:40:24.771000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "hand_start",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "bolt-3"
+   ]
+  },
+  "engine_ms": 1.4622,
+  "evidence_ms": 1.4622,
+  "clip_key": "clips/W-14/2026/10/16/4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b/f510b18e-001b-4188-a3d7-11f9a599102a.mp4",
+  "narrative": "Release requested with step 'hand start' unfinished. Missing: bolt 3. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "9dcce4ca-6b95-40cf-a96e-841ed14c188c",
+  "ts": "2026-10-16T13:40:20.770000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "hand_start",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "STEP_TIMEOUT",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "bolt-3"
+   ]
+  },
+  "engine_ms": 2.2561,
+  "evidence_ms": 2.2561,
+  "clip_key": "clips/W-14/2026/10/16/4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b/9dcce4ca-6b95-40cf-a96e-841ed14c188c.mp4",
+  "narrative": "Step 'hand start' ran past its 20 s deadline. Still missing: bolt 3.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "1c56d20b-f1c1-45c1-a411-b7ba8d28e198",
+  "ts": "2026-10-16T13:40:13.173000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "db62f73b-baae-4d72-9998-ba35567a0ee6",
+  "step_id": "connector",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "connector-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "connector-1",
+   "signal": "Station.D07.ConnectorLock"
+  },
+  "engine_ms": 2.3499,
+  "evidence_ms": 2.3499,
+  "clip_key": "clips/D-07/2026/10/16/db62f73b-baae-4d72-9998-ba35567a0ee6/1c56d20b-f1c1-45c1-a411-b7ba8d28e198.mp4",
+  "narrative": "Connector 1 looks mated, but Station.D07.ConnectorLock did not confirm it within 1000 ms.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "a1772124-10ed-4416-b85e-678b6b5fdf25",
+  "ts": "2026-10-16T13:40:06.128000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "bolt-4",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-4",
+   "before": [
+    "hand_start"
+   ]
+  },
+  "engine_ms": 2.9311,
+  "evidence_ms": 36.67,
+  "clip_key": null,
+  "narrative": "Bolt 4 fastened before step 'hand start' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "5f0e6799-5dea-4cb4-aa99-16fc2c85c712",
+  "ts": "2026-10-16T13:40:05.337000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "bolt-2",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-2",
+   "before": [
+    "hand_start"
+   ]
+  },
+  "engine_ms": 2.336,
+  "evidence_ms": 35.7712,
+  "clip_key": null,
+  "narrative": "Bolt 2 fastened before step 'hand start' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "ba864425-e68d-4e41-92a5-31f66384941c",
+  "ts": "2026-10-16T13:40:04.536000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "bolt-5",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-5",
+   "before": [
+    "hand_start"
+   ]
+  },
+  "engine_ms": 1.746,
+  "evidence_ms": 34.7208,
+  "clip_key": "clips/W-14/2026/10/16/4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b/ba864425-e68d-4e41-92a5-31f66384941c.mp4",
+  "narrative": "Bolt 5 fastened before step 'hand start' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "6db6d06c-6459-4cea-abeb-4fff3a502bd3",
+  "ts": "2026-10-16T13:40:03.733000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "bolt-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-1",
+   "before": [
+    "hand_start"
+   ]
+  },
+  "engine_ms": 1.4633,
+  "evidence_ms": 33.5325,
+  "clip_key": "clips/W-14/2026/10/16/4c74e6a7-3db2-4f4b-a8c6-cf5c4ee89e4b/6db6d06c-6459-4cea-abeb-4fff3a502bd3.mp4",
+  "narrative": "Bolt 1 fastened before step 'hand start' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "c5faabb1-29db-4920-843b-2edd17feb655",
+  "ts": "2026-10-16T13:40:03.213000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "f78421fb-ef34-4b8f-aa28-9d1eb0b965aa",
+  "step_id": "clips",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "clip-4"
+   ]
+  },
+  "engine_ms": 1.5157,
+  "evidence_ms": 1.5157,
+  "clip_key": "clips/D-07/2026/10/16/f78421fb-ef34-4b8f-aa28-9d1eb0b965aa/c5faabb1-29db-4920-843b-2edd17feb655.mp4",
+  "narrative": "Release requested with step 'clips' unfinished. Missing: clip 4. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "c285c3c6-c1f6-4ee3-ba64-1116cc0adb62",
+  "ts": "2026-10-16T13:40:02.179000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "f78421fb-ef34-4b8f-aa28-9d1eb0b965aa",
+  "step_id": "trim_panel",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "panel-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "panel-1",
+   "before": [
+    "clips"
+   ]
+  },
+  "engine_ms": 1.4163,
+  "evidence_ms": 34.8734,
+  "clip_key": "clips/D-07/2026/10/16/f78421fb-ef34-4b8f-aa28-9d1eb0b965aa/c285c3c6-c1f6-4ee3-ba64-1116cc0adb62.mp4",
+  "narrative": "Panel 1 installed before step 'clips' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "07cae60b-5f4c-4008-8360-67442e19d410",
+  "ts": "2026-10-16T13:39:45.177000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "811e4f11-d22b-45c3-b59a-8a085dfb1759",
+  "step_id": "connector",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "connector-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "connector-1",
+   "signal": "Station.D07.ConnectorLock"
+  },
+  "engine_ms": 3.0945,
+  "evidence_ms": 3.0945,
+  "clip_key": "clips/D-07/2026/10/16/811e4f11-d22b-45c3-b59a-8a085dfb1759/07cae60b-5f4c-4008-8360-67442e19d410.mp4",
+  "narrative": "Connector 1 looks mated, but Station.D07.ConnectorLock did not confirm it within 1000 ms.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "25e7085f-df92-4039-933b-00e148c2442d",
+  "ts": "2026-10-16T13:39:40.935000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "a9ed0c63-68f2-4e09-a03b-1997aa70c613",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "SEQUENCE",
+  "observed_ip": "bolt-5",
+  "expected_ip": "bolt-4",
+  "detail": {
+   "expected": "bolt-4",
+   "observed": "bolt-5"
+  },
+  "engine_ms": 2.8055,
+  "evidence_ms": 36.2964,
+  "clip_key": null,
+  "narrative": "Bolt 5 fastened before bolt 4. Expected 1 \u2192 3 \u2192 5 \u2192 2 \u2192 4.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "7bc5dcaa-b905-4325-ab9f-0c510a4a45e5",
+  "ts": "2026-10-16T13:39:40.135000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "a9ed0c63-68f2-4e09-a03b-1997aa70c613",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "SEQUENCE",
+  "observed_ip": "bolt-4",
+  "expected_ip": "bolt-2",
+  "detail": {
+   "expected": "bolt-2",
+   "observed": "bolt-4"
+  },
+  "engine_ms": 2.8842,
+  "evidence_ms": 36.6291,
+  "clip_key": null,
+  "narrative": "Bolt 4 fastened before bolt 2. Expected 1 \u2192 3 \u2192 5 \u2192 2 \u2192 4.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "efecd168-e157-47c6-a531-31d8d5cd2475",
+  "ts": "2026-10-16T13:39:39.330000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "a9ed0c63-68f2-4e09-a03b-1997aa70c613",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "SEQUENCE",
+  "observed_ip": "bolt-3",
+  "expected_ip": "bolt-5",
+  "detail": {
+   "expected": "bolt-5",
+   "observed": "bolt-3"
+  },
+  "engine_ms": 1.7531,
+  "evidence_ms": 35.1755,
+  "clip_key": "clips/W-14/2026/10/16/a9ed0c63-68f2-4e09-a03b-1997aa70c613/efecd168-e157-47c6-a531-31d8d5cd2475.mp4",
+  "narrative": "Bolt 3 fastened before bolt 5. Expected 1 \u2192 3 \u2192 5 \u2192 2 \u2192 4.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "1f3812ef-4053-44a9-9661-9e798a366300",
+  "ts": "2026-10-16T13:39:38.527000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "a9ed0c63-68f2-4e09-a03b-1997aa70c613",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "SEQUENCE",
+  "observed_ip": "bolt-2",
+  "expected_ip": "bolt-3",
+  "detail": {
+   "expected": "bolt-3",
+   "observed": "bolt-2"
+  },
+  "engine_ms": 4.8046,
+  "evidence_ms": 37.944,
+  "clip_key": "clips/W-14/2026/10/16/a9ed0c63-68f2-4e09-a03b-1997aa70c613/1f3812ef-4053-44a9-9661-9e798a366300.mp4",
+  "narrative": "Bolt 2 fastened before bolt 3. Expected 1 \u2192 3 \u2192 5 \u2192 2 \u2192 4.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "606dc23a-8ade-4e92-bdcc-f7b4d0822da2",
+  "ts": "2026-10-16T13:39:35.203000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "ba1c2754-d45b-41ed-8464-a24bbed1c316",
+  "step_id": "clips",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "clip-4"
+   ]
+  },
+  "engine_ms": 1.4484,
+  "evidence_ms": 1.4484,
+  "clip_key": "clips/D-07/2026/10/16/ba1c2754-d45b-41ed-8464-a24bbed1c316/606dc23a-8ade-4e92-bdcc-f7b4d0822da2.mp4",
+  "narrative": "Release requested with step 'clips' unfinished. Missing: clip 4. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "c1d8568e-f029-442a-bada-a2e407729dd2",
+  "ts": "2026-10-16T13:39:34.178000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "ba1c2754-d45b-41ed-8464-a24bbed1c316",
+  "step_id": "trim_panel",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "panel-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "panel-1",
+   "before": [
+    "clips"
+   ]
+  },
+  "engine_ms": 2.655,
+  "evidence_ms": 35.2101,
+  "clip_key": "clips/D-07/2026/10/16/ba1c2754-d45b-41ed-8464-a24bbed1c316/c1d8568e-f029-442a-bada-a2e407729dd2.mp4",
+  "narrative": "Panel 1 installed before step 'clips' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "8abdfbdc-eaf0-4701-8d7c-e2a2d4ec8eba",
+  "ts": "2026-10-16T13:39:20.772000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "d7193124-77f7-405e-bb8e-996751505723",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "bolt-5",
+    "bolt-4"
+   ]
+  },
+  "engine_ms": 1.4911,
+  "evidence_ms": 1.4911,
+  "clip_key": "clips/W-14/2026/10/16/d7193124-77f7-405e-bb8e-996751505723/8abdfbdc-eaf0-4701-8d7c-e2a2d4ec8eba.mp4",
+  "narrative": "Release requested with step 'torque' unfinished. Missing: bolt 5, bolt 4. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "4b977146-8192-4814-a6bf-d873381d7892",
+  "ts": "2026-10-16T13:39:17.201000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "e6eaa224-e1a3-4550-b493-518714782ca2",
+  "step_id": "connector",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "connector-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "connector-1",
+   "signal": "Station.D07.ConnectorLock"
+  },
+  "engine_ms": 3.1502,
+  "evidence_ms": 3.1502,
+  "clip_key": "clips/D-07/2026/10/16/e6eaa224-e1a3-4550-b493-518714782ca2/4b977146-8192-4814-a6bf-d873381d7892.mp4",
+  "narrative": "Connector 1 looks mated, but Station.D07.ConnectorLock did not confirm it within 1000 ms.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "16349c98-52d3-451c-a360-99882b002aef",
+  "ts": "2026-10-16T13:39:16.731000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "d7193124-77f7-405e-bb8e-996751505723",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "SEQUENCE",
+  "observed_ip": "bolt-2",
+  "expected_ip": "bolt-5",
+  "detail": {
+   "expected": "bolt-5",
+   "observed": "bolt-2"
+  },
+  "engine_ms": 2.6923,
+  "evidence_ms": 35.6806,
+  "clip_key": "clips/W-14/2026/10/16/d7193124-77f7-405e-bb8e-996751505723/16349c98-52d3-451c-a360-99882b002aef.mp4",
+  "narrative": "Bolt 2 fastened before bolt 5. Expected 1 \u2192 3 \u2192 5 \u2192 2 \u2192 4.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "a84ef889-0f80-4961-b2f7-1b3c74af2165",
+  "ts": "2026-10-16T13:39:07.215000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "2cbf38df-2484-40e3-af0f-5c69e16c3a7d",
+  "step_id": "clips",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "INCOMPLETE_AT_RELEASE",
+  "observed_ip": null,
+  "expected_ip": null,
+  "detail": {
+   "missing": [
+    "clip-4"
+   ]
+  },
+  "engine_ms": 1.4251,
+  "evidence_ms": 1.4251,
+  "clip_key": null,
+  "narrative": "Release requested with step 'clips' unfinished. Missing: clip 4. The part is held.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "e99af055-1c49-47d7-a614-aff6733c18af",
+  "ts": "2026-10-16T13:39:06.174000+00:00",
+  "station_id": "D-07",
+  "cycle_id": "2cbf38df-2484-40e3-af0f-5c69e16c3a7d",
+  "step_id": "trim_panel",
+  "profile": "door-trim-harness-fl",
+  "profile_version": "721cc5271ba8",
+  "violation_type": "PRECEDENCE",
+  "observed_ip": "panel-1",
+  "expected_ip": null,
+  "detail": {
+   "ip": "panel-1",
+   "before": [
+    "clips"
+   ]
+  },
+  "engine_ms": 2.9658,
+  "evidence_ms": 36.1308,
+  "clip_key": "clips/D-07/2026/10/16/2cbf38df-2484-40e3-af0f-5c69e16c3a7d/e99af055-1c49-47d7-a614-aff6733c18af.mp4",
+  "narrative": "Panel 1 installed before step 'clips' was complete. That step must be finished first.",
+  "adjudicated": false,
+  "cad_revision": "cad",
+  "model_version": "schematic-detector-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ },
+ {
+  "event_id": "a1cd41bc-3886-498a-9d4e-cbd9186b4d6b",
+  "ts": "2026-10-16T13:38:01.872000+00:00",
+  "station_id": "W-14",
+  "cycle_id": "4b2ccb9a-0355-460f-9f00-14ba15de1d15",
+  "step_id": "torque",
+  "profile": "wheel-fitment-rl",
+  "profile_version": "cfb6f63f46a0",
+  "violation_type": "EVIDENCE_MISSING",
+  "observed_ip": "bolt-3",
+  "expected_ip": null,
+  "detail": {
+   "ip": "bolt-3",
+   "signal": "Station.W14.Nutrunner.ResultOK"
+  },
+  "engine_ms": 2.7203,
+  "evidence_ms": 2.7203,
+  "clip_key": null,
+  "narrative": "Bolt 3 looks fastened, but Station.W14.Nutrunner.ResultOK did not confirm it within 1500 ms.",
+  "adjudicated": false,
+  "cad_revision": "C",
+  "model_version": "replay-fixtures-v1",
+  "reviewed_at": null,
+  "false_positive": null
+ }
+]

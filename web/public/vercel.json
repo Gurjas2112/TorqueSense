@@ -1,0 +1,4 @@
+{
+  "rewrites": [{ "source": "/((?!assets/|replay/).*)", "destination": "/index.html" }],
+  "headers": [{ "source": "/replay/(.*)", "headers": [{ "key": "Cache-Control", "value": "no-cache" }] }]
+}
