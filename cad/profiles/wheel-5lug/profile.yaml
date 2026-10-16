@@ -1,0 +1,30 @@
+# Compiled from the FreeCAD export (cad/build_wheel.py): positions come from assembly.step, joined by part number.
+# Wheel and tyre fitment, 5-lug hub, 114.3 mm PCD — the PS4 reference
+# Rendered from CAD by BlenderProc; no camera needed.
+profile: wheel-fitment-rl
+title: "Wheel and tyre fitment, 5-lug hub, 114.3 mm PCD — the PS4 reference"
+geometry: cad                 # cad: positions from the STEP file | measured: with a ruler
+cad_revision: C               # RL_WHEEL_ASSY_REV_C.step (spec Section 21: the provenance chip)
+registration: fixed
+
+cameras:
+  - {id: cam-1, width_px: 1920, hfov_deg: 70.4, position_mm: [0, 0, 900], look_at_mm: [0, 0, 0]}
+sources:                      # one per camera: file | uvc | stream
+  cam-1: {kind: file, path: media/correct.mp4}
+
+groups:
+  - id: bolt
+    family: threaded_fastener
+    part_number: BLT-M12-1.25-45
+    states: [absent, seated, fastened]
+    feature_mm: 17
+    members:
+      - {position_mm: [0.0, 57.15, 0]}
+      - {position_mm: [54.35, 17.66, 0]}
+      - {position_mm: [33.59, -46.24, 0]}
+      - {position_mm: [-33.59, -46.24, 0]}
+      - {position_mm: [-54.35, 17.66, 0]}
+
+steps:
+  - {id: hand_start, group: bolt, kind: complete, state: seated, max_duration_s: 20}
+  - {id: torque, group: bolt, kind: sequence, order: derive, state: fastened, requires: [hand_start], max_duration_s: 16, evidence: {tag: Station.W14.Nutrunner.ResultOK, equals: true, within_ms: 1500}}

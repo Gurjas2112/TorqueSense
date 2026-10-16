@@ -1,0 +1,59 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "cam-1",
+      "distance_mm": 901.8,
+      "feature_px": 25.6,
+      "in_frame_and_facing": true,
+      "ip": "bolt-1",
+      "obliquity_deg": 3.6,
+      "occlusion": "clear",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 901.8,
+      "feature_px": 25.6,
+      "in_frame_and_facing": true,
+      "ip": "bolt-2",
+      "obliquity_deg": 3.6,
+      "occlusion": "clear",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 901.8,
+      "feature_px": 25.6,
+      "in_frame_and_facing": true,
+      "ip": "bolt-3",
+      "obliquity_deg": 3.6,
+      "occlusion": "clear",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 901.8,
+      "feature_px": 25.6,
+      "in_frame_and_facing": true,
+      "ip": "bolt-4",
+      "obliquity_deg": 3.6,
+      "occlusion": "clear",
+      "resolved": true
+    },
+    {
+      "camera": "cam-1",
+      "distance_mm": 901.8,
+      "feature_px": 25.6,
+      "in_frame_and_facing": true,
+      "ip": "bolt-5",
+      "obliquity_deg": 3.6,
+      "occlusion": "clear",
+      "resolved": true
+    }
+  ],
+  "profile": "wheel-fitment-rl",
+  "profile_version": "9507efe3d5d2",
+  "unresolved": []
+}

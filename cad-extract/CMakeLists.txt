@@ -35,3 +35,11 @@ foreach(_p IN LISTS _profiles)
     add_test(NAME CompiledProfileUpToDate.${_n} COMMAND cad_extract_app ${_p} --check)
   endif()
 endforeach()
+
+# The FreeCAD-built assemblies (cad/build_wheel.py): their STEP exports compile to the committed
+# procedures. Needs OCCT; a headless build cannot read STEP and skips them.
+if(OpenCASCADE_FOUND)
+  foreach(_n wheel-5lug wheel-4lug)
+    add_test(NAME CadFromFreeCad.${_n} COMMAND cad_extract_app ${CMAKE_SOURCE_DIR}/cad/profiles/${_n} --check)
+  endforeach()
+endif()
