@@ -1,7 +1,7 @@
 """I9 — renders are reproducible: same seed, identical labels, pixels within PSNR >= 45 dB.
 
 Runs only where its inputs exist: BlenderProc installed and the 👤 FreeCAD export at
-cad/export/wheel_assembly.gltf (Phase 2). Elsewhere it skips and says why — it never passes vacuously.
+cad/export/wheel_assembly.glb (cad/build_wheel.py). Elsewhere it skips and says why — it never passes vacuously.
 The cache-key and scenario tests below run everywhere.
 """
 from __future__ import annotations
@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "synth"))
 import cache       # noqa: E402
 import scenarios   # noqa: E402
 
-GLTF = ROOT / "cad" / "export" / "wheel_assembly.gltf"
+GLTF = ROOT / "cad" / "export" / "wheel_assembly.glb"
 
 
 def psnr(a, b) -> float:
@@ -24,17 +24,17 @@ def psnr(a, b) -> float:
 
 
 def render(seed: int, frames: int, out: pathlib.Path):
-    subprocess.run(["blenderproc", "run", str(ROOT / "synth" / "generate.py"), "--", "--gltf", str(GLTF),
+    subprocess.run(["blenderproc", "run", str(ROOT / "synth" / "generate.py"), "--gltf", str(GLTF),
                     "--seed", str(seed), "--frames", str(frames), "--out-root", str(out)], check=True)
     d = cache.output_dir(GLTF, seed, out)
     labels = json.loads((d / "coco" / "coco_annotations.json").read_text())
     import cv2
-    images = [cv2.imread(str(p)) for p in sorted((d / "coco" / "images").glob("*.jpg"))]
+    images = [cv2.imread(str(d / "coco" / im["file_name"])) for im in sorted(labels["images"], key=lambda im: im["id"])]
     return labels, images
 
 
 @pytest.mark.skipif(shutil.which("blenderproc") is None or not GLTF.exists(),
-                    reason="needs BlenderProc and the FreeCAD export cad/export/wheel_assembly.gltf (Phase 2, 👤)")
+                    reason="needs BlenderProc and the FreeCAD export cad/export/wheel_assembly.glb (cad/build_wheel.py)")
 def test_same_seed_same_render(tmp_path):
     la, ia = render(7, 10, tmp_path / "a")
     lb, ib = render(7, 10, tmp_path / "b")

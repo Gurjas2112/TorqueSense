@@ -7,7 +7,7 @@ way the old folder stops matching, and nothing is ever deleted to "invalidate" i
 from __future__ import annotations
 import hashlib, json, pathlib
 
-GENERATOR_VERSION = "3"
+GENERATOR_VERSION = "5"
 
 
 def gltf_sha(gltf: pathlib.Path) -> str:

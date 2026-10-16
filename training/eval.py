@@ -22,7 +22,8 @@ def evaluate(model: pathlib.Path, dataset: pathlib.Path) -> dict:
     """mAP50 and mAP50-95 on one YOLO-format dataset folder (images/ + labels/ + data.yaml)."""
     from ultralytics import YOLO        # dev venv only; not a runtime dependency
     m = YOLO(str(model), task="detect")
-    r = m.val(data=str(dataset / "data.yaml"), imgsz=640, batch=8, plots=False, verbose=False)
+    # on the CPU: accuracy does not depend on the device, and it keeps the CUDA 12 onnxruntime-gpu wheel out
+    r = m.val(data=str(dataset / "data.yaml"), imgsz=640, batch=8, plots=False, verbose=False, device="cpu")
     images = len(list((dataset / "images").glob("*")))
     return {"set": str(dataset.relative_to(ROOT) if dataset.is_relative_to(ROOT) else dataset), "images": images,
             "map50": round(float(r.box.map50), 4), "map50_95": round(float(r.box.map), 4)}
