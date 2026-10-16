@@ -75,8 +75,8 @@ class SharedClipRing {
   std::byte* base_ = nullptr;
   std::size_t bytes_ = 0;
   std::uint32_t slots_ = 0, slot_bytes_ = 0;
-  void* handle_ = nullptr;   // Win32 mapping handle
-  int fd_ = -1;              // POSIX shm descriptor
+  [[maybe_unused]] void* handle_ = nullptr;   // Win32 mapping handle (unused on POSIX)
+  [[maybe_unused]] int fd_ = -1;              // POSIX shm descriptor (unused on Win32)
   std::string shm_name_;
   bool owner_ = false;
 };

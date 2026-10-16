@@ -27,7 +27,7 @@ jobs:
           install: git
           pacboy: >-
             toolchain:p cmake:p ninja:p opencv:p opencascade:p
-            spdlog:p gtest:p benchmark:p nlohmann-json:p yaml-cpp:p
+            spdlog:p gtest:p benchmark:p nlohmann-json:p yaml-cpp:p python-yaml:p
       - run: cmake --preset windows-ci && cmake --build --preset windows-ci
       - run: ctest --preset windows-ci
 
