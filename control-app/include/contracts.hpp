@@ -96,6 +96,14 @@ namespace contracts {
         double conf;
         std::string family;
         std::string id;
+        /**
+         * how many states the family has; rank n_states-1 is the last
+         */
+        std::optional<int64_t> n_states;
+        /**
+         * index of `state` in the point's ordered family
+         */
+        std::optional<int64_t> rank;
         std::string state;
         /**
          * image column of the CAD-projected point, full-resolution pixels
@@ -414,6 +422,8 @@ namespace contracts {
         x.conf = j.at("conf").get<double>();
         x.family = j.at("family").get<std::string>();
         x.id = j.at("id").get<std::string>();
+        x.n_states = get_stack_optional<int64_t>(j, "n_states");
+        x.rank = get_stack_optional<int64_t>(j, "rank");
         x.state = j.at("state").get<std::string>();
         x.u = j.at("u").get<double>();
         x.v = j.at("v").get<double>();
@@ -427,6 +437,8 @@ namespace contracts {
         j["conf"] = x.conf;
         j["family"] = x.family;
         j["id"] = x.id;
+        j["n_states"] = x.n_states;
+        j["rank"] = x.rank;
         j["state"] = x.state;
         j["u"] = x.u;
         j["v"] = x.v;

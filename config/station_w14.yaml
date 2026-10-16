@@ -1,0 +1,70 @@
+# Station W-14 — wheel and tyre fitment (spec Section 29). Paths are relative to the repository root,
+# where scripts/start-dev.ps1 starts the engine. Prototype edition: perception runs as the replay
+# provider until a trained model and the GPU stack exist (docs/SPEC.md preface P.3).
+station:
+  id: W-14
+  name: "Wheel & Tyre Fitment, Line 2"
+  takt_seconds: 58
+
+source:
+  kind: file                                  # file | uvc | stream  (Section 8)
+  scenarios_dir: data/scenarios               # <scenario>.mp4, rendered or schematic (synth/)
+  playlist: [cycle_correct_01, fault_interrupt_resume, cycle_correct_01, fault_adjacent_order,
+             edge_hand_occlusion, fault_missing_bolt, cycle_correct_01, fault_no_tool]
+  fps: 30
+  process_width: 960
+  process_height: 540
+
+threads:                                      # logical CPUs: one per physical core 4..7
+  capture: 8
+  inference: 10
+  verify: 12
+  alert: 14
+  priority_class: high                        # never realtime
+
+perception:
+  provider: replay                            # replay | cuda | tensorrt (Phase 12)
+  fixtures: tests/fixtures/detections         # ReplayDetector input, one per scenario
+  model_manifest: models/manifest.json        # SHA-256 checked before load (I12)
+  model_version: replay-fixtures-v1
+  conf_commit: 0.65
+  conf_floor: 0.35
+  debounce_frames: 2
+  crop_pool_size: 4
+
+profile:
+  dir: samples/wheel-hub-5lug                 # procedure.json, compiled by cad-extract
+  advisory_only: false
+
+alert:
+  backend: opcua                              # opcua | none (tests only)
+  endpoint: opc.tcp://127.0.0.1:4840
+  prefix: Station.W14
+
+line_simulator:                               # stands in for the nutrunner and the line PLC: writes each
+  enabled: true                               # scenario's plant signals and release request to the PLC
+
+clip_ring:
+  name: W-14
+  slots: 180
+  slot_bytes: 262144
+  jpeg_quality: 80
+
+sidecar:
+  enabled: true
+  url: http://127.0.0.1:8001
+  timeout_ms: 1500
+  failure_threshold: 3
+  circuit_open_seconds: 60
+  queue_depth: 16
+
+io:
+  websocket_port: 8080                        # W-15 adds 100 to all three ports, W-16 adds 200, …
+  mjpeg_port: 8090
+  control_port: 8095
+  api_url: http://127.0.0.1:8000
+  event_spool: var/spool/W-14.jsonl           # events survive an API outage
+
+health:
+  bucket_s: 300                               # 5 in demo mode
+  heartbeat_ms: 500

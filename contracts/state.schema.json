@@ -5,93 +5,294 @@
   "description": "Engine -> dashboard and HMI, about 15 Hz over the WebSocket on :8080. Built on the io thread from the hot path's fixed-size StateVector; JSON never touches a pinned thread (spec Section 30).",
   "type": "object",
   "additionalProperties": false,
-  "required": ["station_id", "frame_seq", "cycle_id", "step", "profile", "ips", "next", "latency", "verdict"],
+  "required": [
+    "station_id",
+    "frame_seq",
+    "cycle_id",
+    "step",
+    "profile",
+    "ips",
+    "next",
+    "latency",
+    "verdict"
+  ],
   "properties": {
-    "station_id": { "type": "string", "description": "e.g. W-14" },
-    "frame_seq": { "type": "integer", "minimum": 0 },
-    "ts_ms": { "type": "integer", "description": "engine wall clock, ms since the Unix epoch" },
-    "cycle_id": { "type": "string" },
-    "cycle_elapsed_ms": { "type": "integer", "minimum": 0 },
-    "takt_s": { "type": "number" },
-    "step": { "type": "string", "description": "id of the first incomplete step, or an empty string when every step is complete" },
-    "profile": { "type": "string" },
-    "profile_version": { "type": "string" },
-    "cad_revision": { "type": "string" },
-    "model_version": { "type": "string" },
-    "provider": { "type": "string", "description": "execution provider in use: tensorrt | cuda | replay" },
-    "degraded": { "type": ["string", "null"], "description": "why the engine runs on a fallback provider, or null" },
-    "advisory_only": { "type": "boolean" },
+    "station_id": {
+      "type": "string",
+      "description": "e.g. W-14"
+    },
+    "frame_seq": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "ts_ms": {
+      "type": "integer",
+      "description": "engine wall clock, ms since the Unix epoch"
+    },
+    "cycle_id": {
+      "type": "string"
+    },
+    "cycle_elapsed_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "takt_s": {
+      "type": "number"
+    },
+    "step": {
+      "type": "string",
+      "description": "id of the first incomplete step, or an empty string when every step is complete"
+    },
+    "profile": {
+      "type": "string"
+    },
+    "profile_version": {
+      "type": "string"
+    },
+    "cad_revision": {
+      "type": "string"
+    },
+    "model_version": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string",
+      "description": "execution provider in use: tensorrt | cuda | replay"
+    },
+    "degraded": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "why the engine runs on a fallback provider, or null"
+    },
+    "advisory_only": {
+      "type": "boolean"
+    },
     "steps": {
       "type": "array",
-      "items": { "$ref": "#/definitions/StepState" }
+      "items": {
+        "$ref": "#/definitions/StepState"
+      }
     },
     "ips": {
       "type": "array",
-      "items": { "$ref": "#/definitions/InspectionPointState" }
+      "items": {
+        "$ref": "#/definitions/InspectionPointState"
+      }
     },
-    "next": { "type": "array", "items": { "type": "string" }, "description": "the inspection points the operator should act on next" },
-    "latency": { "$ref": "#/definitions/Latency" },
+    "next": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "the inspection points the operator should act on next"
+    },
+    "latency": {
+      "$ref": "#/definitions/Latency"
+    },
     "verdict": {
-      "oneOf": [{ "type": "null" }, { "$ref": "#/definitions/Verdict" }]
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/Verdict"
+        }
+      ]
     },
-    "andon": { "type": "string", "enum": ["GREEN", "RED", "AMBER"] }
+    "andon": {
+      "type": "string",
+      "enum": [
+        "GREEN",
+        "RED",
+        "AMBER"
+      ]
+    }
   },
   "definitions": {
     "InspectionPointState": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "family", "state", "conf", "u", "v"],
+      "required": [
+        "id",
+        "family",
+        "state",
+        "conf",
+        "u",
+        "v"
+      ],
       "properties": {
-        "id": { "type": "string" },
-        "family": { "type": "string" },
-        "state": { "type": "string" },
-        "conf": { "type": "number", "minimum": 0, "maximum": 1 },
-        "ambiguous": { "type": "boolean" },
-        "u": { "type": "number", "description": "image column of the CAD-projected point, full-resolution pixels" },
-        "v": { "type": "number" },
-        "x_mm": { "type": "number", "description": "position in the assembly frame, for the part map" },
-        "y_mm": { "type": "number" }
+        "id": {
+          "type": "string"
+        },
+        "family": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "conf": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "ambiguous": {
+          "type": "boolean"
+        },
+        "u": {
+          "type": "number",
+          "description": "image column of the CAD-projected point, full-resolution pixels"
+        },
+        "v": {
+          "type": "number"
+        },
+        "x_mm": {
+          "type": "number",
+          "description": "position in the assembly frame, for the part map"
+        },
+        "y_mm": {
+          "type": "number"
+        },
+        "rank": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "index of `state` in the point's ordered family"
+        },
+        "n_states": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "how many states the family has; rank n_states-1 is the last"
+        }
       }
     },
     "StepState": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["id", "kind", "state", "done", "total", "status"],
+      "required": [
+        "id",
+        "kind",
+        "state",
+        "done",
+        "total",
+        "status"
+      ],
       "properties": {
-        "id": { "type": "string" },
-        "kind": { "type": "string", "enum": ["complete", "sequence"] },
-        "state": { "type": "string" },
-        "targets": { "type": "array", "items": { "type": "string" } },
-        "done": { "type": "integer", "minimum": 0 },
-        "total": { "type": "integer", "minimum": 0 },
-        "status": { "type": "string", "enum": ["waiting", "active", "complete", "violated"] },
-        "elapsed_ms": { "type": "integer" },
-        "allotted_ms": { "type": "integer" }
+        "id": {
+          "type": "string"
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "sequence"
+          ]
+        },
+        "state": {
+          "type": "string"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "done": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "waiting",
+            "active",
+            "complete",
+            "violated"
+          ]
+        },
+        "elapsed_ms": {
+          "type": "integer"
+        },
+        "allotted_ms": {
+          "type": "integer"
+        }
       }
     },
     "Latency": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["engine_ms_p50", "engine_ms_p99", "evidence_ms_p99"],
+      "required": [
+        "engine_ms_p50",
+        "engine_ms_p99",
+        "evidence_ms_p99"
+      ],
       "properties": {
-        "engine_ms_p50": { "type": "number" },
-        "engine_ms_p99": { "type": "number" },
-        "evidence_ms_p99": { "type": "number" },
-        "last_engine_ms": { "type": "number" },
-        "last_evidence_ms": { "type": "number" }
+        "engine_ms_p50": {
+          "type": "number"
+        },
+        "engine_ms_p99": {
+          "type": "number"
+        },
+        "evidence_ms_p99": {
+          "type": "number"
+        },
+        "last_engine_ms": {
+          "type": "number"
+        },
+        "last_evidence_ms": {
+          "type": "number"
+        }
       }
     },
     "Verdict": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "step"],
+      "required": [
+        "kind",
+        "step"
+      ],
       "properties": {
-        "kind": { "type": "string", "enum": ["SEQUENCE", "PRECEDENCE", "EVIDENCE_MISSING", "REGRESSION", "STEP_TIMEOUT", "INCOMPLETE_AT_RELEASE", "RELEASED"] },
-        "step": { "type": "string" },
-        "observed_ip": { "type": ["string", "null"] },
-        "expected_ip": { "type": ["string", "null"] },
-        "narrative": { "type": "string" },
-        "corrective": { "type": "array", "items": { "type": "string" }, "description": "the order still to do, for the corrective arc" }
+        "kind": {
+          "type": "string",
+          "enum": [
+            "SEQUENCE",
+            "PRECEDENCE",
+            "EVIDENCE_MISSING",
+            "REGRESSION",
+            "STEP_TIMEOUT",
+            "INCOMPLETE_AT_RELEASE",
+            "RELEASED"
+          ]
+        },
+        "step": {
+          "type": "string"
+        },
+        "observed_ip": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "expected_ip": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "narrative": {
+          "type": "string"
+        },
+        "corrective": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "the order still to do, for the corrective arc"
+        }
       }
     }
   }

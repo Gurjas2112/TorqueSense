@@ -9,8 +9,12 @@ gtest_discover_tests(contracts_test DISCOVERY_MODE PRE_TEST)
 # itself, and the counting allocator's replacement conflicts with it. That exclusion is intended.
 if(NOT CMAKE_CXX_FLAGS MATCHES "sanitize=(address|thread)")
   add_executable(no_allocation_test allocation/NoAllocationTest.cpp allocation/CountingAllocator.cpp)
-  target_link_libraries(no_allocation_test PRIVATE sunverify_warnings sunverify_procedure sunverify_perception
+  target_link_libraries(no_allocation_test PRIVATE sunverify_warnings torquesense_core
                         GTest::gtest_main)
   target_compile_definitions(no_allocation_test PRIVATE TS_SOURCE_DIR="${CMAKE_SOURCE_DIR}")
   gtest_discover_tests(no_allocation_test DISCOVERY_MODE PRE_TEST)
 endif()
+
+# The I4 gate tool (spec Section 31). Run by hand or by Jenkins, with the soft PLC up; not a ctest.
+add_executable(latency_test latency/latency_test.cpp)
+target_link_libraries(latency_test PRIVATE sunverify_warnings torquesense_core)

@@ -32,6 +32,11 @@ struct StateVector {
   std::int64_t t_capture_ns = 0;     // monotonic clock when the grab completed
   std::int64_t t_inferred_ns = 0;    // when inference finished
   std::uint64_t ring_seq = 0;        // this frame's slot in the SharedClipRing
+  std::uint64_t cycle_no = 0;        // which assembly cycle (one part on the station)
+  std::uint64_t frame_in_cycle = 0;
+  std::int16_t scenario = -1;        // replay: which recorded scenario feeds this cycle
+  bool new_cycle = false;            // first frame of a cycle: the verify thread restarts the procedure
+  std::uint8_t reserved2 = 0;
   std::uint16_t n_ips = 0;
   std::uint16_t hands = 0;           // detector: hands in view
   std::uint16_t tools = 0;           // detector: tools in view

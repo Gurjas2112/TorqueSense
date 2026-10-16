@@ -3,12 +3,19 @@
 //   torquesense --version                                   build, ONNX Runtime, the providers that load
 //   torquesense --conformance samples [--json out.json]     every sample trace through this engine (I16)
 //   torquesense --sample <dir> --replay-trace <trace.yaml>  one trace, printed
+//   torquesense --config config\station_w14.yaml [--record web/public/replay/session.jsonl] [--seconds N]
+//                                                           run the station
+#include <atomic>
+#include <chrono>
+#include <csignal>
 #include <cstdio>
 #include <cstring>
 #include <filesystem>
 #include <string>
 
 #include "Conformance.hpp"
+#include "IoSide.hpp"
+#include "Pipeline.hpp"
 
 #ifdef SUNVERIFY_WITH_CUDA
 #include <onnxruntime_cxx_api.h>
@@ -64,11 +71,43 @@ bool has(int argc, char** argv, const char* flag) {
   return false;
 }
 
+std::atomic<bool> g_stop{false};
+extern "C" void on_signal(int) { g_stop = true; }
+
+int run_station(const char* config, const char* record, const char* seconds) {
+  using namespace sunverify::app;
+  StationConfig cfg = load_station_config(config);
+  Pipeline p{cfg};
+  IoSide io{p};
+  if (record) io.record_to(record);
+  std::printf("torquesense %s: station %s, profile %s (%s), %zu scenarios, provider %s\n", TORQUESENSE_VERSION,
+              cfg.station_id.c_str(), p.profile().name().c_str(), p.profile().version().c_str(),
+              p.detector().scenarios().size(), p.detector().provider());
+  std::printf("  ws :%d  mjpeg :%d  control :%d  plc %s (%s)\n", cfg.ws_port, cfg.mjpeg_port, cfg.control_port,
+              cfg.opcua_endpoint.c_str(), cfg.alert_backend.c_str());
+  std::fflush(stdout);
+  std::signal(SIGINT, on_signal);
+  std::signal(SIGTERM, on_signal);
+  p.start();
+  io.start();
+  const auto t0 = std::chrono::steady_clock::now();
+  const double limit = seconds ? std::stod(seconds) : 0.0;
+  while (!g_stop && !io.shutdown_requested()) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    if (limit > 0 && std::chrono::duration<double>(std::chrono::steady_clock::now() - t0).count() >= limit) break;
+  }
+  std::printf("stopping: %s\n", io.health_json().c_str());
+  p.stop();
+  io.stop();
+  return 0;
+}
+
 int usage() {
   std::fprintf(stderr,
                "usage: torquesense --version\n"
                "       torquesense --conformance <samples-dir> [--template] [--json <out.json>]\n"
-               "       torquesense --sample <dir> --replay-trace <trace.yaml>\n");
+               "       torquesense --sample <dir> --replay-trace <trace.yaml>\n"
+               "       torquesense --config <station.yaml> [--record <session.jsonl>] [--seconds N]\n");
   return 2;
 }
 
@@ -86,6 +125,8 @@ int main(int argc, char** argv) {
       const char* json = arg_after(argc, argv, "--json");
       return sunverify::app::run_conformance(dir, json ? json : "", has(argc, argv, "--template"));
     }
+    if (const char* config = arg_after(argc, argv, "--config"))
+      return run_station(config, arg_after(argc, argv, "--record"), arg_after(argc, argv, "--seconds"));
     if (const char* sample = arg_after(argc, argv, "--sample")) {
       if (const char* trace = arg_after(argc, argv, "--replay-trace")) return sunverify::app::run_one_trace(sample, trace);
     }

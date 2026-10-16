@@ -102,27 +102,38 @@ def build(sample: pathlib.Path, name: str, scn: dict, fps: float, prof: dict) ->
     }
 
     ok, got = run_samples.replay(prof, {"events": events, "release_at": release_at})
-    tol = 2 * frame_ms                                          # commits land on frame boundaries
+    times, kinds = _frame_ticked(prof, events, release_at, frame_ms)
+    assert kinds == [v["kind"] for v in got], f"{name}: frame ticking changed the verdict: {kinds}"
     expected = {
         "scenario": name, "release_ok": ok, "must_alert": not ok,
-        "violations": [dict(v, window_ms=[max(0.0, v_t - tol), v_t + tol]) for v, v_t in
-                       zip(got, _violation_times(prof, events, release_at))],
+        # a camera engine notices a deadline within a frame of it, and commits land on frame
+        # boundaries: one frame early (integer ms) to two frames late
+        "violations": [dict(v, window_ms=[max(0.0, v_t - frame_ms), v_t + 2 * frame_ms]) for v, v_t in zip(got, times)],
     }
     return fixture, expected
 
 
-def _violation_times(prof: dict, events: list, release_at: int) -> list[int]:
+def _frame_ticked(prof: dict, events: list, release_at: int, frame_ms: float) -> tuple[list[float], list[str]]:
+    """The reference, ticked at every frame as the engine is — so a missed deadline is stamped when a
+    30 fps engine notices it, not when the trace's next event happens to arrive."""
     from tsref.procedure import Procedure
     p = Procedure(prof)
     p.start(0)
-    for e in events:
-        if "ip" in e:
-            p.state(e["t"], e["ip"], e["state"])
-        elif "tag" in e:
-            p.tag(e["t"], e["tag"], e["value"])
-        p.tick(e["t"])
+    pending = sorted(events, key=lambda e: e["t"])
+    k, f = 0, 0
+    while f * frame_ms < release_at:
+        t = f * frame_ms
+        while k < len(pending) and pending[k]["t"] <= t:
+            e = pending[k]; k += 1
+            if "ip" in e:
+                p.state(e["t"], e["ip"], e["state"])
+            elif "tag" in e:
+                p.tag(e["t"], e["tag"], e["value"])
+            p.tick(e["t"])
+        p.tick(t)
+        f += 1
     p.release(release_at)
-    return [v.t_ms for v in p.violations]
+    return [v.t_ms for v in p.violations], [v.kind for v in p.violations]
 
 
 def generate(sample: pathlib.Path) -> dict[str, str]:

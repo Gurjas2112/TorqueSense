@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include "VerifyCore.hpp"
+#include "sunverify/perception/Detector.hpp"
 #include "sunverify/procedure/ProcedureEngine.hpp"
 
 extern std::atomic<std::size_t> g_allocs;
@@ -70,4 +72,47 @@ TEST(NoAllocation, ProcedureEngineOverTenThousandEvents) {
   g_counting = false;
   EXPECT_EQ(g_allocs.load(), 0u) << "allocations on the verify path over " << events << " events";
   EXPECT_GT(violations, 0u) << "the faulty cycles must have flagged";
+}
+
+// Pipeline::tick(): one frame through inference (ReplayDetector) and verify (committer, interpreter,
+// deadlines) — the spec's NoAllocationInSteadyState, over 10,000 frames that cycle through every
+// recorded scenario, faults included.
+TEST(NoAllocation, PipelineTickOverTenThousandFrames) {
+  const Profile p = Profile::load(std::string(TS_SOURCE_DIR) + "/samples/wheel-hub-5lug/procedure.json");
+  std::vector<std::string> ids;
+  for (const auto& ip : p.ips()) ids.push_back(ip.id);
+  sunverify::perception::ReplayDetector det{ids, std::vector<float>(ids.size()), std::vector<float>(ids.size())};
+  det.load_dir(std::string(TS_SOURCE_DIR) + "/tests/fixtures/detections");
+  sunverify::app::VerifyCore core{p, {}};
+  auto sv = std::make_unique<sunverify::perception::StateVector>();
+  const int n_scn = static_cast<int>(det.scenarios().size());
+
+  std::uint64_t frame = 0, f_in_cycle = 0, cycle = 0;
+  int scn = 0;
+  auto tick = [&] {
+    const auto& s = det.scenarios()[static_cast<std::size_t>(scn)];
+    if (f_in_cycle == 0) det.select(scn);
+    det.infer(f_in_cycle, *sv);
+    sv->frame_seq = frame;
+    sv->t_capture_ns = static_cast<std::int64_t>(frame) * 33'333'333;
+    sv->cycle_no = cycle;
+    sv->frame_in_cycle = f_in_cycle;
+    sv->new_cycle = f_in_cycle == 0;
+    core.on_frame(*sv);
+    core.mark_reported();
+    ++frame;
+    if (++f_in_cycle >= s.n_frames) {
+      core.on_release(sv->t_capture_ns);
+      f_in_cycle = 0;
+      ++cycle;
+      scn = (scn + 1) % n_scn;
+    }
+  };
+  for (int i = 0; i < 100; ++i) tick();          // warm-up: pools, first cycle
+  g_allocs = 0;
+  g_counting = true;
+  for (int i = 0; i < 10'000; ++i) tick();
+  g_counting = false;
+  EXPECT_EQ(g_allocs.load(), 0u) << "allocations in Pipeline::tick over 10,000 frames";
+  EXPECT_GT(cycle, 5u);
 }

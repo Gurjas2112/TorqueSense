@@ -1,0 +1,26 @@
+{
+  "budget_evidence_p99_ms": 150.0,
+  "conditions_after": "NVIDIA GeForce RTX 3060 Laptop GPU, 1702 MHz, 2100 MHz, 38, 596.21",
+  "conditions_before": "NVIDIA GeForce RTX 3060 Laptop GPU, 1702 MHz, 2100 MHz, 50, 596.21",
+  "counts_as_I4": false,
+  "engine": {
+    "max_ms": 6.335,
+    "n": 199,
+    "p50_ms": 1.662,
+    "p999_ms": 6.335,
+    "p99_ms": 3.259
+  },
+  "evidence": {
+    "max_ms": 40.063,
+    "n": 199,
+    "p50_ms": 5.599,
+    "p999_ms": 40.063,
+    "p99_ms": 36.735
+  },
+  "fps": 18.795900798542494,
+  "frames_dropped": 901,
+  "pass": true,
+  "provider": "replay",
+  "runs": 100,
+  "scenario": "fault_interrupt_resume"
+}

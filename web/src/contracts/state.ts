@@ -70,6 +70,14 @@ export interface InspectionPointState {
    */
   x_mm?: number;
   y_mm?: number;
+  /**
+   * index of `state` in the point's ordered family
+   */
+  rank?: number;
+  /**
+   * how many states the family has; rank n_states-1 is the last
+   */
+  n_states?: number;
 }
 export interface Latency {
   engine_ms_p50: number;

@@ -86,3 +86,36 @@ engine stopped     -> Amber after 1.97 s | Online: False
 
 The last beat was written 0.4 s before the clock started: AMBER came 2.37 s after the last
 heartbeat, inside the 2.5 s bound.
+
+## Pipeline, scenarios and allocation (Phase 6) — 2026-10-16
+
+- `Scenario.EveryRecordedScenarioRaisesExactlyItsExpectedVerdict`: all ten scenarios through replay
+  perception, the 2-frame debounce / 0.65 commit floor / ambiguous band, and the interpreter — every
+  fault raises exactly its expected violations inside its frame window; `edge_hand_occlusion` (with a
+  flicker frame, an occlusion and an ambiguous frame) and `edge_second_person` raise nothing.
+- `NoAllocation.PipelineTickOverTenThousandFrames`: **0 allocations** in `Pipeline::tick()` (detector
+  replay + committer + interpreter + deadlines) over 10,000 frames cycling through every scenario (I1).
+
+### Latency on the replay provider — NOT the I4 measurement
+
+```text
+> latency_test --scenario data/scenarios/fault_interrupt_resume.mp4 --runs 100 --budget-evidence-p99-ms 150
+latency_test: 100 runs of fault_interrupt_resume (15.0 s each), provider replay, PLC opc.tcp://127.0.0.1:14841 (opcua)
+conditions before: NVIDIA GeForce RTX 3060 Laptop GPU, 1702 MHz, 2100 MHz, 50, 596.21
+engine   latency (ms): n=199 p50=1.66 p99=3.26 p99.9=6.33 max=6.33
+evidence latency (ms): n=199 p50=5.60 p99=36.73 p99.9=40.06 max=40.06
+frames verified 45025, dropped 901, fps 18.80
+conditions after: NVIDIA GeForce RTX 3060 Laptop GPU, 1702 MHz, 2100 MHz, 38, 596.21
+PASS: evidence p99 36.73 ms against a 150 ms budget
+```
+
+What this does and does not show:
+
+- **Measured:** the engine's own path — capture pacing, the SPSC rings, the debounce frame, the
+  interpreter, the alert thread and a real OPC-UA write acknowledged by the soft PLC on the same
+  machine. Histogram: `docs/latency-replay.hgrm`; summary: `docs/latency-replay.json`.
+- **Not measured:** detector inference. The replay provider has none, so the ~14 ms YOLO11n budget of
+  Section 13 is absent. I4 stays **not run** until the GPU stack and a trained model exist.
+- **Conditions not controlled:** clocks unlocked, other work running (builds, history seeding), and the
+  process was descheduled for part of the run — the average of 18.8 fps and 901 dropped frames show
+  it. 199 of the expected 200 alerts were acknowledged; the last cycle ended with the run.
