@@ -1,6 +1,6 @@
 # TorqueSense
 
-Real-time assembly verification for the production line (Tata Motors PS4). A camera watches the station.
+Real-time assembly verification for the production line. A camera watches the station.
 A procedure compiled from the CAD model says what must happen and in which order. A wrong or missing step
 stops the station with a physical alert through the PLC, well inside the one-second requirement.
 
