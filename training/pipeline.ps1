@@ -30,7 +30,11 @@ function Say([string]$m) { Add-Content -Path $log -Value ("{0:u}  {1}" -f (Get-D
 function Step([string]$name, [scriptblock]$body, [int]$tries = 3) {
     for ($i = 1; $i -le $tries; $i++) {
         Say "$name (attempt $i)"
+        # Windows PowerShell 5.1 turns a native tool's stderr into error records; with 'Stop' that kills
+        # the run when Blender logs on exit. Judge a step by its exit code alone.
+        $ErrorActionPreference = 'Continue'
         & $body *>> $log
+        $ErrorActionPreference = 'Stop'
         if ($LASTEXITCODE -eq 0) { Say "$name done"; return }
         Say "$name failed with exit $LASTEXITCODE"
     }
