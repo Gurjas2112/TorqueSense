@@ -375,7 +375,8 @@ def scenario_mode(a, scene, rng):
         d.mkdir(parents=True, exist_ok=True)
         srng = random.Random(f'{a.seed}:{sc["name"]}')
         scene.restyle(srng)
-        lights = [([srng.uniform(-0.6, 0.6), srng.uniform(-0.6, 0.6), srng.uniform(1.0, 1.6)], srng.uniform(40, 80))
+        # held for the whole scenario, inside the range the training frames saw (light_frame)
+        lights = [([srng.uniform(-0.6, 0.6), srng.uniform(-0.6, 0.6), srng.uniform(1.0, 1.6)], srng.uniform(2.0, 4.0))
                   for _ in scene.lights]
         yaws = [srng.uniform(0, math.pi / 3) for _ in scene.points]   # a bolt keeps its orientation
         truth = open(d / "truth.jsonl", "w", encoding="utf-8")

@@ -8,9 +8,10 @@
 //            rank order plus one more, `occluded`: a glove or tool over the face is the classifier's call,
 //            per point, because a hand's bounding box is too coarse to say which bolt it covers.
 //
-// Everything is sized at create(): the letterbox map, the crop buffers, the bound input and output
-// tensors. infer() fills them in place and runs both sessions through I/O bindings — no allocation of
-// ours on the inference thread (I1). ONNX Runtime types stay behind the pimpl, so nothing else in the
+// Everything is sized at create(): the letterbox map, the crop buffers, the input and output tensors.
+// infer() fills them in place and hands the same tensors to every Run() — no allocation of ours on the
+// inference thread (I1). Not I/O bindings: ORT copies a bound CPU input to the device when it is bound,
+// so a buffer rewritten in place afterwards would never reach the GPU. ONNX Runtime types stay behind the pimpl, so nothing else in the
 // engine needs ORT's headers. Built only with SUNVERIFY_WITH_CUDA.
 #include <cstdint>
 #include <filesystem>

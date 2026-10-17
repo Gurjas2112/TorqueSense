@@ -48,8 +48,15 @@ struct OnnxDetector::Impl {
   Ort::Env env{ORT_LOGGING_LEVEL_WARNING, "torquesense"};
   Ort::Session det{nullptr}, cls{nullptr};
   Ort::MemoryInfo mem = Ort::MemoryInfo::CreateCpu(OrtArenaAllocator, OrtMemTypeDefault);
-  Ort::IoBinding det_bind{nullptr}, cls_bind{nullptr};
+  // Tensors wrap the buffers below and are passed to Run() each frame. Not IoBinding: a bound CPU input
+  // is copied to the device once, at bind time, so every later frame would be inferred on that copy.
+  Ort::Value det_in_v{nullptr}, det_out_v{nullptr}, cls_in_v{nullptr}, cls_out_v{nullptr};
+  std::string det_in_name, det_out_name, cls_in_name, cls_out_name;
+  const char *det_in_c = nullptr, *det_out_c = nullptr, *cls_in_c = nullptr, *cls_out_c = nullptr;
   Ort::RunOptions run;
+
+  void run_det() { det.Run(run, &det_in_c, &det_in_v, 1, &det_out_c, &det_out_v, 1); }
+  void run_cls() { cls.Run(run, &cls_in_c, &cls_in_v, 1, &cls_out_c, &cls_out_v, 1); }
 
   // sized once in create(); infer() only writes into them
   std::vector<float> det_in, det_out, cls_in, cls_out;
@@ -268,27 +275,29 @@ std::unique_ptr<OnnxDetector> OnnxDetector::create(const OnnxConfig& cfg, std::v
     const std::array<std::int64_t, 4> din{1, 3, kSide, kSide};
     const std::array<std::int64_t, 4> cin{n, 3, kCrop, kCrop};
     const std::array<std::int64_t, 2> cout{n, im->n_out_states};
-    im->det_bind = Ort::IoBinding(im->det);
-    im->cls_bind = Ort::IoBinding(im->cls);
-    im->det_bind.BindInput(im->det.GetInputNameAllocated(0, alloc).get(),
-                           Ort::Value::CreateTensor<float>(im->mem, im->det_in.data(), im->det_in.size(), din.data(), din.size()));
-    im->det_bind.BindOutput(im->det.GetOutputNameAllocated(0, alloc).get(),
-                            Ort::Value::CreateTensor<float>(im->mem, im->det_out.data(), im->det_out.size(), dshape.data(), dshape.size()));
-    im->cls_bind.BindInput(im->cls.GetInputNameAllocated(0, alloc).get(),
-                           Ort::Value::CreateTensor<float>(im->mem, im->cls_in.data(), im->cls_in.size(), cin.data(), cin.size()));
-    im->cls_bind.BindOutput(im->cls.GetOutputNameAllocated(0, alloc).get(),
-                            Ort::Value::CreateTensor<float>(im->mem, im->cls_out.data(), im->cls_out.size(), cout.data(), cout.size()));
+    im->det_in_name = im->det.GetInputNameAllocated(0, alloc).get();
+    im->det_out_name = im->det.GetOutputNameAllocated(0, alloc).get();
+    im->cls_in_name = im->cls.GetInputNameAllocated(0, alloc).get();
+    im->cls_out_name = im->cls.GetOutputNameAllocated(0, alloc).get();
+    im->det_in_c = im->det_in_name.c_str();
+    im->det_out_c = im->det_out_name.c_str();
+    im->cls_in_c = im->cls_in_name.c_str();
+    im->cls_out_c = im->cls_out_name.c_str();
+    im->det_in_v = Ort::Value::CreateTensor<float>(im->mem, im->det_in.data(), im->det_in.size(), din.data(), din.size());
+    im->det_out_v = Ort::Value::CreateTensor<float>(im->mem, im->det_out.data(), im->det_out.size(), dshape.data(), dshape.size());
+    im->cls_in_v = Ort::Value::CreateTensor<float>(im->mem, im->cls_in.data(), im->cls_in.size(), cin.data(), cin.size());
+    im->cls_out_v = Ort::Value::CreateTensor<float>(im->mem, im->cls_out.data(), im->cls_out.size(), cout.data(), cout.size());
 
     // Warm-up: the first runs pay for cuDNN's exhaustive algorithm search (and, under TensorRT, the
     // engine load). They must never land in a latency histogram.
     for (int i = 0; i < std::max(1, cfg.warmup_runs); ++i) {
-      im->det.Run(im->run, im->det_bind);
-      im->cls.Run(im->run, im->cls_bind);
+      im->run_det();
+      im->run_cls();
     }
     std::array<double, 10> t{};
     for (double& v : t) {
       const auto t0 = std::chrono::steady_clock::now();
-      im->det.Run(im->run, im->det_bind);
+      im->run_det();
       v = ms_since(t0);
     }
     std::sort(t.begin(), t.end());
@@ -310,7 +319,7 @@ void OnnxDetector::infer(const std::uint8_t* bgr, int stride, StateVector& sv) n
   auto t0 = std::chrono::steady_clock::now();
   m.letterbox(bgr, stride);
   try {
-    m.det.Run(m.run, m.det_bind);
+    m.run_det();
   } catch (const Ort::Exception&) {
     sv.hands = sv.tools = 0;
   }
@@ -318,7 +327,7 @@ void OnnxDetector::infer(const std::uint8_t* bgr, int stride, StateVector& sv) n
   t0 = std::chrono::steady_clock::now();
   m.crops(bgr, stride);
   try {
-    m.cls.Run(m.run, m.cls_bind);
+    m.run_cls();
   } catch (const Ort::Exception&) {
     for (std::size_t i = 0; i < m.pts.size(); ++i) sv.ips[i] = IpObservation{};   // no answer this frame
     sv.n_ips = static_cast<std::uint16_t>(m.pts.size());

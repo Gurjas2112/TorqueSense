@@ -17,11 +17,15 @@ if(SUNVERIFY_WITH_CUDA)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ONNXRUNTIME_ROOT}/lib/onnxruntime.dll ${ONNXRUNTIME_ROOT}/lib/onnxruntime_providers_shared.dll
             ${ONNXRUNTIME_ROOT}/lib/onnxruntime_providers_cuda.dll ${ONNXRUNTIME_ROOT}/lib/onnxruntime_providers_tensorrt.dll ${CMAKE_BINARY_DIR}/tests
     COMMAND ${CMAKE_COMMAND} -E copy_if_different ${ONNXRUNTIME_ROOT}/lib/onnxruntime.dll ${ONNXRUNTIME_ROOT}/lib/onnxruntime_providers_shared.dll
-            ${CMAKE_BINARY_DIR}/perception)
+            ${ONNXRUNTIME_ROOT}/lib/onnxruntime_providers_cuda.dll ${CMAKE_BINARY_DIR}/perception)
 else()
   target_sources(sunverify_perception PRIVATE src/OnnxDetectorStub.cpp)
 endif()
 
 add_executable(perception_test tests/SpscRingBufferTest.cpp tests/DetectorMathTest.cpp)
+if(SUNVERIFY_WITH_CUDA)
+  target_sources(perception_test PRIVATE tests/OnnxDetectorGpuTest.cpp)   # the detector sees each frame
+  add_dependencies(perception_test onnxruntime_dlls)
+endif()
 target_link_libraries(perception_test PRIVATE sunverify_warnings sunverify_perception GTest::gtest_main)
 gtest_discover_tests(perception_test DISCOVERY_MODE PRE_TEST)
