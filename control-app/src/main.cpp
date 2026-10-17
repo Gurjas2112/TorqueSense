@@ -18,6 +18,7 @@
 
 #include "Conformance.hpp"
 #include "IoSide.hpp"
+#include "KeepAwake.hpp"
 #include "MediaVerify.hpp"
 #include "sources/CameraSource.hpp"
 #include "Pipeline.hpp"
@@ -94,6 +95,7 @@ int run_station(const char* config, const char* record, const char* seconds) {
   std::fflush(stdout);
   std::signal(SIGINT, on_signal);
   std::signal(SIGTERM, on_signal);
+  keep_system_awake();
   p.start();
   io.start();
   const auto t0 = std::chrono::steady_clock::now();

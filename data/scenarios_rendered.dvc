@@ -1,0 +1,6 @@
+outs:
+- md5: edda21a2bbf5e2c75b598021cee2e0ad.dir
+  size: 6477557
+  nfiles: 6
+  hash: md5
+  path: scenarios_rendered

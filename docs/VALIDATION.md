@@ -95,9 +95,78 @@ The five positions read from the STEP occurrences equal the profile's hand-enter
 `test_same_seed_same_render` renders 10 frames twice with seed 7 — identical labels, every frame's
 PSNR ≥ 45 dB. **4 passed** (the render test runs; it does not skip).
 
-## Latency (I4), accuracy (I10), VRAM (I7), TensorRT gate
+## Phase 3: models trained on the RTX 3060 — 2026-10-17
 
-**Not run.** They need the G2 stack and a trained detector (Phases 3, 6, 12).
+`training\pipeline.ps1` rendered 2,000 training frames (seed 20260721) and 400 held-out frames (seed
+99) with BlenderProc from the FreeCAD glTF, then `training\train_local.py` trained YOLO11n (hand, tool;
+40 epochs) and the `threaded_fastener` classifier (MobileNetV3-Small, absent/seated/fastened +
+occluded) locally; Colab was not needed. The spec's render count is 4,000; 2,000 were used and the
+count is recorded. On the held-out renders (`docs/accuracy.synthetic.json`):
+
+| Model | Held-out renders | Figure |
+|---|---|---|
+| YOLO11n | 400 images | mAP50 **0.994**, mAP50-95 0.958 |
+| threaded_fastener | 2,000 crops | top-1 **0.9865**; recall absent 0.996, seated 0.983, fastened 0.991, occluded 0.983 |
+
+This is the synthetic half of I10 only. There is no labelled real-photo set (👤), so **I10 is not met**.
+Weights and the held-out set are in DVC (`models/*.dvc`, `data/synth/heldout.dvc`); the engine checks
+their SHA-256 against `models/manifest.json` (I12).
+
+## Two bugs the first GPU latency run exposed — 2026-10-17
+
+The first 3-cycle run on the GPU printed **PASS, evidence p99 1.85 ms**. That figure was impossible: a
+state read from the pixels needs two frames (`debounce_frames: 2`), at least ~33 ms. Checking it found:
+
+1. **The detector saw only its warm-up input.** `OnnxDetector` bound its CPU buffers with
+   `Ort::IoBinding` at start-up and rewrote them in place each frame. ONNX Runtime copies a bound CPU
+   input to the device at bind time, so every frame was inferred on the warm-up contents: no hands,
+   every bolt "occluded". The alerts that fired came from timers and plant signals. Fixed by passing
+   the same pre-made tensors to `Session::Run` each frame (still no allocation of ours). The new
+   `OnnxDetectorGpu.AnswersFollowThePixels` test fails on the old code and passes on the new.
+2. **The scenario videos were over-exposed.** Scenario mode in `synth/generate.py` lit the scene at
+   40–80 W, left over from before the exposure fix in training mode (1–6 W): up to 80 % of each frame
+   was clipped white, which produced a false RED in the correct cycle. Lights now sit at 2–4 W.
+
+On the re-rendered videos the classifier agrees with the render truth at 373/373 visible sampled
+points, and the engine's verdicts from the pixels match the reference interpreter:
+
+| Scenario | Reference | Engine on the GPU, from the pixels |
+|---|---|---|
+| `cycle_correct_01` (twice) | released, no violation | RELEASED, GREEN throughout |
+| `fault_interrupt_resume` | SEQUENCE bolt-2 (expected bolt-5) at 9.97–10.07 s; INCOMPLETE_AT_RELEASE | RED at ~9.95 s; INCOMPLETE_AT_RELEASE, missing bolt 5, bolt 4 |
+| `fault_adjacent_order` | SEQUENCE bolt-2 (expected bolt-3) at 3.77–3.87 s, then 3 more | RED at 3.84 s; later SEQUENCE alerts |
+
+## I4: latency on the GPU detector — PASS — 2026-10-17
+
+```text
+> latency_test --config config\station_w14_gpu.yaml --provider cuda --scenario fault_interrupt_resume `
+    --runs 100 --budget-evidence-p99-ms 150 --histogram docs\latency.hgrm --summary-json docs\latency.json
+latency_test: 100 runs of fault_interrupt_resume (15.0 s each), provider cuda, PLC opc.tcp://127.0.0.1:4840 (opcua)
+conditions before: NVIDIA GeForce RTX 3060 Laptop GPU, 1702 MHz, 2100 MHz, 46, 596.21
+engine   latency (ms): n=200 p50=12.98 p99=29.04 p99.9=29.58 max=29.58
+evidence latency (ms): n=200 p50=12.98 p99=62.78 p99.9=63.01 max=63.01
+frames verified 45008, dropped 0, fps 30.00
+conditions after: NVIDIA GeForce RTX 3060 Laptop GPU, 720 MHz, 2100 MHz, 59, 596.21
+PASS: evidence p99 62.78 ms against a 150 ms budget
+```
+
+- **What is in the loop:** FileSource decoding the rendered 1920×1080 video at 30 fps, YOLO11n and the
+  classifier on ONNX Runtime's CUDA provider (detector mean 11.5 ms, classifier 3.6 ms, sampled every
+  30 s), the procedure engine, and the OPC-UA write to the soft PLC, acknowledged.
+- **Two kinds of alert, 100 each.** The SEQUENCE alert is read from the pixels: 50.6–63.0 ms evidence
+  (two debounce frames plus inference). INCOMPLETE_AT_RELEASE comes from the plant's release request:
+  ~1–2 ms. The p99 is the pixel-read alert.
+- **Conditions:** AC power, Balanced plan. Clocks **not locked**, because that needs Administrator, which
+  the spec allows when disclosed: 525–1,702 MHz and 46–60 °C observed.
+- **Not in the figure:** a real camera's exposure and transfer time. The frames are renders, not camera
+  footage.
+- **Two earlier 100-cycle runs are void.** Windows put the laptop to sleep for being idle mid-run
+  (13:09:59 and 13:38:47; Kernel-Power 42). The capture clock fell behind and the runs ended at
+  14.9 and 9.8 fps with 44 % and 61 % of frames dropped, yet printed PASS. Both are discarded. Now
+  `torquesense` and `latency_test` hold the system awake while they run, and `latency_test` **fails** a
+  run below 95 % of the camera rate or with more than 1 % of frames dropped.
+
+VRAM under four stations (I7) and the TensorRT parity gate are not run yet.
 
 ## The engine agrees with the reference (I16) — 2026-10-16
 

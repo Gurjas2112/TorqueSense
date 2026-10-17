@@ -165,11 +165,11 @@ schema in `contracts/`, a health endpoint and a place in the network-pull drill.
 | Hot-path invariants | ✅ Done | 0 allocations over 10,000 frames; no mutex; Florence-2 off the alert path (link-time check) |
 | CAD from FreeCAD (Phase 2) | ✅ Done | `cad/build_wheel.py` → STEP → `cad-extract`: 5 bolts at 114.3 mm PCD to 0.01 mm; order 1,3,5,2,4 derived; 4-lug revision 1,3,2,4 |
 | GPU stack, gate G2 | ✅ Done | cuDNN 9.27 (CUDA 13), ONNX Runtime 1.28.0 gpu_cuda13, TensorRT 10.13.3.9; CUDA and TensorRT providers load from GCC; `trtexec` stock YOLO11n FP16 median 1.95 ms |
-| GPU detector in the engine | ✅ Built | `OnnxDetector`: YOLO11n + per-point classifier, TensorRT → CUDA, model SHA-256 checked (I12); 29.8 fps end to end with stand-in models |
-| Rendered training data, I9 | ✅ Done / ⏳ rendering | BlenderProc renders from the FreeCAD glTF; I9 reproducibility passes on real renders; the 4,000 + 400 frame sets are rendering on the RTX 3060 |
-| Trained models (Phase 3) | ⏳ In progress | `training/train_local.py` on the RTX 3060 (Colab not required); results go to `docs/VALIDATION.md` |
-| **I4 latency on the GPU detector** | ⏳ Not yet measured | runs once the models and rendered scenario videos exist. Replay-provider figures (evidence p50 5.6 ms / p99 36.7 ms) are **not** I4 |
-| **I10 accuracy (synthetic + real)** | ⏳ Synthetic pending; real 👤 | the real half needs labelled photos of a real hub |
+| GPU detector in the engine | ✅ Done | `OnnxDetector`: YOLO11n + per-point classifier on CUDA (TensorRT optional), model SHA-256 checked (I12); its verdicts from the pixels of the rendered scenarios match the reference interpreter |
+| Rendered training data, I9 | ✅ Done | BlenderProc renders from the FreeCAD glTF: 2,000 training + 400 held-out frames (the spec's figure is 4,000; the count used is recorded) and 3 scenario videos; I9 reproducibility passes |
+| Trained models (Phase 3) | ✅ Done | trained locally on the RTX 3060 (`training/train_local.py`, Colab not required); weights in DVC, hashes in `models/manifest.json` |
+| **I4 latency on the GPU detector** | ✅ **PASS** | 100 cycles of the hero fault at 30.00 fps, 0 of 45,008 frames dropped: **evidence p99 62.8 ms** against 150 ms. GPU clocks unlocked (525–1,702 MHz observed), AC power |
+| **I10 accuracy (synthetic + real)** | ⚠️ Synthetic only; real 👤 | held-out renders: detector mAP50 0.994, classifier top-1 98.7 %. The real half needs labelled photos of a real hub, so I10 is **not met** |
 | Soft PLC + heartbeat watchdog, Node-RED | ✅ Done | station amber 2.37 s after the last beat |
 | API / outbox / Supabase (RLS, Storage clips), sidecar with Florence-2 on GPU | ✅ Done | anomaly row and H.264 clip land end to end |
 | Network-pull drill | ✅ PASS | 45 s outage: 14 alerts and 1,356 frames verified, outbox peak 18, drained in 16 s, 14/14 anomalies in Supabase in order |
@@ -419,8 +419,9 @@ The rules every change is held to (spec Section 7). The table shows the main one
 - **No real-camera accuracy figure yet.** The detector is trained on renders of the CAD, and the
   hands and nutrunner in those renders are primitive proxies. Real-image accuracy needs labelled photos
   of a real hub, which is a human step. Until then I10 is not met and nothing claims it.
-- **Latency figures shown so far come from the replay and schematic providers.** The I4 figure on the
-  GPU detector will be recorded in `VALIDATION.md` when it has been measured.
+- **I4 was measured on rendered video, not a live camera.** The GPU detector reads the pixels of CAD
+  renders played back at 30 fps. Camera capture latency (exposure, USB transfer) is not inside the figure,
+  and the clocks were not locked (that needs Administrator); the observed clocks are recorded with it.
 - **Sample media are schematic.** The schematic sample videos are drawings of recorded scenarios,
   stamped as such. The rendered scenario videos are photoreal renders, but they are still not camera
   footage.

@@ -22,6 +22,7 @@
 #include <nlohmann/json.hpp>
 
 #include "IoSide.hpp"
+#include "KeepAwake.hpp"
 #include "Pipeline.hpp"
 
 namespace fs = std::filesystem;
@@ -79,6 +80,7 @@ int main(int argc, char** argv) {
   std::printf("conditions before: %s\n", before.c_str());
   std::fflush(stdout);
 
+  keep_system_awake();   // an idle-sleep mid-run once turned 30 fps into 9.8 and still printed PASS
   p.start();
   io.start();
   // cycles count from 1; wait until `runs` complete cycles have passed
@@ -105,7 +107,16 @@ int main(int argc, char** argv) {
                 "OPC-UA write, not I4 (which needs the GPU detector on locked clocks).\n");
 
   if (hist) io.write_histogram(hist);
-  const bool pass = ev["n"].get<long long>() > 0 && ev["p99_ms"].get<double>() <= budget;
+  // I4 is a figure at the camera's rate: a run that fell behind it (sleep, throttling, a starved thread)
+  // measured something else, whatever its percentiles say.
+  const double fps = health["fps"].get<double>();
+  const auto verified = health["frames_verified"].get<unsigned long long>();
+  const auto dropped = health["frames_dropped"].get<unsigned long long>();
+  const bool at_rate = fps >= 0.95 * cfg.fps && dropped * 100 <= verified + dropped;   // >= 95% of fps, <= 1% dropped
+  if (!at_rate)
+    std::printf("FAIL: the run did not hold the camera rate (fps %.2f of %.0f, %llu of %llu frames dropped)\n", fps,
+                cfg.fps, dropped, verified + dropped);
+  const bool pass = at_rate && ev["n"].get<long long>() > 0 && ev["p99_ms"].get<double>() <= budget;
   if (summary) {
     std::ofstream out(summary);
     out << nlohmann::json{{"scenario", scenario}, {"runs", runs}, {"provider", p.provider()},
