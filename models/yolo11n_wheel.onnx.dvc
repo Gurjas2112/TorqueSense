@@ -1,0 +1,5 @@
+outs:
+- md5: 18b333f2a866679c4eda00bdf4c5dbd9
+  size: 10664435
+  hash: md5
+  path: yolo11n_wheel.onnx

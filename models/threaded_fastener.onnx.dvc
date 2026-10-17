@@ -1,0 +1,5 @@
+outs:
+- md5: 9f56a461d1f3d3f7d3cf6f0c40a1592a
+  size: 6098471
+  hash: md5
+  path: threaded_fastener.onnx

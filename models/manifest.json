@@ -1,3 +1,39 @@
 {
-  "_comment": "SHA-256 of every ONNX model the engine may load; the engine refuses a file whose hash differs (I12). Keys starting with _ are not models. Filled from training/colab_train.ipynb (Phase 3)."
+  "_comment": "SHA-256 of every ONNX model the engine may load; the engine refuses a file whose hash differs (I12). Keys starting with _ are not models. Filled from training/colab_train.ipynb (Phase 3).",
+  "yolo11n_wheel.onnx": {
+    "sha256": "8c383266033b43d6149139035de9533d2204dc0a083cab357480ad4bf6ffa8e9",
+    "version": "yolo11n-w14-s20260721",
+    "classes": [
+      "hand",
+      "tool"
+    ],
+    "input": [
+      640,
+      640
+    ],
+    "trained_from": "2c6556b6091a-g5-s20260721",
+    "trained_on": "HSGPC RTX 3060 (local)",
+    "accuracy_report": "docs/accuracy.synthetic.json"
+  },
+  "threaded_fastener.onnx": {
+    "sha256": "c9127134b637195757d44424e2a70f8ab625ff2604d4b9af01fe18ed7e167147",
+    "version": "mnv3s-tf-s20260721",
+    "states": [
+      "absent",
+      "seated",
+      "fastened"
+    ],
+    "outputs": [
+      "absent",
+      "seated",
+      "fastened",
+      "occluded"
+    ],
+    "input": [
+      96,
+      96
+    ],
+    "trained_from": "2c6556b6091a-g5-s20260721",
+    "trained_on": "HSGPC RTX 3060 (local)"
+  }
 }

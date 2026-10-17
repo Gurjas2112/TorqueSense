@@ -1,0 +1,83 @@
+{
+  "trained_on": "HSGPC RTX 3060 Laptop (local, not Colab)",
+  "seed": 20260721,
+  "train_render": "2c6556b6091a-g5-s20260721",
+  "heldout_render": "2c6556b6091a-g5-s99",
+  "crops_train": {
+    "absent": 1313,
+    "seated": 1947,
+    "fastened": 2295,
+    "occluded": 4445
+  },
+  "crops_heldout": {
+    "absent": 279,
+    "seated": 406,
+    "fastened": 421,
+    "occluded": 894
+  },
+  "classifier_training": {
+    "val_top1": 0.98,
+    "train_crops": 9000,
+    "per_class_train": {
+      "absent": 1180,
+      "seated": 1764,
+      "fastened": 2064,
+      "occluded": 3992
+    }
+  },
+  "detector_synthetic_heldout": {
+    "set": "data\\synth\\heldout",
+    "images": 400,
+    "map50": 0.994,
+    "map50_95": 0.9577
+  },
+  "classifier_synthetic_heldout": {
+    "crops": 2000,
+    "top1": 0.9865,
+    "per_class_recall": {
+      "absent": 0.9964,
+      "seated": 0.9828,
+      "fastened": 0.9905,
+      "occluded": 0.9832
+    },
+    "confusion_rows_true_cols_pred": [
+      [
+        278,
+        0,
+        0,
+        1
+      ],
+      [
+        2,
+        399,
+        0,
+        5
+      ],
+      [
+        0,
+        0,
+        417,
+        4
+      ],
+      [
+        3,
+        3,
+        9,
+        879
+      ]
+    ],
+    "classes": [
+      "absent",
+      "seated",
+      "fastened",
+      "occluded"
+    ]
+  },
+  "real": null,
+  "limits": [
+    "bolt_torqued has no real-set coverage: real hubs do not carry the yellow witness mark (spec Section 17)",
+    "No real-photo set exists yet (\ud83d\udc64 Phase 3): the real half of I10 is not measured, so I10 is not met.",
+    "Hands and the nutrunner are primitive proxies in the renders; transfer to real gloves is unmeasured."
+  ],
+  "minutes": 14.3
+}

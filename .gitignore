@@ -21,6 +21,10 @@ var/
 data/*
 !data/*.dvc
 !data/.gitignore
+!data/synth/
+data/synth/*
+!data/synth/*.dvc
+!data/synth/.gitignore
 models/*
 !models/manifest.json
 !models/*.dvc
