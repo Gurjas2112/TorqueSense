@@ -32,9 +32,9 @@ What these images are not:
 - **Not camera footage.** The wheel frames are photoreal BlenderProc renders of the FreeCAD model,
   and the door frames are schematic drawings of recorded scenarios, stamped as such.
 - **Not a real-camera accuracy claim.** The wheel's detector accuracy is measured on held-out renders
-  only; the real-photo half of I10 is still open.
+  only; accuracy on real photos is not measured yet.
 - **The latency is the GPU detector's.** The W-14 latency on screen comes from the detector reading the
-  renders: I4 measured evidence p99 62.8 ms over 100 cycles. D-07's latency comes from the schematic
+  renders: the 100-cycle latency test measured p99 62.8 ms. D-07's latency comes from the schematic
   provider.
 - **The public replay (16) is older.** It still plays the session recorded on 16 October, before the
   GPU detector.

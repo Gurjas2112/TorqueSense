@@ -40,7 +40,10 @@ def verdict(row, expect_online: bool, now: datetime) -> tuple[int, str]:
 
 
 def main() -> int:
-    url, key = os.environ["SUPABASE_URL"], os.environ["SUPABASE_PUBLISHABLE_KEY"]
+    url, key = os.environ.get("SUPABASE_URL", ""), os.environ.get("SUPABASE_PUBLISHABLE_KEY", "")
+    if not url or not key:                     # a fork, or a clone without its own Supabase project
+        print("watchdog: SUPABASE_URL / SUPABASE_PUBLISHABLE_KEY not set; nothing to watch")
+        return 0
     expect = os.environ.get("TS_EXPECT_ONLINE", "false").lower() == "true"
     try:
         row = newest_bucket(url, key)          # this request is also the keep-alive
