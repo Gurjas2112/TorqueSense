@@ -13,8 +13,8 @@ station:
 source:
   kind: file                                  # file | uvc | stream  (Section 8)
   scenarios_dir: data/scenarios_rendered      # <scenario>.mp4 rendered from the CAD (synth/render_plan.py)
-  playlist: [cycle_correct_01, fault_interrupt_resume, cycle_correct_01, fault_adjacent_order,
-             edge_hand_occlusion, fault_missing_bolt, cycle_correct_01, fault_no_tool]
+  # only the scenarios rendered so far (training\pipeline.ps1 -Scenarios); the rest would play blank frames
+  playlist: [cycle_correct_01, fault_interrupt_resume, cycle_correct_01, fault_adjacent_order]
   fps: 30
   process_width: 1920                         # full resolution: the crops need it (Section 9)
   process_height: 1080

@@ -62,6 +62,7 @@ int main(int argc, char** argv) {
   cfg.playlist.assign(1, scenario);                     // one scenario, cycle after cycle
   cfg.line_simulator = cfg.alert_backend != "none";
   cfg.sidecar_enabled = false;                          // adjudication is off the alert path; keep it out of the run
+  cfg.uplink_enabled = false;                           // its alerts are measurements, not station history: no spool, no API
   if (provider_asked != cfg.provider) {
     std::fprintf(stderr, "latency_test: provider %s requested, but this build runs %s\n", provider_asked.c_str(), cfg.provider.c_str());
     return 2;

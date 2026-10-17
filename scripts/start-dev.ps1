@@ -6,12 +6,14 @@
 #   .\scripts\start-dev.ps1                 # one station, W-14
 #   .\scripts\start-dev.ps1 -NoFlorence     # sidecar without Florence-2 (clips only)
 #   .\scripts\start-dev.ps1 -Door           # also station D-07, the door-trim profile, read from pixels
+#   .\scripts\start-dev.ps1 -Gpu            # W-14 on the trained models (CUDA build, rendered scenario videos)
 #   .\scripts\stop-dev.ps1
 param(
     [switch]$NoFlorence,
     [switch]$NoNodeRed,
     [switch]$Kiosk,
     [switch]$Door,
+    [switch]$Gpu,
     [int]$ApiPort = 8000
 )
 $ErrorActionPreference = 'Stop'
@@ -62,7 +64,11 @@ if (-not $NoNodeRed -and (Test-Path $nodeRed)) {
     Start-Bg 'node-red' 'node' @($nodeRed, '-p', '1880', '-u', (Join-Path $root 'var\node-red'), (Join-Path $root 'softplc\node-red\flows.json'))
 }
 
-Start-Bg 'engine-w14' (Join-Path $build 'control-app\torquesense.exe') @('--config', 'config\station_w14.yaml')
+if ($Gpu) {   # the CUDA build carries its own onnxruntime.dll beside the exe (System32 has an older one)
+    Start-Bg 'engine-w14' (Join-Path $root 'build\windows-release\control-app\torquesense.exe') @('--config', 'config\station_w14_gpu.yaml')
+} else {
+    Start-Bg 'engine-w14' (Join-Path $build 'control-app\torquesense.exe') @('--config', 'config\station_w14.yaml')
+}
 if (-not (Wait-Url 'http://127.0.0.1:8095/health' 30)) { throw 'the engine did not come up: see var\logs\engine-w14.err.log' }
 
 if ($Door) {

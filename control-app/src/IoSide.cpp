@@ -194,6 +194,7 @@ struct IoSide::Impl {
 
   // ---- uplink -----------------------------------------------------------------------------------
   void enqueue(const std::string& path, const json& body) {
+    if (!cfg.uplink_enabled) return;               // a measurement run is not plant history
     const json line = {{"path", path}, {"body", body}};
     {
       std::lock_guard lk(up_m);

@@ -377,3 +377,19 @@ two engines, Florence-2, Node-RED, a headless browser and video encoding shared 
 one-second requirement, far outside the ~36 ms seen unloaded, and unexplained. The second (published)
 run measured evidence p99 36.7 ms (W-14) and 38.1 ms (D-07). The outlier is recorded here rather than
 re-run away; I4 remains not run.
+
+## The recorded demo run, again, on the GPU detector — 2026-10-17
+
+`app_screenshots_screen_recording/` was re-captured with `scripts\start-dev.ps1 -Gpu -Door`. W-14 now
+runs `config\station_w14_gpu.yaml`: the trained models on CUDA, reading the rendered 1080p scenario
+videos. Its playlist is limited to the three scenarios rendered so far. The full stack ran on the laptop
+during the recording: two engines, Florence-2, Node-RED, the API and a headless browser recording video.
+W-14's on-screen evidence p99 was **67.4 ms** and D-07's was 36.6 ms. The hero fault's alert reached
+Supabase with its clip at 59.3 ms evidence.
+
+The first take exposed one more defect. `latency_test` had been spooling every alert from its runs into
+W-14's event outbox (`var/spool/W-14.jsonl`), so 720 test-run events, some from before the detector fix,
+were queued ahead of the demo's. 143 of them had already reached the API and Supabase, and those rows are
+still there. Now `latency_test` sets `uplink_enabled = false`: a measurement run is not plant history.
+The remaining backlog of 685 events was moved to `var/spool/W-14.backlog-2026-10-17-latency-runs.jsonl`
+and kept there, not uploaded and not deleted.

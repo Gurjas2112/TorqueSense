@@ -12,7 +12,7 @@ electronics enclosure.
 
 | | |
 |---|---|
-| **Demo walk-through** | [app_screenshots_screen_recording/](app_screenshots_screen_recording/README.md): 16 screenshots in flow order and `torquesense_demo_full.mp4` (116 s) |
+| **Demo walk-through** | [app_screenshots_screen_recording/](app_screenshots_screen_recording/README.md): 16 screenshots in flow order and `torquesense_demo_full.mp4` (120 s), recorded 17 Oct with W-14 on the trained GPU models |
 | **Public replay** | https://dist-replay-one.vercel.app: a recorded engine session, with live anomalies read from Supabase through the read-only key |
 | **Specification** | [docs/SPEC.md](docs/SPEC.md): prototype preface plus the full v5.5 engineering specification |
 | **Measured results** | [docs/VALIDATION.md](docs/VALIDATION.md): every gate's real output. A number not in that file is not claimed |

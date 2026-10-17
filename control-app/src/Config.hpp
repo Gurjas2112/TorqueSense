@@ -55,6 +55,7 @@ struct StationConfig {
   int ws_port = 8080, mjpeg_port = 8090, control_port = 8095;
   std::string api_url = "http://127.0.0.1:8000";
   std::filesystem::path event_spool = "var/spool/W-14.jsonl";
+  bool uplink_enabled = true;                     // false: record nothing for the API (latency_test runs)
 
   int bucket_s = 300, heartbeat_ms = 500;
   std::string api_key;   // from the environment (API_KEY), never from a committed file

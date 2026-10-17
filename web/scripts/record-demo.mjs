@@ -40,19 +40,22 @@ const card = async (title, sub) => {
   await pause(2600);
 };
 
-await card('TorqueSense', 'Real-time assembly verification compiled from CAD — any assembly, as data. A walk through the running prototype: engine, soft PLC, Node-RED, Florence-2 sidecar, API, Supabase.');
+await card('TorqueSense', 'Real-time assembly verification compiled from CAD — any assembly, as data. A walk through the running prototype: engine with trained models on the GPU, soft PLC, Node-RED, Florence-2 sidecar, API, Supabase.');
 
 // 1 · a correct cycle
-await card('1 · A correct cycle', 'Station W-14 fits a 5-lug wheel. The star order 1 → 3 → 5 → 2 → 4 was derived from the bolt geometry, not typed.');
+await card('1 · A correct cycle', 'Station W-14 fits a 5-lug wheel. The star order 1 → 3 → 5 → 2 → 4 was derived from the bolt geometry, not typed. YOLO11n and the bolt classifier read every frame of a CAD render on the RTX 3060.');
 await fetch(`${ENGINE}/scenario/cycle_correct_01`, { method: 'POST' });
 await page.goto(`${API}/`);
-await waitFor((s) => s.scenario === 'cycle_correct_01' && (s.cycle_elapsed_ms ?? 0) > 4500, 45000);
+// the rendered cycle torques a bolt every 0.8 s and holds RELEASED for about a second: shoot promptly
+const midCycle = (s) => s.scenario === 'cycle_correct_01' && s.cycle_elapsed_ms > 3600 && s.cycle_elapsed_ms < 5600;
+await waitFor(midCycle, 45000);
 await shot('dashboard_correct_cycle_in_progress');
 await page.goto(`${API}/hmi/W-14`);
-await pause(2500);
+await page.getByText(/NEXT: BOLT/).waitFor({ timeout: 30000 });   // the HMI has its socket and a state
+await waitFor(midCycle, 30000);
 await shot('hmi_green_next_bolt');
 await waitFor((s) => s.verdict?.kind === 'RELEASED', 20000);
-await pause(800);
+await pause(150);
 await shot('hmi_green_released');
 
 // 2 · pick a fault
@@ -65,7 +68,7 @@ await pause(1200);
 await shot('harness_fault_queued');
 
 // 3 · the hero fault, caught
-await card('3 · Interrupt and resume', 'Called away after bolts 1 and 3, the operator resumes from bolt 2 — sequentially. Nothing he can see is wrong.');
+await card('3 · Interrupt and resume', 'Called away after bolts 1 and 3, the operator resumes from bolt 2 — sequentially. Nothing the operator can see is wrong.');
 await page.goto(`${API}/hmi/W-14`);
 await waitFor((s) => s.scenario === 'fault_interrupt_resume', 40000);
 await waitFor((s) => s.verdict && s.verdict.kind === 'SEQUENCE', 30000);
@@ -77,7 +80,10 @@ await shot('node_red_opcua_red_and_hold_request');
 await page.goto(`${API}/`);
 await pause(2500);
 await shot('dashboard_violation_narrative_latency');
-await page.locator('[data-kind="SEQUENCE"]').first().click();
+// the hero fault's row, once its clip has been cut (the clip lands a few seconds after the alert)
+const hero = page.locator('[data-kind="SEQUENCE"]', { hasText: /Bolt 2 fastened before bolt 5[\s\S]*clip$/ }).first();
+await hero.waitFor({ timeout: 30000 });
+await hero.click();
 await pause(3500);
 await shot('anomaly_modal_clip_narrative_review');
 await page.keyboard.press('Escape');
@@ -120,7 +126,7 @@ await page.goto(VERCEL);
 await pause(9000);
 await shot('vercel_public_replay');
 
-await card('TorqueSense', 'Engine latency ≈ 1.7 ms, evidence ≈ 36 ms on the replay provider (docs/VALIDATION.md) — against a one-second requirement.');
+await card('TorqueSense', 'I4 on the GPU detector: evidence p99 62.8 ms over 100 cycles at 30 fps, 0 frames dropped (docs/VALIDATION.md) — against a one-second requirement. Read from CAD renders, not yet a real camera.');
 await ctx.close();
 await b.close();
 const webm = fs.readdirSync(tmp).find((f) => f.endsWith('.webm'));
