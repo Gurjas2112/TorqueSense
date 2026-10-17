@@ -50,6 +50,8 @@ samples/*/media/*
 !samples/*/media/*/
 !samples/*/media/*/*.png
 !samples/*/media/*/frames.json
+# real camera recordings of a sample assembly, kept small (samples/earbud-case-charge)
+!samples/*/recordings/*.mp4
 
 # build trees
 build/

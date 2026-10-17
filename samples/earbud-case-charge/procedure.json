@@ -1,0 +1,273 @@
+{
+  "cad_revision": "measured",
+  "cameras": [
+    {
+      "aspect": 1.0,
+      "f_px": 727.8229015276639,
+      "hfov_deg": 36.5,
+      "id": "desk",
+      "look_at_mm": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "position_mm": [
+        0.0,
+        0.0,
+        200.0
+      ],
+      "width_px": 480
+    }
+  ],
+  "geometry": "measured",
+  "inspection_points": [
+    {
+      "camera": "desk",
+      "family": "presence",
+      "feature_mm": 15.0,
+      "feature_px": 54.1,
+      "id": "kit-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        19.0,
+        4.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "present"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "presence",
+      "feature_mm": 15.0,
+      "feature_px": 52.1,
+      "id": "kit-2",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -39.0,
+        19.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "present"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "presence",
+      "feature_mm": 15.0,
+      "feature_px": 52.8,
+      "id": "kit-3",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -36.0,
+        -6.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "present"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "presence",
+      "feature_mm": 15.0,
+      "feature_px": 51.0,
+      "id": "kit-4",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        -25.0,
+        47.0,
+        0.0
+      ],
+      "states": [
+        "absent",
+        "present"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "hinged_lid",
+      "feature_mm": 50.0,
+      "feature_px": 180.3,
+      "id": "lid-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        19.0,
+        4.0,
+        0.0
+      ],
+      "states": [
+        "shut",
+        "open",
+        "closed"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "earbud_slot",
+      "feature_mm": 15.0,
+      "feature_px": 54.3,
+      "id": "left_slot-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        10.0,
+        10.0,
+        0.0
+      ],
+      "states": [
+        "empty",
+        "seated"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "earbud_slot",
+      "feature_mm": 15.0,
+      "feature_px": 53.4,
+      "id": "right_slot-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        28.0,
+        10.0,
+        0.0
+      ],
+      "states": [
+        "empty",
+        "seated"
+      ]
+    },
+    {
+      "camera": "desk",
+      "family": "connector",
+      "feature_mm": 10.0,
+      "feature_px": 35.9,
+      "id": "cable-1",
+      "normal": [
+        0.0,
+        0.0,
+        1.0
+      ],
+      "position_mm": [
+        5.0,
+        22.0,
+        0.0
+      ],
+      "states": [
+        "unmated",
+        "mated"
+      ]
+    }
+  ],
+  "profile": "earbud-case-charge",
+  "profile_version": "6f0399f5ed68",
+  "schema": "torquesense.procedure/1",
+  "steps": [
+    {
+      "id": "prepare",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "state": "present",
+      "targets": [
+        "kit-1",
+        "kit-2",
+        "kit-3",
+        "kit-4"
+      ]
+    },
+    {
+      "id": "open_case",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "requires": [
+        "prepare"
+      ],
+      "state": "open",
+      "targets": [
+        "lid-1"
+      ]
+    },
+    {
+      "id": "insert_left",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "requires": [
+        "open_case"
+      ],
+      "state": "seated",
+      "targets": [
+        "left_slot-1"
+      ]
+    },
+    {
+      "id": "insert_right",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "requires": [
+        "open_case"
+      ],
+      "state": "seated",
+      "targets": [
+        "right_slot-1"
+      ]
+    },
+    {
+      "id": "close_case",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "requires": [
+        "insert_left",
+        "insert_right"
+      ],
+      "state": "closed",
+      "targets": [
+        "lid-1"
+      ]
+    },
+    {
+      "id": "plug_cable",
+      "kind": "complete",
+      "max_duration_s": 10.0,
+      "requires": [
+        "close_case"
+      ],
+      "state": "mated",
+      "targets": [
+        "cable-1"
+      ]
+    }
+  ],
+  "title": "Earbuds into the charging case, lid closed, cable plugged in"
+}

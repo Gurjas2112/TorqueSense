@@ -175,11 +175,12 @@ schema in `contracts/`, a health endpoint and a place in the network-pull drill.
 | Network-pull drill | ✅ PASS | 45 s outage: 14 alerts and 1,356 frames verified, outbox peak 18, drained in 16 s, 14/14 anomalies in Supabase in order |
 | Web app and Vercel replay (live mode) | ✅ Done | vitest 6, Playwright 5; Supabase env vars set on Vercel |
 | Jenkins for the GPU gates (Phase 9) | ✅ Running, first build pending | controller as code in Docker, agent `hsgpc-gpu` connected over WebSocket |
-| Samples: 7 assemblies, schematic media read from pixels | ✅ Done | 22 videos, 198 keyframes verified frame by frame |
+| Samples: 8 assemblies, schematic media read from pixels | ✅ Done | 22 videos, 198 keyframes verified frame by frame |
+| Real camera recordings: earbuds into a charging case | ✅ Procedure level | [samples/earbud-case-charge](samples/earbud-case-charge/README.md): golden + 3 faulty runs; both engines raise the omission the moment the lid closes over an empty slot |
 | Camera calibration and desk recordings (Phase 11) | 👤 Human step | needs printed ChArUco sheets, a webcam/phone and the physical desk kits |
 | Production track (Phase 13) | ⏸ Deferred on purpose | [ADR 0010](docs/adr/0010-prototype-scope.md) |
 
-**Tests today:** ctest 83/83 (windows-ci) · pytest across `api`, `sidecar`, `reference`, `scripts`,
+**Tests today:** ctest 84/84 (windows-ci) · pytest across `api`, `sidecar`, `reference`, `scripts`,
 `synth` · vitest 6 · Playwright 5 · GitHub Actions 10 jobs green.
 
 ## 6. Quick start
@@ -383,7 +384,7 @@ Pipeline stages:
 | `fleet-agent/` | Go host agent and supervisor |
 | `web/` | React 19 dashboard, HMI, harness, line, fleet; replay build for Vercel |
 | `reference/` | the executable specification (Python); the engine is tested against it |
-| `samples/` | seven assemblies: profile, traces, scenarios, media |
+| `samples/` | eight assemblies: profile, traces, scenarios, media; `earbud-case-charge` holds real recordings |
 | `synth/` | renders, scenario plans and videos, schematic media |
 | `training/` | local training, evaluation, the Colab notebook, the unattended pipeline |
 | `contracts/` | JSON Schemas shared by C++, Python and TypeScript |

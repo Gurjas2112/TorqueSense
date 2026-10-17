@@ -15,6 +15,7 @@ assembly can be written as a folder that passes `run_samples.py`, TorqueSense ac
 | `electronics-enclosure` | connector, six screws, label — not automotive | — traces only | CAD | field order, centre-out; omission caught at release |
 | `desk-cover-4screw` | any box with a four-screw lid | **phone**, top-down | **ruler** | runs at a desk; diagonal order derived from four measured points |
 | `desk-harness-clips` | cable, five clips, plug, cover | **laptop webcam** | **ruler** | the door problem at desk scale, on the camera you already have |
+| `earbud-case-charge` | earbuds into a charging case, cable plugged in | **real recordings**, top-down | **measured** | real footage: a lid closed over an empty slot caught as PRECEDENCE |
 | `_template` | — | — | — | copy this to start |
 
 ## A folder

@@ -1,0 +1,16 @@
+# recordings/test2.mp4 — both earbuds in, lid closed, but the charging cable is never plugged in
+trace: cable_never_plugged
+events:
+  - {t: 500, ip: kit-1, state: present}
+  - {t: 500, ip: kit-2, state: present}
+  - {t: 500, ip: kit-3, state: present}
+  - {t: 500, ip: kit-4, state: present}
+  - {t: 1200, ip: lid-1, state: open}
+  - {t: 2000, ip: left_slot-1, state: seated}
+  - {t: 2500, ip: right_slot-1, state: seated}
+  - {t: 3500, ip: lid-1, state: closed}
+release_at: 13500
+expect:
+  release_ok: false
+  violations:
+    - {kind: INCOMPLETE_AT_RELEASE, step: plug_cable, missing: [cable-1]}

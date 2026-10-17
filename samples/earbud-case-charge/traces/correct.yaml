@@ -1,0 +1,16 @@
+# recordings/golden.mp4 — every step, in order (times from the golden run's evidence frames, every 8th frame at 30 fps)
+trace: correct
+events:
+  - {t: 500, ip: kit-1, state: present}
+  - {t: 500, ip: kit-2, state: present}
+  - {t: 500, ip: kit-3, state: present}
+  - {t: 500, ip: kit-4, state: present}
+  - {t: 1870, ip: lid-1, state: open}
+  - {t: 3470, ip: left_slot-1, state: seated}
+  - {t: 4530, ip: right_slot-1, state: seated}
+  - {t: 5070, ip: lid-1, state: closed}
+  - {t: 7730, ip: cable-1, state: mated}
+release_at: 20000
+expect:
+  release_ok: true
+  violations: []

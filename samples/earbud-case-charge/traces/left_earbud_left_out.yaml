@@ -1,0 +1,18 @@
+# recordings/test1.mp4 — the left earbud is never inserted; the lid is closed over its empty slot
+trace: left_earbud_left_out
+events:
+  - {t: 500, ip: kit-1, state: present}
+  - {t: 500, ip: kit-2, state: present}
+  - {t: 500, ip: kit-3, state: present}
+  - {t: 500, ip: kit-4, state: present}
+  - {t: 1200, ip: lid-1, state: open}
+  - {t: 2300, ip: right_slot-1, state: seated}
+  - {t: 3500, ip: lid-1, state: closed}
+  - {t: 4800, ip: cable-1, state: mated}
+release_at: 16500
+expect:
+  release_ok: false
+  violations:
+    - {kind: PRECEDENCE, step: close_case, ip: lid-1, before: [insert_left]}     # caught as the lid closes, at 3.5 s
+    - {kind: STEP_TIMEOUT, step: insert_left, missing: [left_slot-1]}
+    - {kind: INCOMPLETE_AT_RELEASE, step: insert_left, missing: [left_slot-1]}

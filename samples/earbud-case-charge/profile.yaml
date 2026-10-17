@@ -1,0 +1,57 @@
+# Earbuds into their charging case, then the cable — a real assembly filmed top-down on a desk
+# (recordings/: golden.mp4 and three faulty runs, 480 x 480 at 30 fps). No CAD: positions are measured
+# from the first frame of golden.mp4 at about 3.6 px/mm (the case is ~55 mm wide), origin at the frame
+# centre, +x right, +y up the frame.
+profile: earbud-case-charge
+title: "Earbuds into the charging case, lid closed, cable plugged in"
+geometry: measured
+registration: fixed
+
+cameras:                          # top-down phone, ~200 mm above the desk; hfov from the 132 mm field of view
+  - {id: desk, width_px: 480, aspect: 1.0, hfov_deg: 36.5, position_mm: [0, 0, 200], look_at_mm: [0, 0, 0]}
+sources:
+  desk: {kind: file, path: recordings/golden.mp4}
+
+groups:
+  - id: kit                       # step 1: everything on the workstation before work starts
+    family: presence
+    states: [absent, present]
+    feature_mm: 15
+    members:
+      - {position_mm: [19, 4, 0]}       # case
+      - {position_mm: [-39, 19, 0]}     # left earbud
+      - {position_mm: [-36, -6, 0]}     # right earbud
+      - {position_mm: [-25, 47, 0]}     # cable plug
+  - id: lid
+    family: hinged_lid            # shut as delivered < open < closed again over loaded slots
+    states: [shut, open, closed]
+    feature_mm: 50
+    members:
+      - {position_mm: [19, 4, 0]}
+  - id: left_slot
+    family: earbud_slot
+    states: [empty, seated]
+    feature_mm: 15
+    members:
+      - {position_mm: [10, 10, 0]}
+  - id: right_slot
+    family: earbud_slot
+    states: [empty, seated]
+    feature_mm: 15
+    members:
+      - {position_mm: [28, 10, 0]}
+  - id: cable
+    family: connector
+    states: [unmated, mated]
+    feature_mm: 10                # the USB-C plug body at the case
+    members:
+      - {position_mm: [5, 22, 0]}
+
+steps:
+  - {id: prepare, group: kit, kind: complete, state: present, max_duration_s: 10}
+  - {id: open_case, group: lid, kind: complete, state: open, requires: [prepare], max_duration_s: 10}
+  - {id: insert_left, group: left_slot, kind: complete, state: seated, requires: [open_case], max_duration_s: 10}
+  - {id: insert_right, group: right_slot, kind: complete, state: seated, requires: [open_case], max_duration_s: 10}
+  # a lid closed over an empty slot is the door problem in miniature: the next step hides the omission
+  - {id: close_case, group: lid, kind: complete, state: closed, requires: [insert_left, insert_right], max_duration_s: 10}
+  - {id: plug_cable, group: cable, kind: complete, state: mated, requires: [close_case], max_duration_s: 10}

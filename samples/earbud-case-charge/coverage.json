@@ -1,0 +1,89 @@
+{
+  "min_feature_px": 16.0,
+  "ok": true,
+  "points": [
+    {
+      "camera": "desk",
+      "distance_mm": 200.9,
+      "feature_px": 54.1,
+      "in_frame_and_facing": true,
+      "ip": "kit-1",
+      "obliquity_deg": 5.5,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 204.7,
+      "feature_px": 52.1,
+      "in_frame_and_facing": true,
+      "ip": "kit-2",
+      "obliquity_deg": 12.2,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 203.3,
+      "feature_px": 52.8,
+      "in_frame_and_facing": true,
+      "ip": "kit-3",
+      "obliquity_deg": 10.3,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 207.0,
+      "feature_px": 51.0,
+      "in_frame_and_facing": true,
+      "ip": "kit-4",
+      "obliquity_deg": 14.9,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 200.9,
+      "feature_px": 180.3,
+      "in_frame_and_facing": true,
+      "ip": "lid-1",
+      "obliquity_deg": 5.5,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 200.5,
+      "feature_px": 54.3,
+      "in_frame_and_facing": true,
+      "ip": "left_slot-1",
+      "obliquity_deg": 4.0,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 202.2,
+      "feature_px": 53.4,
+      "in_frame_and_facing": true,
+      "ip": "right_slot-1",
+      "obliquity_deg": 8.5,
+      "occlusion": "not_run",
+      "resolved": true
+    },
+    {
+      "camera": "desk",
+      "distance_mm": 201.3,
+      "feature_px": 35.9,
+      "in_frame_and_facing": true,
+      "ip": "cable-1",
+      "obliquity_deg": 6.4,
+      "occlusion": "not_run",
+      "resolved": true
+    }
+  ],
+  "profile": "earbud-case-charge",
+  "profile_version": "6f0399f5ed68",
+  "unresolved": []
+}
